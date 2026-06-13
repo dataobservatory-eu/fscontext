@@ -1,6 +1,6 @@
 #' Classify operational file types
 #'
-#' Classify observed resources into operational categories that support 
+#' Classify observed resources into operational categories that support
 #' contextual reconstruction and Record Set derivation.
 #'
 #' @description
@@ -28,7 +28,7 @@
 #' for assigning observed resources to such workflow-oriented
 #' categories before higher-level contextualisation, Record Set
 #' construction, or semantic stabilisation takes place.
-#' 
+#'
 #' Classification is currently based on extension patterns and
 #' workflow-specific heuristics. The function does not inspect
 #' file contents, infer authoritative media types, determine

@@ -1,7 +1,6 @@
 test_that(
-  "semantic_stabilization detects invalid labels",
+  "validate_labelled_conversion detects invalid labels",
   {
-    
     x <- structure(
       c("a", "b"),
       labels = list(
@@ -10,9 +9,9 @@ test_that(
       ),
       class = "prelabelled"
     )
-    
-    result <- semantic_stabilization(x)
-    
+
+    result <- validate_labelled_conversion(x)
+
     expect_false(result$valid)
     expect_type(result$message, "character")
   }
@@ -20,9 +19,8 @@ test_that(
 
 
 test_that(
-  "semantic_stabilization returns expected structure",
+  "validate_labelled_conversion returns expected structure",
   {
-    
     x <- prelabel(
       c("r", "png"),
       labels = c(
@@ -30,14 +28,14 @@ test_that(
         png = "visualisation"
       )
     )
-    
-    result <- semantic_stabilization(x)
-    
+
+    result <- validate_labelled_conversion(x)
+
     expect_named(
       result,
       c("valid", "message")
     )
-    
+
     expect_type(result$valid, "logical")
   }
 )

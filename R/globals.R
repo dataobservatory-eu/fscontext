@@ -26,6 +26,7 @@ utils::globalVariables(
     "avg_size_unit",
     "matched_rule",
     "refine_id",
-    "tmp_observed_unit"
+    "tmp_observed_unit",
+    "fsdemo_country_data"
   )
 )

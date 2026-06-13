@@ -91,7 +91,7 @@ Semantic stabilisation
 The starting point is a filesystem snapshot.
 
 ```{r, eval=FALSE}
-snapshot <- scan_storage(root = "D:/projects") 
+snapshot <- scan_storage(root = "D:/projects")
 ```
 
 Snapshots are ordinary data frames containing observed filesystem resources and associated metadata.
@@ -105,10 +105,10 @@ The package includes two reproducible filesystem snapshots from the companion pa
 The two snapshots capture the repository at different stages of development. Between the first and second observations, additional artefacts, datasets, visualisations, and semantic enrichment workflows were introduced. This creates a realistic longitudinal example that can be used to explore how digital work environments evolve over time.
 
 ```{r snapshot02}
-data("fscontextdemo_snapshot_02")  
+data("fscontextdemo_snapshot_02")
 fscontextdemo_snapshot_02 |>
   dplyr::select(storage_id, rel_path, filename) |>
-  head() 
+  head()
 ```
 
 These observations describe files that were present when the snapshot was created.
@@ -118,7 +118,7 @@ These observations describe files that were present when the snapshot was create
 Filesystem observations can be enriched with contextual identifiers.
 
 ```{r}
-snapshots <- add_snapshot_context(fscontextdemo_snapshot_02) 
+snapshots <- add_snapshot_context(fscontextdemo_snapshot_02)
 ```
 
 Additional structural groupings can then be derived.
@@ -148,14 +148,15 @@ This creates lightweight contextual structures that support later reconstruction
 One of the central goals of the package is to derive contextual Record Sets from filesystem observations.
 
 ```{r}
-tmp <- tempfile(fileext = ".rds")  
-saveRDS(fscontextdemo_snapshot_02, tmp)  
+tmp <- tempfile(fileext = ".rds")
+saveRDS(fscontextdemo_snapshot_02, tmp)
 
 record_set <- snapshot_to_recordset_df(
-  person = utils::person("Jane","Doe"),
-  snapshot_files = tmp,   
-  roots = "D:/_packages/fscontextdemo",   
-  record_set_id = "fscontextdemo" ) 
+  person = utils::person("Jane", "Doe"),
+  snapshot_files = tmp,
+  roots = "D:/_packages/fscontextdemo",
+  record_set_id = "fscontextdemo"
+)
 ```
 
 Record Sets provide contextual documentary groupings derived from filesystem evidence.
@@ -164,7 +165,7 @@ Record Sets provide contextual documentary groupings derived from filesystem evi
 set.seed(12)
 record_set |>
   dplyr::select(record_set_id, filename, quick_sig, size) |>
-  sample_n(10) 
+  sample_n(10)
 ```
 
 ## Repeated observation
@@ -177,7 +178,7 @@ Multiple snapshots allow longitudinal analysis.
 observe_universe(
   snapshot_dir = snapshot_directory,
   max_aggregation_depth = 2
-  ) 
+)
 ```
 
 Repeated observations support analysis of:
