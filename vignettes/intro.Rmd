@@ -1,0 +1,223 @@
+---
+title: "Introduction to fscontext"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to fscontext}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE, message=FALSE, warning=FALSE}
+library(fscontext)
+library(knitr)
+library(dplyr)
+```
+
+## What is fscontext?
+
+`fscontext` provides tools for observing, contextualising, and analysing filesystem environments.
+
+The package creates reproducible snapshots of files, directories, and related digital resources, then supports their transformation into contextualised analytical objects.
+
+Typical applications include:
+
+- software repositories;
+
+- research data collections;
+
+- shared drives;
+
+- audiovisual production environments;
+
+- digitised archival collections;
+
+- digital preservation workflows.
+
+Rather than treating files as isolated technical objects, `fscontext` treats them as evidence of activities that occurred within a broader operational context.
+
+## Why filesystem observations matter
+
+Many organisations possess large collections of files but limited contextual information about how those files relate to projects, activities, workflows, or documentary processes.
+
+Examples include:
+
+- research organisations with many partially documented projects;
+
+- cultural heritage institutions holding digitised surrogates;
+
+- audiovisual archives with complex production workflows;
+
+- software development environments spread across multiple devices;
+
+- shared drives that have evolved over many years.
+
+In these environments the challenge is often not storage, but understanding.
+
+Filesystem observations provide a starting point for reconstructing how digital resources relate to one another.
+
+## The fscontext workflow
+
+The package follows a layered workflow:
+
+```
+Filesystem observations
+↓
+Snapshots
+↓
+Contextualisation
+↓
+Record Sets
+↓
+Semantic stabilisation
+```
+
+*Filesystem observations* capture what was observed at a particular point in time.
+
+*Contextualisation* groups observations into meaningful analytical or operational contexts.
+
+*Record Sets* provide higher-level documentary groupings inspired by the Records in Contexts (RiC) conceptual model.
+
+*Semantic stabilisation* supports the progressive enrichment and refinement of contextual information.
+
+## Creating a snapshot
+
+The starting point is a filesystem snapshot.
+
+```{r, eval=FALSE}
+snapshot <- scan_storage(root = "D:/projects") 
+```
+
+Snapshots are ordinary data frames containing observed filesystem resources and associated metadata.
+
+## Working with example data
+
+The package includes two reproducible filesystem snapshots from the companion package `fscontextdemo` that is available at <https://github.com/dataobservatory-eu/fscontextdemo>.
+
+`fscontextdemo` is a deliberately constructed demonstration repository designed to simulate a small but realistic digital work environment. It contains source code, datasets, generated artefacts, documentation, tests, package metadata, and semantic enrichment examples. The repository was created specifically to support reproducible experimentation with filesystem reconstruction, provenance analysis, contextualisation, and Record Set construction workflows.
+
+The two snapshots capture the repository at different stages of development. Between the first and second observations, additional artefacts, datasets, visualisations, and semantic enrichment workflows were introduced. This creates a realistic longitudinal example that can be used to explore how digital work environments evolve over time.
+
+```{r snapshot02}
+data("fscontextdemo_snapshot_02")  
+fscontextdemo_snapshot_02 |>
+  dplyr::select(storage_id, rel_path, filename) |>
+  head() 
+```
+
+These observations describe files that were present when the snapshot was created.
+
+## Adding contextual information
+
+Filesystem observations can be enriched with contextual identifiers.
+
+```{r}
+snapshots <- add_snapshot_context(fscontextdemo_snapshot_02) 
+```
+
+Additional structural groupings can then be derived.
+
+```{r}
+snapshots <- dplyr::bind_cols(
+  snapshots,
+  derive_structural_groups(
+    snapshots$rel_path
+  )
+)
+
+snapshots |>
+  dplyr::select(
+    rel_path,
+    structural_group,
+    component
+  ) |>
+  head()
+```
+
+
+This creates lightweight contextual structures that support later reconstruction and analysis.
+
+## Creating Record Sets
+
+One of the central goals of the package is to derive contextual Record Sets from filesystem observations.
+
+```{r}
+tmp <- tempfile(fileext = ".rds")  
+saveRDS(fscontextdemo_snapshot_02, tmp)  
+
+record_set <- snapshot_to_recordset_df(
+  person = utils::person("Jane","Doe"),
+  snapshot_files = tmp,   
+  roots = "D:/_packages/fscontextdemo",   
+  record_set_id = "fscontextdemo" ) 
+```
+
+Record Sets provide contextual documentary groupings derived from filesystem evidence.
+
+```{r}
+set.seed(12)
+record_set |>
+  dplyr::select(record_set_id, filename, quick_sig, size) |>
+  sample_n(10) 
+```
+
+## Repeated observation
+
+A single snapshot provides a static view.
+
+Multiple snapshots allow longitudinal analysis.
+
+```{r, eval=FALSE}
+observe_universe(
+  snapshot_dir = snapshot_directory,
+  max_aggregation_depth = 2
+  ) 
+```
+
+Repeated observations support analysis of:
+
+- persistence;
+
+- duplication;
+
+- growth;
+
+- disappearance;
+
+- structural change.
+
+## Semantic stabilisation
+
+Filesystem observations often contain ambiguous or incomplete information.
+
+`fscontext` supports progressive semantic enrichment through semantic stabilisation workflows.
+
+These workflows allow observations to be refined incrementally while preserving the underlying observational evidence.
+
+## Relationship to Records in Contexts
+
+The package is inspired by the Records in Contexts (RiC) family of models.
+
+It is not a formal implementation of RiC-CM or RiC-O.
+
+Instead, it provides practical tools for moving from filesystem observations toward contextual documentary representations that may later support RiC-aligned workflows.
+
+## Next steps
+
+The remaining vignettes demonstrate:
+
+- contextual reconstruction;
+
+- Record Set construction;
+
+- semantic stabilisation;
+
+- longitudinal observation;
+
+- provenance-aware analytical workflows.
