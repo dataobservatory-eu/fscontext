@@ -31,7 +31,7 @@ Typical use cases include:
 \item deriving Record Set–like groupings in RiC-aligned archival workflows
 }
 
-Behavior is fully deterministic:
+behaviour is fully deterministic:
 \itemize{
 \item identical inputs always produce identical outputs
 \item paths shorter than \code{depth} are returned unchanged

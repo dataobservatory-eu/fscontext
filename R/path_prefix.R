@@ -13,7 +13,7 @@
 #' - creating stable aggregation units for audit, reporting, or timesheets
 #' - deriving Record Set–like groupings in RiC-aligned archival workflows
 #'
-#' Behavior is fully deterministic:
+#' behaviour is fully deterministic:
 #' - identical inputs always produce identical outputs
 #' - paths shorter than `depth` are returned unchanged
 #' - `depth = 0` returns an empty string (explicit root-level grouping)

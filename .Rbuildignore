@@ -18,3 +18,4 @@
 ^codemeta\.json$
 ^review-reporting.txt$
 ^\.github$
+^fscontext\.Rproj$
