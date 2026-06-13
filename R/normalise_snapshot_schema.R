@@ -30,11 +30,9 @@
 #'
 #' Additional columns from `scan_storage()` are preserved.
 #'
-#' @examples
-#' data("fscontextdemo_snapshot_02")
-#' snap <- normalise_snapshot_schema(fscontextdemo_snapshot_02)
-#'
 #' @keywords internal
+#' @noRd
+
 normalise_snapshot_schema <- function(df) {
   version <- attr(df, "schema_version")
 
@@ -81,6 +79,7 @@ normalise_snapshot_schema <- function(df) {
 #' vignette ("Reporting Data Structure").
 #'
 #' @keywords internal
+#' @noRd
 normalise_snapshot_schema_010 <- function(df) {
   # --- copy to avoid accidental reference issues ---
   out <- df
