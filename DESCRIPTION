@@ -1,0 +1,59 @@
+Package: fscontext
+Title: Contextual Observation and Analysis of Filesystem Data
+Version: 0.1.45
+Language: en-GB
+Authors@R: 
+    person(given = "Daniel", family = "Antal", 
+           email = "daniel.antal@dataobservatory.eu", 
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-7513-6760"))
+Description:
+    Provides a provenance-aware contextual reconstruction framework for 
+    file systems and related digital resource collections by creating 
+    reproducible snapshots of file-level metadata, paths, repository context,
+    and optional content signatures. The package supports contextual 
+    reconstruction workflows for research infrastructure, analytical 
+    provenance, audit, preservation, and computational workflow 
+    reconstruction. It enables contextual grouping, structural abstraction,
+    temporal event projection, semantic stabilization, duplicate and 
+    reuse detection, and lightweight workflow reconstruction from 
+    filesystem observations while deliberately separating 
+    observational evidence, contextual abstraction, semantic 
+    interpretation, and analytical reconstruction layers. 
+    The framework is designed to support reproducible and inspectable 
+    provenance-aware workflows and future alignment with archival and 
+    contextual knowledge representation models such as RiC-CM, RiC-O, and 
+    PROV-O.
+License: file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Imports: 
+    digest,
+    fs,
+    progress,
+    here,
+    dplyr,
+    utils,
+    rlang,
+    purrr,
+    dataset,
+    stats,
+    tools,
+    glue,
+    tibble,
+    tidyr,
+    magrittr,
+    lubridate,
+    stringr,
+    labelled,
+    gh
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+Depends: 
+    R (>= 4.1.0)
+LazyData: true
+Config/roxygen2/version: 8.0.0

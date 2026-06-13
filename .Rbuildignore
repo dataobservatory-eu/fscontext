@@ -1,0 +1,16 @@
+^reporting\.Rproj$
+^\.Rproj\.user$
+^docs$
+^not_included$
+^data-raw$
+^wbso*\.*$
+^\.positai$
+^\.claude$
+^README\.Rmd$
+^doc$
+^Meta$
+^_pkgdown\.yml$
+^pkgdown$
+^reports$
+^codemeta\.json$
+^review-reporting.txt$
