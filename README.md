@@ -1,15 +1,10 @@
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # fscontext
 
-`fscontext` provides a provenance-aware contextual reconstruction
-framework for file systems and related digital resource collections.
+`fscontext` provides a provenance-aware contextual reconstruction framework for file systems and related digital resource collections.
 
-The package creates reproducible observational snapshots of files,
-repository structures, and related operational resources, and supports
-their contextual abstraction, semantic stabilization, and
-reconstruction-oriented analysis.
+The package creates reproducible observational snapshots of files, repository structures, and related operational resources, and supports their contextual abstraction, semantic stabilization, and reconstruction-oriented analysis.
 
 Typical use cases include:
 
@@ -33,19 +28,13 @@ The package separates three complementary analytical layers:
 | contextual | contextual grouping of related resources into lightweight Record Sets, projects, collections, or reconstruction workspaces |
 | analytical | derived interpretations, temporal comparisons, summaries, activity metrics, semantic stabilization, and reconstruction-oriented analysis |
 
-The framework intentionally separates observational evidence, contextual
-abstraction, semantic interpretation, and analytical reconstruction.
-This layered design supports reproducible workflows while preserving the
-distinction between:
+The framework intentionally separates observational evidence, contextual abstraction, semantic interpretation, and analytical reconstruction. This layered design supports reproducible workflows while preserving the distinction between:
 
 - observed digital evidence,
 - contextual organisation of related resources,
 - and later analytical or professional archival interpretation.
 
-In operational archival terms, observed files and digital objects may
-later support the construction of contextual `Record Sets`, while still
-remaining separate observed `Instantiations` of evolving digital
-resources.
+In operational archival terms, observed files and digital objects may later support the construction of contextual `Record Sets`, while still remaining separate observed `Instantiations` of evolving digital resources.
 
 ## Installation
 
@@ -90,14 +79,10 @@ The package does not:
 
 ## Notes
 
-- Large scans may require substantial time on slower or networked
-  storage systems.
-- Some files may be inaccessible due to permissions or synchronization
-  state.
-- Observational snapshots are intended for reproducible local or
-  institutional analysis workflows.
-- Contextual and analytical layers may evolve independently from the
-  original observational corpus.
+- Large scans may require substantial time on slower or networked storage systems.
+- Some files may be inaccessible due to permissions or synchronization state.
+- Observational snapshots are intended for reproducible local or institutional analysis workflows.
+- Contextual and analytical layers may evolve independently from the original observational corpus.
 
 <!-- -->
 
