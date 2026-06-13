@@ -31,10 +31,10 @@ make_test_df <- function() {
 
 # Structure ------------------------------------------------------------
 
-test_that("summarise_activity returns expected structure", {
+test_that("summarise_observed_activity returns expected structure", {
   df <- make_test_df()
 
-  res <- summarise_activity(df, time_unit = "week")
+  res <- summarise_observed_activity(df, time_unit = "week")
 
   expect_s3_class(res, "data.frame")
 
@@ -46,11 +46,11 @@ test_that("summarise_activity returns expected structure", {
 
 # Determinism ----------------------------------------------------------
 
-test_that("summarise_activity is deterministic", {
+test_that("summarise_observed_activity is deterministic", {
   df <- make_test_df()
 
-  res1 <- summarise_activity(df, time_unit = "week")
-  res2 <- summarise_activity(df, time_unit = "week")
+  res1 <- summarise_observed_activity(df, time_unit = "week")
+  res2 <- summarise_observed_activity(df, time_unit = "week")
 
   expect_equal(res1, res2)
 })
@@ -60,7 +60,7 @@ test_that("summarise_activity is deterministic", {
 test_that("extensions filter works", {
   df <- make_test_df()
 
-  res <- summarise_activity(df, extensions = "r")
+  res <- summarise_observed_activity(df, extensions = "r")
 
   expect_false(any(grepl("d.bak", res$file_names)))
 })
@@ -70,8 +70,8 @@ test_that("extensions filter works", {
 test_that("time_unit changes aggregation", {
   df <- make_test_df()
 
-  res_week <- summarise_activity(df, time_unit = "week")
-  res_month <- summarise_activity(df, time_unit = "month")
+  res_week <- summarise_observed_activity(df, time_unit = "week")
+  res_month <- summarise_observed_activity(df, time_unit = "month")
 
   expect_true(nrow(res_month) <= nrow(res_week))
 })
@@ -81,7 +81,7 @@ test_that("time_unit changes aggregation", {
 test_that("untracked files counted correctly", {
   df <- make_test_df()
 
-  res <- summarise_activity(df)
+  res <- summarise_observed_activity(df)
 
   expect_true(any(res$untracked > 0, na.rm = TRUE))
 })
@@ -91,7 +91,7 @@ test_that("untracked files counted correctly", {
 test_that("n_unique_files counts distinct files correctly", {
   df <- make_test_df()
 
-  res <- summarise_activity(df)
+  res <- summarise_observed_activity(df)
 
   expect_true(all(res$n_unique_files <= res$n_files))
   expect_true(all(res$n_unique_files > 0))
@@ -102,18 +102,18 @@ test_that("n_unique_files counts distinct files correctly", {
 test_that("file_names are non-empty and aggregated", {
   df <- make_test_df()
 
-  res <- summarise_activity(df)
+  res <- summarise_observed_activity(df)
 
   expect_true(all(nchar(res$file_names) > 0))
 })
 
 # Missing git_tracked --------------------------------------------------
 
-test_that("summarise_activity works without git_tracked", {
+test_that("summarise_observed_activity works without git_tracked", {
   df <- make_test_df()
   df$git_tracked <- NULL
 
-  res <- summarise_activity(df)
+  res <- summarise_observed_activity(df)
 
   expect_true("untracked" %in% names(res))
   expect_true(all(is.na(res$untracked)))
@@ -121,10 +121,10 @@ test_that("summarise_activity works without git_tracked", {
 
 # Realistic snapshot (legacy) ------------------------------------------
 
-test_that("summarise_activity works on canonical snapshot", {
+test_that("summarise_observed_activity works on canonical snapshot", {
   data(fscontextdemo_snapshot_02, package = "fscontext")
 
-  res <- summarise_activity(
+  res <- summarise_observed_activity(
     fscontextdemo_snapshot_02,
     extensions = c("html", "css", "js")
   )
@@ -140,10 +140,10 @@ test_that("summarise_activity works on canonical snapshot", {
 
 # Realistic snapshot (canonical) ---------------------------------------
 
-test_that("summarise_activity works on canonical snapshot", {
+test_that("summarise_observed_activity works on canonical snapshot", {
   data(fscontextdemo_snapshot_02, package = "fscontext")
 
-  res <- summarise_activity(fscontextdemo_snapshot_02)
+  res <- summarise_observed_activity(fscontextdemo_snapshot_02)
 
   expect_s3_class(res, "data.frame")
   expect_true(nrow(res) > 0)
@@ -181,7 +181,7 @@ test_that("group_path never contains file extensions", {
     git_tracked = c(TRUE, FALSE)
   )
 
-  res <- summarise_activity(df)
+  res <- summarise_observed_activity(df)
 
   expect_false(any(grepl("\\.[A-Za-z0-9]+$", res$group_path)))
 })
