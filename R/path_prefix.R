@@ -22,15 +22,8 @@
 #' @param depth Integer. Number of leading path components to keep (>= 0)
 #'
 #' @return Character vector of normalized path prefixes
-#'
-#' @examples
-#' path_prefix("_eviota/reporting/R/scan_storage.R", depth = 2)
-#' # "_eviota/reporting"
-#'
-#' path_prefix(c("a/b/c.txt", "x/y"), depth = 1)
-#' # c("a", "x")
-#'
 #' @keywords internal
+#' @noRd
 path_prefix <- function(path, depth = 2) {
   stopifnot(is.character(path))
 
