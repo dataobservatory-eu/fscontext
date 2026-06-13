@@ -5,15 +5,14 @@
 
 <!-- badges: start -->
 
-[![rhub](https://github.com/dataobservatory-eu/fscontext/actions/workflows/rhub.yaml/badge.svg)](https://github.com/dataobservatory-eu/dataset/actions/workflows/rhub.yaml)
+[![rhub](https://github.com/dataobservatory-eu/fscontext/actions/workflows/rhub.yaml/badge.svg)](https://github.com/dataobservatory-eu/fscontext/actions/workflows/rhub.yaml)
 [![lifecycle](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status:
 WIP](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![devel-version](https://img.shields.io/badge/devel%20version-0.2.0-blue.svg)](https://github.com/dataobservatory-eu/fscontext)
 [![dataobservatory](https://img.shields.io/badge/ecosystem-dataobservatory.eu-3EA135.svg)](https://dataobservatory.eu/)
-[![Coveralls test
-coverage](https://coveralls.io/repos/github/dataobservatory-eu/dataset/badge.svg)](https://coveralls.io/r/dataobservatory-eu/fscontext?branch=main)
-
+[![Codecov test
+coverage](https://codecov.io/gh/dataobservatory-eu/fscontext/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dataobservatory-eu/fscontext)
 <!-- badges: end -->
 
 `fscontext` provides a provenance-aware contextual reconstruction
