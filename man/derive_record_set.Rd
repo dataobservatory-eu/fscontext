@@ -12,33 +12,24 @@ derive_record_set(
 )
 }
 \arguments{
-\item{x}{A data frame containing observational filesystem
-units, typically created with \code{\link[=observe_universe]{observe_universe()}} or
-derived from \code{\link[=scan_storage]{scan_storage()}}.}
+\item{x}{A data frame containing observational units,
+typically created with \code{\link[=observe_universe]{observe_universe()}}.}
 
-\item{contextual_groups}{A data frame containing declared
-contextual boundaries.
+\item{contextual_groups}{A data frame defining contextual
+boundaries.
 
-Required columns:
+Must contain:
 
 \describe{
-\item{context}{
-Identifier of the analytical or curatorial context.
-}
-\item{root}{
-Filesystem boundary used to derive contextual
-membership.
-}
+\item{context}{Context identifier.}
+\item{root}{Filesystem root used to derive membership.}
 }}
 
-\item{observed_unit_var}{Character scalar giving the name
-of the observational unit variable.
-Defaults to \code{"observed_unit"}.}
+\item{observed_unit_var}{Name of the column containing
+observational units. Defaults to "observed_unit".}
 
-\item{include_subfolders}{Logical.
-Currently retained for future compatibility.
-Contextual membership is presently derived using
-recursive path-prefix matching.}
+\item{include_subfolders}{Logical. Currently retained for
+future compatibility. Membership is derived recursively.}
 }
 \value{
 A tibble containing observational units assigned to one
@@ -47,74 +38,52 @@ or more contexts.
 Additional variables include:
 
 \describe{
-\item{context}{
-Context identifier.
-}
-\item{context_root}{
-Boundary root used for membership derivation.
-}
-\item{construction_method}{
-Membership derivation method.
-}
-\item{derived_by}{
-Function that created the membership assignment.
-}
-\item{derived_at}{
-Timestamp when membership was derived.
-}
+\item{context}{Context identifier.}
+\item{context_root}{Root used for membership derivation.}
+\item{construction_method}{Membership derivation method.}
+\item{derived_by}{Function that created the assignment.}
+\item{derived_at}{Timestamp of derivation.}
 }
 }
 \description{
-Derive contextual Record Set membership from filesystem
-observations using declared contextual boundaries.
+Assign observational units to one or more contexts using
+declared filesystem boundaries.
 }
 \details{
-The function creates a contextual membership layer over an
-observational universe by assigning observed filesystem
-units to one or more analytical, operational, or curatorial
-contexts.
+derive_record_set() creates a contextual membership layer
+over an observational universe. Membership is derived by
+matching observational units against one or more declared
+context roots.
 
-Contexts are defined explicitly through boundary roots.
-Membership is derived using recursive path-prefix matching.
+The function is intended as an intermediate step between
+filesystem observation and Record Set construction.
 
-This approach is inspired by the Records in Contexts (RiC)
-conceptual model, where records and instantiations may
-participate in multiple overlapping contexts rather than
-belonging exclusively to a single hierarchical structure.
+In a software repository, contexts may correspond to
+projects, packages, or reporting workflows. In archival
+environments, contexts may correspond to collections,
+fonds, or other documentary aggregations.
 
-In fscontext, a context represents a meaningful analytical
-or curatorial perspective over observed filesystem units.
-It is not intended to represent an authoritative archival
-Record Set or a complete documentary aggregation.
-
-The resulting membership layer can support:
-\itemize{
-\item contextual reconstruction workflows;
-\item Record Set derivation;
-\item provenance analysis;
-\item filesystem archaeology;
-\item semantic stabilisation workflows.
-}
-
-The original observational universe remains unchanged.
+Membership is currently derived using recursive path-prefix
+matching.
 }
 \examples{
 toy_universe <- tibble::tibble(
-  observed_unit = c(
-    "D:/projects/eviota",
-    "D:/projects/eviota/tests",
-    "D:/other"
-  ),
-  inst_id = c("a", "b", "c")
+observed_unit = c(
+"D:/projects/eviota",
+"D:/projects/eviota/tests",
+"D:/other"
+),
+inst_id = c("a", "b", "c")
 )
 
-toy_groups <- tibble::tibble(
-  context = "eviota",
-  root = "D:/projects/eviota"
+contextual_groups <- tibble::tibble(
+context = "eviota",
+root = "D:/projects/eviota"
 )
 
 derive_record_set(
-  toy_universe,
-  toy_groups
+toy_universe,
+contextual_groups
 )
+
 }

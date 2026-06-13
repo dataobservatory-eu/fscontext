@@ -46,10 +46,8 @@ Imports:
     tibble,
     tidyr,
     magrittr,
-    lubridate,
     stringr,
-    labelled,
-    gh
+    labelled
 Suggests: 
     knitr,
     rmarkdown,
