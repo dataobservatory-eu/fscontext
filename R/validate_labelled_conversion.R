@@ -1,5 +1,6 @@
 #' Evaluate semantic stabilization readiness
 #'
+#' @description
 #' Evaluate whether a semantically enriched observational vector
 #' can be coerced into stricter semantic representations.
 #'
@@ -7,6 +8,7 @@
 #' provisional semantic overlays can be represented as a
 #' [labelled::labelled()] vector.
 #'
+#' @details
 #' Semantic stabilization is interpreted progressively:
 #'
 #' - observational vectors preserve raw observed values;
@@ -28,20 +30,6 @@
 #'   \item{valid}{Logical. `TRUE` if coercion succeeded.}
 #'   \item{message}{Diagnostic warning or error message, if any.}
 #' }
-#'
-#' @examples
-#' x <- prelabel(
-#'   c("r", "png", "csv"),
-#'   labels = c(
-#'     r = "source_code",
-#'     png = "visualisation",
-#'     csv = "tabular_data"
-#'   )
-#' )
-#'
-#' validate_labelled_conversion(x)
-#'
-#' @aliases semantic_stabilization
 #'
 #' @importFrom labelled labelled
 #'
@@ -77,7 +65,3 @@ validate_labelled_conversion <- function(x) {
 
   out
 }
-
-#' @rdname validate_labelled_conversion
-#' @export
-semantic_stabilization <- validate_labelled_conversion
