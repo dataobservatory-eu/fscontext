@@ -46,3 +46,4 @@ path_prefix(c("a/b/c.txt", "x/y"), depth = 1)
 # c("a", "x")
 
 }
+\keyword{internal}

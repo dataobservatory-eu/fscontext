@@ -55,7 +55,7 @@
 #' @seealso [derive_structural_groups()]
 #'
 #' @importFrom dplyr bind_cols
-#' @export
+#' @keywords internal
 
 add_structural_groups <- function(df) {
   if (!"rel_path" %in% names(df)) {

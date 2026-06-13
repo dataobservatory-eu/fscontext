@@ -1,4 +1,117 @@
-url: ~
+url: https://fscontext.dataobservatory.eu/
 template:
   bootstrap: 5
+  bslib:
+    base_font: {google: "Roboto"}
+    heading_font: {google: "Roboto Slab"}
+    code_font: {google: "JetBrains Mono"}
+    
+home:
+  links:
+  - text: http://fscontext.dataobservatory.eu
+    href: http://fscontext.dataobservatory.eu
 
+authors:
+  Daniel Antal:
+    href: https://reprex.nl/authors/daniel_antal/
+  Reprex:
+    href: https://reprex.nl/
+    html: <img src="https://reprex.nl/authors/admin/avatar_hud66277e7f64fbf44513e7a4881e2a94f_35557_270x270_fill_lanczos_center_2.png"
+      height="24" />
+      
+      
+articles:
+  - title: "Getting Started"
+    desc: >
+     Learn how to create filesystem snapshots, explore structural
+      organisation, construct contextual Record Sets, and analyse
+      digital working environments with fscontext.
+    contents:
+      - intro
+      - prelabelled
+
+reference:
+
+  - title: "Filesystem Snapshots"
+    desc: >
+      Create, store and retrieve filesystem observations.
+    contents:
+      - scan_storage
+      - snapshot_storage
+      - read_snapshot
+      - save_scan
+      - subset_snapshot
+      
+  - title: "Record Sets"
+    desc: >
+      Construct contextual Record Sets from filesystem observations
+      and create semantically enriched recordset_df objects inspired
+      by the Records in Contexts model.
+    contents:
+      - construct_structural_paths
+      - create_record_set
+      - snapshot_to_reconstruction_context
+      - snapshot_to_recordset_df
+      - recordset_df
+      - as_recordset_df
+      
+  - title: "Contextualisation"
+    contents:
+      - context_roots
+      - coverage_roots
+      - derive_record_set
+      - invert_contextual_grouping
+
+  - title: "Observational Analysis"
+    desc: >
+        Analyse filesystem observations, identify duplicates,
+        generated artefacts and operational noise before
+        contextual reconstruction.
+    contents:
+    - observe_universe
+    - quick_signature
+    - detect_generated_artifacts
+    - exclude_operational_noise
+    - classify_operational_file_type
+    - derive_structural_groups
+    
+
+  - title: "Semantic Stabilisation"
+    desc: >
+      Support human-in-the-loop semantic stabilisation through
+      prelabelled values, rulebooks, semantic refinement and
+      controlled vocabulary workflows.
+    contents:
+      - prelabel
+      - is.prelabelled
+      - as_character
+      - as_value_key
+      - invert_value_key
+      - refine
+      - refine_by_rulebook
+      - compile_rulebook
+      - coverage_rules_path
+
+  - title: "Activity & Change Analysis"
+    desc: >
+      Reconstruct activity, change and event patterns from filesystem
+      observations.
+    contents:
+      - summarise_duplicates
+      - summarise_observed_activity
+      
+  - title: "Context Enrichment"
+    desc: >
+      Add contextual identifiers and structural grouping
+      variables to filesystem observations.
+    contents:
+    - add_snapshot_context
+    - add_structural_groups
+
+  - title: "Example Snapshots"
+    desc: >
+      Reproducible filesystem snapshots and contextual reconstruction
+      examples used throughout the package.
+    contents:
+      - fscontextdemo_snapshot_01
+      - fscontextdemo_snapshot_02

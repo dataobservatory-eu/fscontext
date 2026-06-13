@@ -49,3 +49,4 @@ get_git_remote("/path/to/repo")
 }
 
 }
+\keyword{internal}

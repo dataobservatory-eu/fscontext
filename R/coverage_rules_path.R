@@ -1,107 +1,140 @@
-#' Evaluate structural path-rule coverage
+#' Evaluate contextual rule coverage for structural paths
 #'
-#' Evaluates recursive structural path coverage inside
-#' contextual roots.
+#' Evaluates how filesystem observations align with a contextual
+#' path-rule model.
 #'
-#' The function expands relative filesystem paths into
-#' recursive structural components and evaluates whether
-#' they match contextual path rules.
+#' @description
+#' coverage_rules_path() expands observed filesystem paths into
+#' recursive structural components and evaluates whether those
+#' components are covered by contextual path rules.
 #'
-#' Typical use cases include:
+#' The function provides a diagnostic view of contextual coverage.
+#' It identifies which observed filesystem structures are recognised
+#' by a rulebook and which remain unmatched.
 #'
-#' - identifying software development structures;
-#' - identifying testing workflows;
-#' - identifying ETL/data engineering workflows;
-#' - detecting unmatched or noisy filesystem structures;
-#' - evaluating contextual classification coverage.
+#' This makes it useful for:
 #'
+#' - contextual reconstruction;
+#' - semantic stabilisation workflows;
+#' - rulebook development and refinement;
+#' - coverage diagnostics;
+#' - filesystem archaeology;
+#' - exploratory analysis of operational structures.
+#'
+#' @details
 #' Structural matching is recursive.
 #'
 #' For example:
 #'
-#' - `"R/import/helpers.R"` matches `"R"`
-#' - `"tests/testthat/test-import.R"` matches
-#'   `"tests/testthat"`
+#' - "R/import/helpers.R" expands to:
+#' - "R"
+#' - "R/import"
 #'
-#' The function operates on snapshot-level observations,
-#' not observational aggregation units.
+#' - "tests/testthat/test-import.R" expands to:
+#' - "tests"
+#' - "tests/testthat"
 #'
-#' @param snapshot A filesystem snapshot tibble containing
-#'   at least:
+#' Expanded structural paths are evaluated against contextual
+#' path rules associated with the matching contextual root.
 #'
-#'   - `full_path`
-#'   - `rel_path`
+#' The function operates on filesystem observations and explicit
+#' contextual rules. It does not infer:
 #'
-#' @param contexts A contextual reconstruction object
-#'   containing path rules.
+#' - Activities;
+#' - Events;
+#' - Record Sets;
+#' - provenance relationships.
+#'
+#' Instead, it evaluates whether observed filesystem structures
+#' are covered by an existing contextual model.
+#'
+#' Unmatched structures may indicate:
+#'
+#' - missing contextual rules;
+#' - evolving workflows;
+#' - operational noise;
+#' - areas requiring further semantic stabilisation.
+#'
+#' @param snapshot A filesystem snapshot data.frame
+#' containing at least:
+#'
+#' - full_path;
+#' - rel_path.
+#'
+#' @param contexts A contextual reconstruction object containing
+#' contextual roots and path rules.
 #'
 #' @return
-#' A tibble describing recursive structural path-rule
-#' coverage.
+#' A tibble describing structural path-rule coverage.
 #'
 #' The returned tibble includes:
 #'
 #' \describe{
 #'
-#'   \item{explored_path}{
-#'   Recursively expanded structural path.
-#'   }
+#' \item{context}{
+#' Contextual environment associated with the matched rule.
+#' }
 #'
-#'   \item{matched_rule}{
-#'   Contextual rule matched against the structural path.
-#'   }
+#' \item{root}{
+#' Contextual root used for evaluation.
+#' }
 #'
-#'   \item{activity}{
-#'   Structural activity associated with the matched rule.
-#'   }
+#' \item{explored_path}{
+#' Recursively expanded structural path.
+#' }
 #'
-#'   \item{matched}{
-#'   Logical indicating whether the structural path matched
-#'   a contextual rule.
-#'   }
+#' \item{matched_rule}{
+#' Path rule evaluated against the structural path.
+#' }
+#'
+#' \item{activity}{
+#' Rule outcome associated with the matched rule.
+#' }
+#'
+#' \item{matched}{
+#' Logical indicator showing whether the structural path is
+#' covered by the rule.
+#' }
 #' }
 #'
 #' @examples
 #' small_snapshot <- tibble::tibble(
-#'   full_path = c(
-#'     "D:/packages/fscontext/R/import/helpers.R",
-#'     "D:/packages/fscontext/tests/testthat/test-import.R",
-#'     "D:/packages/fscontext/data-raw/input.csv"
-#'   ),
-#'   rel_path = c(
-#'     "R/import/helpers.R",
-#'     "tests/testthat/test-import.R",
-#'     "data-raw/input.csv"
-#'   )
+#' full_path = c(
+#' "D:/packages/fscontext/R/import/helpers.R",
+#' "D:/packages/fscontext/tests/testthat/test-import.R",
+#' "D:/packages/fscontext/data-raw/input.csv"
+#' ),
+#' rel_path = c(
+#' "R/import/helpers.R",
+#' "tests/testthat/test-import.R",
+#' "data-raw/input.csv"
+#' )
 #' )
 #'
-#' small_test_context <- list(
-#'   contexts = list(
-#'     fscontext = list(
-#'       roots =
-#'         "D:/packages/fscontext",
-#'       rules = list(
-#'         path = c(
-#'           "R" =
-#'             "software_development",
-#'           "tests/testthat" =
-#'             "unit_testing",
-#'           "data-raw" =
-#'             "etl"
-#'         )
-#'       )
-#'     )
-#'   )
+#' small_context <- list(
+#' contexts = list(
+#' fscontext = list(
+#' roots = "D:/packages/fscontext",
+#' rules = list(
+#' path = c(
+#' "R" = "software_development",
+#' "tests/testthat" = "unit_testing",
+#' "data-raw" = "etl"
+#' )
+#' )
+#' )
+#' )
 #' )
 #'
-#' path_coverage <- coverage_rules_path(
-#'   snapshot = small_snapshot,
-#'   contexts = small_test_context
+#' coverage_rules_path(
+#' snapshot = small_snapshot,
+#' contexts = small_context
 #' )
 #'
-#' path_coverage |>
-#'   dplyr::filter(matched) |>
-#'   dplyr::count(activity)
+#' @seealso
+#' [construct_structural_paths()],
+#' [refine_by_rulebook()],
+#' [compile_rulebook()]
 #'
 #' @importFrom dplyr mutate filter cross_join
 #' @importFrom tidyr unnest
@@ -215,41 +248,38 @@ coverage_rules_path <- function(
 
   expanded_paths <- snapshot |>
     dplyr::mutate(
-      dir_path =
-        dirname(rel_path),
-      dir_path =
-        dplyr::if_else(
-          dir_path == ".",
-          NA_character_,
-          dir_path
-        ),
-      explored_path =
-        purrr::map(
-          dir_path,
-          function(path) {
-            if (is.na(path)) {
-              return(character(0))
-            }
-
-            parts <- strsplit(
-              path,
-              "/",
-              fixed = TRUE
-            )[[1]]
-
-            purrr::map_chr(
-              seq_along(parts),
-              function(i) {
-                paste(
-                  parts[
-                    seq_len(i)
-                  ],
-                  collapse = "/"
-                )
-              }
-            )
+      dir_path = dirname(rel_path),
+      dir_path = dplyr::if_else(
+        dir_path == ".",
+        NA_character_,
+        dir_path
+      ),
+      explored_path = purrr::map(
+        dir_path,
+        function(path) {
+          if (is.na(path)) {
+            return(character(0))
           }
-        )
+
+          parts <- strsplit(
+            path,
+            "/",
+            fixed = TRUE
+          )[[1]]
+
+          purrr::map_chr(
+            seq_along(parts),
+            function(i) {
+              paste(
+                parts[
+                  seq_len(i)
+                ],
+                collapse = "/"
+              )
+            }
+          )
+        }
+      )
     ) |>
     tidyr::unnest(
       explored_path
@@ -265,7 +295,6 @@ coverage_rules_path <- function(
     ) |>
     dplyr::filter(
       full_path == root |
-
         stringr::str_starts(
           full_path,
           paste0(root, "/")
@@ -273,9 +302,7 @@ coverage_rules_path <- function(
     ) |>
     dplyr::mutate(
       matched =
-
         explored_path == matched_rule |
-
           stringr::str_starts(
             explored_path,
             paste0(

@@ -87,42 +87,21 @@
 #' @examples
 #'
 #' files <- tibble::tibble(
-#'   filename = c(
-#'     "filmA.png",
-#'     "filmB.png",
-#'     "film.xlsx",
-#'     "fill.png"
-#'   ),
-#'   extension = c(
-#'     "png",
-#'     "png",
-#'     "xlsx",
-#'     "png"
-#'   )
+#'   filename = c("filmA.png", "filmB.png", "film.xlsx", "fill.png"),
+#'   extension = c("png", "png", "xlsx", "png")
 #' )
 #'
 #' out <- refine(
 #'   x = files,
 #'   target =
-#'     rep(
-#'       "unresolved",
-#'       nrow(files)
-#'     ),
-#'   rules =
-#'     tibble::tibble(
-#'       filename = "film",
-#'       extension = "png"
-#'     ),
-#'   by = c(
-#'     "filename",
-#'     "extension"
+#'     rep("unresolved", nrow(files)),
+#'   rules = tibble::tibble(
+#'     filename = "film",
+#'     extension = "png"
 #'   ),
-#'   match = c(
-#'     "starts_with",
-#'     "exact"
-#'   ),
-#'   assertion =
-#'     "film_visualisation"
+#'   by = c("filename", "extension"),
+#'   match = c("starts_with", "exact"),
+#'   assertion = "film_visualisation"
 #' )
 #'
 #' out
@@ -136,6 +115,8 @@
 #' @param match Matching strategy. Defaults to `"first"`.
 #'
 #' @seealso [refine_by_rulebook()], [compile_rulebook()]
+#'
+#' @return A character vector.
 #' @importFrom dplyr across all_of filter mutate row_number semi_join
 #' @importFrom purrr map_lgl
 #' @importFrom stringr fixed str_detect str_ends str_starts
@@ -150,8 +131,19 @@ refine <- function(
   comment = NULL,
   match = "exact"
 ) {
-  stopifnot(is.data.frame(x))
-  stopifnot(is.data.frame(rules))
+  if (!is.data.frame(x)) {
+    stop(
+      "x must inherit from data.frame",
+      call. = FALSE
+    )
+  }
+
+  if (!is.data.frame(rules)) {
+    stop(
+      "rules must inherit from data.frame",
+      call. = FALSE
+    )
+  }
 
   allowed_matches <- c(
     "exact",

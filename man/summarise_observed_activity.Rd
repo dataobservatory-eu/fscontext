@@ -2,7 +2,7 @@
 % Please edit documentation in R/summarise_observed_activity.R
 \name{summarise_observed_activity}
 \alias{summarise_observed_activity}
-\alias{summarize_activity}
+\alias{summarize_observed_activity}
 \title{Summarise observed activity from filesystem observations}
 \usage{
 summarise_observed_activity(
@@ -13,7 +13,7 @@ summarise_observed_activity(
   max_files = 20
 )
 
-summarize_activity(
+summarize_observed_activity(
   df,
   extensions = c("r", "bak"),
   path_col = "rel_path",
@@ -131,7 +131,4 @@ summarise_observed_activity(
   time_unit = "month"
 )
 
-}
-\seealso{
-\code{\link[=project_record_events]{project_record_events()}}, \code{\link[=path_prefix]{path_prefix()}}
 }

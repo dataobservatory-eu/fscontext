@@ -42,9 +42,8 @@ The canonical schema includes:
 Additional columns from \code{scan_storage()} are preserved.
 }
 \examples{
-data(test_snapshot)
-
-# normalise legacy snapshot
-snap <- normalise_snapshot_schema(test_snapshot)
+data("fscontextdemo_snapshot_02")
+snap <- normalise_snapshot_schema(fscontextdemo_snapshot_02)
 
 }
+\keyword{internal}

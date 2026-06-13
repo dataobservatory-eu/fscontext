@@ -1,60 +1,87 @@
 #' Derive contextual Record Set membership
 #'
-#' Derive contextual Record Set membership from an
-#' observational universe using explicit contextual
-#' boundary declarations.
+#' Derive contextual Record Set membership from filesystem
+#' observations using declared contextual boundaries.
 #'
-#' The function performs a curatorial aggregation step
-#' inspired by the "Records in Contexts" (RiC) conceptual
-#' model. It derives contextualized Record Set views over
-#' an observational universe by assigning observed records
-#' or instantiations to one or more meaningful analytical,
-#' operational, or curatorial contexts.
+#' The function creates a contextual membership layer over an
+#' observational universe by assigning observed filesystem
+#' units to one or more analytical, operational, or curatorial
+#' contexts.
 #'
-#' In this implementation, a `context` does not represent
-#' a formally exhaustive or deterministic archival subset.
-#' Instead, it represents a meaningful curatorial or
-#' analytical perspective over observed records.
+#' Contexts are defined explicitly through boundary roots.
+#' Membership is derived using recursive path-prefix matching.
 #'
-#' The same observed records may participate in multiple
-#' overlapping contexts simultaneously. This reflects the
-#' RiC move away from strict single-hierarchy archival
-#' description toward contextual, relational, and
-#' many-to-many representations of records.
+#' This approach is inspired by the Records in Contexts (RiC)
+#' conceptual model, where records and instantiations may
+#' participate in multiple overlapping contexts rather than
+#' belonging exclusively to a single hierarchical structure.
 #'
-#' Contextual membership is currently derived using
-#' recursive path-prefix inclusion heuristics based on
-#' declared contextual boundary roots.
+#' In fscontext, a context represents a meaningful analytical
+#' or curatorial perspective over observed filesystem units.
+#' It is not intended to represent an authoritative archival
+#' Record Set or a complete documentary aggregation.
 #'
-#' This operation does not modify the original
-#' observational universe. It creates a contextual
-#' membership layer suitable for analytical, archival,
-#' provenance, or reporting workflows.
+#' The resulting membership layer can support:
 #'
-#' @param x An observational universe, typically created
-#'   with `scan_storage()` or `observe_universe()`.
+#' - contextual reconstruction workflows;
+#' - Record Set derivation;
+#' - provenance analysis;
+#' - filesystem archaeology;
+#' - semantic stabilisation workflows.
 #'
-#' @param contextual_groups A data frame containing:
+#' The original observational universe remains unchanged.
+#'
+#' @param x A data frame containing observational filesystem
+#'   units, typically created with [observe_universe()] or
+#'   derived from [scan_storage()].
+#'
+#' @param contextual_groups A data frame containing declared
+#'   contextual boundaries.
+#'
+#'   Required columns:
+#'
 #'   \describe{
 #'     \item{context}{
-#'       Identifier of the curatorial or analytical context.
+#'       Identifier of the analytical or curatorial context.
 #'     }
 #'     \item{root}{
-#'       Observed boundary root used for contextual
-#'       membership derivation.
+#'       Filesystem boundary used to derive contextual
+#'       membership.
 #'     }
 #'   }
 #'
-#' @param observed_unit_var Name of the observational
-#'   boundary variable. Defaults to `"observed_unit"`.
+#' @param observed_unit_var Character scalar giving the name
+#'   of the observational unit variable.
+#'   Defaults to `"observed_unit"`.
 #'
-#' @param include_subfolders Logical. If `TRUE`
-#'   (default), recursively include descendants of
-#'   each contextual root.
+#' @param include_subfolders Logical.
+#'   Currently retained for future compatibility.
+#'   Contextual membership is presently derived using
+#'   recursive path-prefix matching.
 #'
 #' @return
-#' A tibble containing derived contextual Record Set
-#' membership.
+#' A tibble containing observational units assigned to one
+#' or more contexts.
+#'
+#' Additional variables include:
+#'
+#' \describe{
+#'   \item{context}{
+#'     Context identifier.
+#'   }
+#'   \item{context_root}{
+#'     Boundary root used for membership derivation.
+#'   }
+#'   \item{construction_method}{
+#'     Membership derivation method.
+#'   }
+#'   \item{derived_by}{
+#'     Function that created the membership assignment.
+#'   }
+#'   \item{derived_at}{
+#'     Timestamp when membership was derived.
+#'   }
+#' }
 #'
 #' @examples
 #' toy_universe <- tibble::tibble(
@@ -75,12 +102,6 @@
 #'   toy_universe,
 #'   toy_groups
 #' )
-#' @importFrom dplyr filter mutate
-#' @importFrom purrr pmap_dfr map_lgl
-#' @importFrom stringr str_replace_all str_replace
-#' @importFrom stringr str_starts
-#' @importFrom rlang .data
-#' @export
 derive_record_set <- function(
   x,
   contextual_groups,

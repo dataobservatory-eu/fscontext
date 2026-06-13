@@ -31,6 +31,8 @@ key-value representations suitable for:
 \item lightweight semantic harmonisation.
 }
 
+@details
+
 \code{as_value_key()} standardizes:
 \itemize{
 \item named vectors;

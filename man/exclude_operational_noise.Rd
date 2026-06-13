@@ -87,7 +87,6 @@ The function is designed to work together with:
 \itemize{
 \item \code{\link[=read_snapshot]{read_snapshot()}}
 \item \code{\link[=snapshot_to_reconstruction_context]{snapshot_to_reconstruction_context()}}
-\item \code{\link[=derive_reuse_metrics]{derive_reuse_metrics()}}
 }
 
 as part of layered provenance-aware reconstruction workflows.

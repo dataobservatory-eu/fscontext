@@ -19,7 +19,6 @@ Extracts a deterministic grouping key from \code{rel_path} by combining
 the first path components: usually collection/project, optionally module.
 }
 \details{
-#' @details
 This function implements a lightweight operational grouping heuristic
 based on shallow relative path structure.
 

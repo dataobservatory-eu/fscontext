@@ -39,15 +39,15 @@
 #'   )
 #' )
 #'
-#' semantic_stabilisation(x)
+#' validate_labelled_conversion(x)
 #'
 #' @aliases semantic_stabilization
 #'
 #' @importFrom labelled labelled
 #'
-#' @export
+#' @keywords internal
 
-semantic_stabilisation <- function(x) {
+validate_labelled_conversion <- function(x) {
   out <- tryCatch(
     {
       labelled::labelled(
@@ -77,6 +77,6 @@ semantic_stabilisation <- function(x) {
   out
 }
 
-#' @rdname semantic_stabilisation
+#' @rdname validate_labelled_conversion
 #' @export
-semantic_stabilization <- semantic_stabilisation
+semantic_stabilization <- validate_labelled_conversion

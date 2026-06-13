@@ -47,3 +47,4 @@ participate in a shared documentary or development environment.
 When multiple repository roots match, the deepest matching root
 is selected.
 }
+\keyword{internal}

@@ -1,103 +1,77 @@
-#' Classify operational file types from observed resources
+#' Classify operational file types
+#'
+#' Classify observed resources into operational categories that support 
+#' contextual reconstruction and Record Set derivation.
 #'
 #' @description
-#' Classifies observed digital resources into operational file types
-#' using workflow-oriented classification profiles.
+#' `classify_operational_file_type()` assigns observed files to
+#' broad operational categories such as code, data, documents,
+#' generated website files, and other artefacts.
 #'
-#' Unlike simple MIME-type or extension lookups, the function is
-#' designed for provenance-aware analytical and reconstruction
-#' workflows where file meaning depends on operational context.
+#' The current implementation provides an `"r_development"` profile
+#' derived from software development, reproducible research,
+#' and analytical repository workflows.
 #'
-#' The function supports lightweight operational classification for:
-#'
-#' - filesystem reconstruction;
-#' - digital preservation review;
-#' - repository analytics;
-#' - synchronized workspace inspection;
-#' - web archive inventories;
-#' - and Heritage Digital Twin workflows.
-#'
-#' The current implementation provides a small set of built-in
-#' profiles intended as operational starting points.
-#'
-#' These profiles are intentionally lightweight and extensible.
-#'
-#' Future versions may support:
-#'
-#' - user-defined profiles;
-#' - YAML-based vocabularies;
-#' - institutional review profiles;
-#' - preservation-oriented classification schemes;
-#' - workflow-specific semantic enrichment.
-#'
-#' The function is designed to work together with:
-#'
-#' - [read_snapshot()]
-#' - [snapshot_to_reconstruction_context()]
-#' - [create_record_set()]
-#'
-#' as part of layered provenance-aware reconstruction workflows.
-#'
-#' @param x A `data.frame` or tibble containing observed resources.
-#'
-#' @param extension Character scalar identifying the column containing
-#'   file extensions.
-#'
-#' Defaults to `"extension"`.
-#'
-#' @param profile Character scalar defining the operational
-#'   classification profile.
-#'
-#' Current built-in profiles include:
-#'
-#' - `"r_development"`
-#'
-#' The `"r_development"` profile is designed for:
-#'
-#' - R package development;
-#' - Quarto and R Markdown workflows;
-#' - reproducible research repositories;
-#' - analytical reporting pipelines.
-#'
-#' @return
-#' A character vector containing operational file type
-#' classifications.
-#'
-#' Typical output categories include:
-#'
-#' - `"code"`
-#' - `"markdown"`
-#' - `"workspace"`
-#' - `"data"`
-#' - `"artifact"`
-#' - `"document"`
-#' - `"website_generated"`
-#' - `"other"`
+#' The broader objective of operational classification is to
+#' introduce an intermediate semantic layer between filesystem
+#' observations and contextual reconstruction.
 #'
 #' @details
-#' The function intentionally performs lightweight operational
-#' classification only.
+#' In many digital collections, archives, and research
+#' environments, files participate in operational roles that
+#' cannot be inferred from directory structure alone. Examples
+#' include source materials, preservation masters, derivative
+#' artefacts, metadata records, rights documentation, analytical
+#' outputs, and publication-ready resources.
 #'
-#' It does not:
+#' Operational classification provides a lightweight mechanism
+#' for assigning observed resources to such workflow-oriented
+#' categories before higher-level contextualisation, Record Set
+#' construction, or semantic stabilisation takes place.
+#' 
+#' Classification is currently based on extension patterns and
+#' workflow-specific heuristics. The function does not inspect
+#' file contents, infer authoritative media types, determine
+#' archival significance, or perform provenance reasoning.
 #'
-#' - infer authoritative media types;
-#' - inspect file contents;
-#' - perform preservation risk assessment;
-#' - infer documentary semantics;
-#' - replace curatorial review.
+#' The resulting classifications should therefore be interpreted
+#' as operational hypotheses that support exploration,
+#' reconstruction, and contextualisation workflows rather than
+#' authoritative documentary assertions.
 #'
-#' Classification is based primarily on operational workflow
-#' heuristics derived from file extensions and workflow profiles.
+#' Future classification profiles may support archival,
+#' audiovisual, heritage, research-data, and Records in Contexts
+#' workflows, where operational roles provide an important bridge
+#' between low-level filesystem observations and higher-level
+#' documentary interpretation.
+#'
+#' @param x A `data.frame` or tibble containing observed files.
+#'
+#' @param extension Character scalar identifying the column that
+#'   contains file extensions. Defaults to `"extension"`.
+#'
+#' @param profile Character scalar defining the classification
+#'   profile. Currently only `"r_development"` is implemented.
+#'
+#' @return
+#' A character vector of operational file type labels.
+#'
+#' Possible values for the `"r_development"` profile include:
+#'
+#' \describe{
+#'   \item{code}{R source files.}
+#'   \item{markdown}{Markdown, R Markdown, or Quarto files.}
+#'   \item{workspace}{R workspace or serialized R objects.}
+#'   \item{data}{Tabular spreadsheet or delimited data files.}
+#'   \item{artifact}{Image artefacts.}
+#'   \item{document}{PDF or word-processing documents.}
+#'   \item{website_generated}{Generated website assets.}
+#'   \item{other}{Files not matched by the selected profile.}
+#' }
 #'
 #' @examples
 #' toy_files <- tibble::tibble(
-#'   extension = c(
-#'     "R",
-#'     "qmd",
-#'     "csv",
-#'     "png",
-#'     "woff2"
-#'   )
+#'   extension = c("R", "qmd", "csv", "png", "woff2")
 #' )
 #'
 #' classify_operational_file_type(

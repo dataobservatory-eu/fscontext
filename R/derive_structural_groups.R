@@ -66,9 +66,25 @@
 #' Future versions of the package may replace or extend this logic with
 #' more explicit provenance-aware Record Set construction workflows
 #' (for example via `create_record_set()`).
+
+#' @examples
+#' data("fscontextdemo_snapshot_02")
+#'
+#' example_paths <- c(
+#'   "_packages/fscontextdemo/R/derive_fsdemo_country_data.R",
+#'   "_packages/fscontextdemo/tests/testthat/test-country-data.R",
+#'   "_packages/fscontextdemo/data-raw/create_fsdemo_country_data.R",
+#'   "_packages/fscontextdemo/docs/index.html"
+#' )
+#'
+#' data.frame(
+#'   rel_path = example_paths,
+#'   derive_structural_groups(example_paths)
+#' )
 #'
 #' @importFrom dplyr bind_rows
 #' @export
+
 derive_structural_groups <- function(rel_path) {
   parts <- strsplit(rel_path, "/", fixed = TRUE)
 

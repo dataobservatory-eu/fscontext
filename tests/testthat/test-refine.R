@@ -1,3 +1,29 @@
+test_that("refine() validates inputs", {
+  expect_error(
+    out <- refine(
+      x = list(a = 4),
+      target = rep("unresolved", 4),
+      rules = tibble::tibble(explored_path = "docs"),
+      by = "explored_path",
+      assertion = "rendered_reporting",
+      match = "starts_with"
+    ),
+    regexp = "must inherit from data.frame"
+  )
+
+  expect_error(
+    out <- refine(
+      x = tibble::tibble(explored_path = "docs"),
+      target = tibble::tibble(explored_path = "docs"),
+      rules = list(a = 4),
+      by = "explored_path",
+      assertion = "rendered_reporting",
+      match = "starts_with"
+    ),
+    regexp = "must inherit from data.frame"
+  )
+})
+
 test_that("refine() supports exact matching", {
   files <- tibble::tibble(
     extension = c("r", "png", "csv")

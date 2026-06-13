@@ -9,6 +9,8 @@
 #' - semantic stabilisation;
 #' - lightweight semantic harmonisation.
 #'
+#'  @details
+#'
 #' `as_value_key()` standardizes:
 #'
 #' - named vectors;

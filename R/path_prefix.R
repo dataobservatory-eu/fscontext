@@ -30,7 +30,7 @@
 #' path_prefix(c("a/b/c.txt", "x/y"), depth = 1)
 #' # c("a", "x")
 #'
-#' @export
+#' @keywords internal
 path_prefix <- function(path, depth = 2) {
   stopifnot(is.character(path))
 

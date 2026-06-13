@@ -21,6 +21,9 @@ refine(x, target = NULL, rules, by, assertion, comment = NULL, match = "exact")
 
 \item{match}{Matching strategy. Defaults to \code{"first"}.}
 }
+\value{
+A character vector.
+}
 \description{
 \code{refine()} incrementally stabilizes semantic assertions through
 deterministic contextual matching rules while preserving row
@@ -117,42 +120,21 @@ Multiple refinement stages may later mature into:
 \examples{
 
 files <- tibble::tibble(
-  filename = c(
-    "filmA.png",
-    "filmB.png",
-    "film.xlsx",
-    "fill.png"
-  ),
-  extension = c(
-    "png",
-    "png",
-    "xlsx",
-    "png"
-  )
+  filename = c("filmA.png", "filmB.png", "film.xlsx", "fill.png"),
+  extension = c("png", "png", "xlsx", "png")
 )
 
 out <- refine(
   x = files,
   target =
-    rep(
-      "unresolved",
-      nrow(files)
-    ),
-  rules =
-    tibble::tibble(
-      filename = "film",
-      extension = "png"
-    ),
-  by = c(
-    "filename",
-    "extension"
+    rep("unresolved", nrow(files)),
+  rules = tibble::tibble(
+    filename = "film",
+    extension = "png"
   ),
-  match = c(
-    "starts_with",
-    "exact"
-  ),
-  assertion =
-    "film_visualisation"
+  by = c("filename", "extension"),
+  match = c("starts_with", "exact"),
+  assertion = "film_visualisation"
 )
 
 out

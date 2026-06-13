@@ -37,7 +37,7 @@
 #' get_git_remote("/path/to/repo")
 #' }
 #'
-#' @export
+#' @keywords internal
 
 get_git_remote <- function(repo_root) {
   stopifnot(is.character(repo_root), length(repo_root) == 1)

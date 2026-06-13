@@ -12,7 +12,7 @@
 #' get_git_branch("/path/to/repo")
 #' }
 #'
-#' @export
+#' @keywords internal
 get_git_branch <- function(repo_root) {
   stopifnot(is.character(repo_root), length(repo_root) == 1)
 

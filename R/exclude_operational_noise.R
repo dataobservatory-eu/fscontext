@@ -48,7 +48,6 @@
 #'
 #' - [read_snapshot()]
 #' - [snapshot_to_reconstruction_context()]
-#' - [derive_reuse_metrics()]
 #'
 #' as part of layered provenance-aware reconstruction workflows.
 #'

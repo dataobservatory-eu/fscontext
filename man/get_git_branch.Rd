@@ -22,3 +22,4 @@ get_git_branch("/path/to/repo")
 }
 
 }
+\keyword{internal}

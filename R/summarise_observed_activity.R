@@ -106,8 +106,6 @@
 #'   time_unit = "month"
 #' )
 #'
-#' @seealso [project_record_events()], [path_prefix()]
-#'
 #' @importFrom dplyr filter mutate group_by summarise arrange n desc n_distinct
 #' @importFrom rlang .data
 #' @importFrom utils head
@@ -168,4 +166,4 @@ summarise_observed_activity <- function(
 
 #' @rdname summarise_observed_activity
 #' @export
-summarize_activity <- summarise_observed_activity
+summarize_observed_activity <- summarise_observed_activity

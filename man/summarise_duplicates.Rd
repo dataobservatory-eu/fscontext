@@ -135,5 +135,5 @@ summarise_duplicates(combined_snapshot)
 
 }
 \seealso{
-\code{\link[=normalise_snapshot_schema]{normalise_snapshot_schema()}}, \code{\link[=quick_signature]{quick_signature()}}
+\code{\link[=quick_signature]{quick_signature()}}
 }

@@ -1,69 +1,49 @@
-#' Invert contextual grouping mappings into relational form
+#' Invert contextual grouping mappings
 #'
-#' Converts grouped contextual mappings into a long-form relational
-#' representation.
+#' Convert a named list of contextual groupings into a long-form
+#' relational table.
 #'
-#' `invert_contextual_grouping()` is useful for transforming
-#' lightweight contextual grouping structures into tidy relational
-#' tables suitable for:
+#' @description
+#' `invert_contextual_grouping()` transforms lightweight contextual
+#' grouping definitions into a two-column table of group membership.
 #'
-#' - joins;
-#' - contextual reconstruction;
-#' - Record Set projections;
-#' - provenance-aware grouping workflows;
-#' - semantic enrichment pipelines;
-#' - lightweight graph construction.
+#' This is useful when contextual roots, resources, or candidate
+#' Record Set members are first declared as a named list but later
+#' need to be used in joins, rulebooks, or reconstruction workflows.
 #'
-#' The function is intentionally operational and lightweight.
-#'
-#' It does not:
-#'
-#' - enforce uniqueness;
-#' - validate ontology semantics;
-#' - construct graph objects;
-#' - distinguish authoritative from analytical groupings;
-#' - or infer hierarchical relations.
-#'
-#' @param x A named list containing contextual grouping mappings.
-#'
-#' Each list name represents a contextual grouping and each list
-#' element contains one or more associated resources.
+#' @param x A named list.
+#'   Each list name identifies a contextual group, and each list
+#'   element contains one or more members of that group.
 #'
 #' @return
 #' A tibble with two columns:
 #'
 #' \describe{
-#'   \item{member}{
-#'   Contextually grouped resource.
-#'   }
 #'   \item{group}{
 #'   Contextual grouping identifier.
+#'   }
+#'   \item{member}{
+#'   Member associated with the contextual group.
 #'   }
 #' }
 #'
 #' @details
-#' The function is conceptually related to [as_value_key()] but
-#' produces a relational projection rather than a canonical named
-#' vector representation.
+#' The function performs a lightweight structural transformation.
 #'
-#' This is particularly useful for one-to-many contextual mappings,
-#' where multiple resources belong to the same contextual grouping.
+#' It does not validate ontology semantics, enforce uniqueness,
+#' construct graph objects, or infer hierarchical relations.
 #'
-#' The resulting relational representation may later support:
-#'
-#' - contextual Record Set construction;
-#' - semantic overlay workflows;
-#' - lightweight provenance analysis;
-#' - many-to-many reconstruction logic.
+#' The result is suitable for relational operations such as joins,
+#' filtering, contextual reconstruction, and candidate Record Set
+#' membership workflows.
 #'
 #' @examples
-#'
 #' record_sets <- list(
 #'   conceptualisation = c(
-#'     "D:/_package/alpha",
+#'     "D:/_packages/alpha",
 #'     "D:/_markdown/alpha-methodology"
 #'   ),
-#'   betaR = c(
+#'   beta = c(
 #'     "D:/_packages/beta",
 #'     "D:/_packages/prebeta"
 #'   )
@@ -71,10 +51,7 @@
 #'
 #' invert_contextual_grouping(record_sets)
 #'
-#' # canonical roundtrip
-#' as_value_key(
-#'   invert_contextual_grouping(record_sets)
-#' )
+#' @seealso [as_value_key()], [invert_value_key()]
 #'
 #' @export
 invert_contextual_grouping <- function(x) {

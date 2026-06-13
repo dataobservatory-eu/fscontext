@@ -35,11 +35,7 @@
 #'   )
 #' )
 #'
-#' @export
+#' @keywords internal
 strip_storage_prefix <- function(x) {
-  sub(
-    "^[^:]+::",
-    "",
-    x
-  )
+  sub("^[^:]+::", "", x)
 }

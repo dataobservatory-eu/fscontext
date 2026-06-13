@@ -35,7 +35,7 @@
 #' @return Character. Matching repository root, or `NA_character_`
 #'   if no repository context is detected.
 #'
-#' @export
+#' @keywords internal
 
 find_repo_root <- function(path, repo_roots) {
   stopifnot(is.character(path), length(path) == 1)

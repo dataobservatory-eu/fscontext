@@ -2,7 +2,7 @@
 % Please edit documentation in R/classify_operational_file_type.R
 \name{classify_operational_file_type}
 \alias{classify_operational_file_type}
-\title{Classify operational file types from observed resources}
+\title{Classify operational file types}
 \usage{
 classify_operational_file_type(
   x,
@@ -11,111 +11,78 @@ classify_operational_file_type(
 )
 }
 \arguments{
-\item{x}{A \code{data.frame} or tibble containing observed resources.}
+\item{x}{A \code{data.frame} or tibble containing observed files.}
 
-\item{extension}{Character scalar identifying the column containing
-file extensions.
+\item{extension}{Character scalar identifying the column that
+contains file extensions. Defaults to \code{"extension"}.}
 
-Defaults to \code{"extension"}.}
-
-\item{profile}{Character scalar defining the operational
-classification profile.
-
-Current built-in profiles include:
-\itemize{
-\item \code{"r_development"}
-}
-
-The \code{"r_development"} profile is designed for:
-\itemize{
-\item R package development;
-\item Quarto and R Markdown workflows;
-\item reproducible research repositories;
-\item analytical reporting pipelines.
-}}
+\item{profile}{Character scalar defining the classification
+profile. Currently only \code{"r_development"} is implemented.}
 }
 \value{
-A character vector containing operational file type
-classifications.
+A character vector of operational file type labels.
 
-Typical output categories include:
-\itemize{
-\item \code{"code"}
-\item \code{"markdown"}
-\item \code{"workspace"}
-\item \code{"data"}
-\item \code{"artifact"}
-\item \code{"document"}
-\item \code{"website_generated"}
-\item \code{"other"}
+Possible values for the \code{"r_development"} profile include:
+
+\describe{
+\item{code}{R source files.}
+\item{markdown}{Markdown, R Markdown, or Quarto files.}
+\item{workspace}{R workspace or serialized R objects.}
+\item{data}{Tabular spreadsheet or delimited data files.}
+\item{artifact}{Image artefacts.}
+\item{document}{PDF or word-processing documents.}
+\item{website_generated}{Generated website assets.}
+\item{other}{Files not matched by the selected profile.}
 }
 }
 \description{
-Classifies observed digital resources into operational file types
-using workflow-oriented classification profiles.
+\code{classify_operational_file_type()} assigns observed files to
+broad operational categories such as code, data, documents,
+generated website files, and other artefacts.
 
-Unlike simple MIME-type or extension lookups, the function is
-designed for provenance-aware analytical and reconstruction
-workflows where file meaning depends on operational context.
+The current implementation provides an \code{"r_development"} profile
+derived from software development, reproducible research,
+and analytical repository workflows.
 
-The function supports lightweight operational classification for:
-\itemize{
-\item filesystem reconstruction;
-\item digital preservation review;
-\item repository analytics;
-\item synchronized workspace inspection;
-\item web archive inventories;
-\item and Heritage Digital Twin workflows.
-}
-
-The current implementation provides a small set of built-in
-profiles intended as operational starting points.
-
-These profiles are intentionally lightweight and extensible.
-
-Future versions may support:
-\itemize{
-\item user-defined profiles;
-\item YAML-based vocabularies;
-\item institutional review profiles;
-\item preservation-oriented classification schemes;
-\item workflow-specific semantic enrichment.
-}
-
-The function is designed to work together with:
-\itemize{
-\item \code{\link[=read_snapshot]{read_snapshot()}}
-\item \code{\link[=snapshot_to_reconstruction_context]{snapshot_to_reconstruction_context()}}
-\item \code{\link[=create_record_set]{create_record_set()}}
-}
-
-as part of layered provenance-aware reconstruction workflows.
+The broader objective of operational classification is to
+introduce an intermediate semantic layer between filesystem
+observations and contextual reconstruction.
 }
 \details{
-The function intentionally performs lightweight operational
-classification only.
+Classify observed resources into operational categories that support
+contextual reconstruction and Record Set derivation.
 
-It does not:
-\itemize{
-\item infer authoritative media types;
-\item inspect file contents;
-\item perform preservation risk assessment;
-\item infer documentary semantics;
-\item replace curatorial review.
-}
+In many digital collections, archives, and research
+environments, files participate in operational roles that
+cannot be inferred from directory structure alone. Examples
+include source materials, preservation masters, derivative
+artefacts, metadata records, rights documentation, analytical
+outputs, and publication-ready resources.
 
-Classification is based primarily on operational workflow
-heuristics derived from file extensions and workflow profiles.
+Operational classification provides a lightweight mechanism
+for assigning observed resources to such workflow-oriented
+categories before higher-level contextualisation, Record Set
+construction, or semantic stabilisation takes place.
+
+Classification is currently based on extension patterns and
+workflow-specific heuristics. The function does not inspect
+file contents, infer authoritative media types, determine
+archival significance, or perform provenance reasoning.
+
+The resulting classifications should therefore be interpreted
+as operational hypotheses that support exploration,
+reconstruction, and contextualisation workflows rather than
+authoritative documentary assertions.
+
+Future classification profiles may support archival,
+audiovisual, heritage, research-data, and Records in Contexts
+workflows, where operational roles provide an important bridge
+between low-level filesystem observations and higher-level
+documentary interpretation.
 }
 \examples{
 toy_files <- tibble::tibble(
-  extension = c(
-    "R",
-    "qmd",
-    "csv",
-    "png",
-    "woff2"
-  )
+  extension = c("R", "qmd", "csv", "png", "woff2")
 )
 
 classify_operational_file_type(

@@ -1,9 +1,10 @@
 Package: fscontext
 Title: Filesystem Contextualisation and Record Set Reconstruction
-Version: 0.2.0
+Version: 0.1.9
 Language: en-GB
 Authors@R: 
-    person(given = "Daniel", family = "Antal", 
+    person(given = "Daniel", 
+           family = "Antal", 
            email = "daniel.antal@dataobservatory.eu", 
            role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7513-6760"))

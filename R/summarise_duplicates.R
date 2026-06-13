@@ -116,7 +116,7 @@
 #'
 #' summarise_duplicates(combined_snapshot)
 #'
-#' @seealso [normalise_snapshot_schema()], [quick_signature()]
+#' @seealso [quick_signature()]
 #'
 #' @importFrom dplyr group_by summarise n n_distinct
 #'

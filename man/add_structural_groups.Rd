@@ -64,3 +64,4 @@ with more explicit provenance-aware Record Set construction workflows
 \seealso{
 \code{\link[=derive_structural_groups]{derive_structural_groups()}}
 }
+\keyword{internal}

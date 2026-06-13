@@ -2,117 +2,149 @@
 % Please edit documentation in R/coverage_rules_path.R
 \name{coverage_rules_path}
 \alias{coverage_rules_path}
-\title{Evaluate structural path-rule coverage}
+\title{Evaluate contextual rule coverage for structural paths}
 \usage{
 coverage_rules_path(snapshot, contexts)
 }
 \arguments{
-\item{snapshot}{A filesystem snapshot tibble containing
-at least:
+\item{snapshot}{A filesystem snapshot data.frame
+containing at least:
 \itemize{
-\item \code{full_path}
-\item \code{rel_path}
+\item full_path;
+\item rel_path.
 }}
 
-\item{contexts}{A contextual reconstruction object
-containing path rules.}
+\item{contexts}{A contextual reconstruction object containing
+contextual roots and path rules.}
 }
 \value{
-A tibble describing recursive structural path-rule
-coverage.
+A tibble describing structural path-rule coverage.
 
 The returned tibble includes:
 
 \describe{
+
+\item{context}{
+Contextual environment associated with the matched rule.
+}
+
+\item{root}{
+Contextual root used for evaluation.
+}
 
 \item{explored_path}{
 Recursively expanded structural path.
 }
 
 \item{matched_rule}{
-Contextual rule matched against the structural path.
+Path rule evaluated against the structural path.
 }
 
 \item{activity}{
-Structural activity associated with the matched rule.
+Rule outcome associated with the matched rule.
 }
 
 \item{matched}{
-Logical indicating whether the structural path matched
-a contextual rule.
+Logical indicator showing whether the structural path is
+covered by the rule.
 }
 }
 }
 \description{
-Evaluates recursive structural path coverage inside
-contextual roots.
+coverage_rules_path() expands observed filesystem paths into
+recursive structural components and evaluates whether those
+components are covered by contextual path rules.
+
+The function provides a diagnostic view of contextual coverage.
+It identifies which observed filesystem structures are recognised
+by a rulebook and which remain unmatched.
+
+This makes it useful for:
+\itemize{
+\item contextual reconstruction;
+\item semantic stabilisation workflows;
+\item rulebook development and refinement;
+\item coverage diagnostics;
+\item filesystem archaeology;
+\item exploratory analysis of operational structures.
+}
 }
 \details{
-The function expands relative filesystem paths into
-recursive structural components and evaluates whether
-they match contextual path rules.
-
-Typical use cases include:
-\itemize{
-\item identifying software development structures;
-\item identifying testing workflows;
-\item identifying ETL/data engineering workflows;
-\item detecting unmatched or noisy filesystem structures;
-\item evaluating contextual classification coverage.
-}
+Evaluates how filesystem observations align with a contextual
+path-rule model.
 
 Structural matching is recursive.
 
 For example:
 \itemize{
-\item \code{"R/import/helpers.R"} matches \code{"R"}
-\item \code{"tests/testthat/test-import.R"} matches
-\code{"tests/testthat"}
+\item "R/import/helpers.R" expands to:
+\item "R"
+\item "R/import"
+\item "tests/testthat/test-import.R" expands to:
+\item "tests"
+\item "tests/testthat"
 }
 
-The function operates on snapshot-level observations,
-not observational aggregation units.
+Expanded structural paths are evaluated against contextual
+path rules associated with the matching contextual root.
+
+The function operates on filesystem observations and explicit
+contextual rules. It does not infer:
+\itemize{
+\item Activities;
+\item Events;
+\item Record Sets;
+\item provenance relationships.
+}
+
+Instead, it evaluates whether observed filesystem structures
+are covered by an existing contextual model.
+
+Unmatched structures may indicate:
+\itemize{
+\item missing contextual rules;
+\item evolving workflows;
+\item operational noise;
+\item areas requiring further semantic stabilisation.
+}
 }
 \examples{
 small_snapshot <- tibble::tibble(
-  full_path = c(
-    "D:/packages/fscontext/R/import/helpers.R",
-    "D:/packages/fscontext/tests/testthat/test-import.R",
-    "D:/packages/fscontext/data-raw/input.csv"
-  ),
-  rel_path = c(
-    "R/import/helpers.R",
-    "tests/testthat/test-import.R",
-    "data-raw/input.csv"
-  )
+full_path = c(
+"D:/packages/fscontext/R/import/helpers.R",
+"D:/packages/fscontext/tests/testthat/test-import.R",
+"D:/packages/fscontext/data-raw/input.csv"
+),
+rel_path = c(
+"R/import/helpers.R",
+"tests/testthat/test-import.R",
+"data-raw/input.csv"
+)
 )
 
-small_test_context <- list(
-  contexts = list(
-    fscontext = list(
-      roots =
-        "D:/packages/fscontext",
-      rules = list(
-        path = c(
-          "R" =
-            "software_development",
-          "tests/testthat" =
-            "unit_testing",
-          "data-raw" =
-            "etl"
-        )
-      )
-    )
-  )
+small_context <- list(
+contexts = list(
+fscontext = list(
+roots = "D:/packages/fscontext",
+rules = list(
+path = c(
+"R" = "software_development",
+"tests/testthat" = "unit_testing",
+"data-raw" = "etl"
+)
+)
+)
+)
 )
 
-path_coverage <- coverage_rules_path(
-  snapshot = small_snapshot,
-  contexts = small_test_context
+coverage_rules_path(
+snapshot = small_snapshot,
+contexts = small_context
 )
 
-path_coverage |>
-  dplyr::filter(matched) |>
-  dplyr::count(activity)
-
+}
+\seealso{
+\code{\link[=construct_structural_paths]{construct_structural_paths()}},
+\code{\link[=refine_by_rulebook]{refine_by_rulebook()}},
+\code{\link[=compile_rulebook]{compile_rulebook()}}
 }
