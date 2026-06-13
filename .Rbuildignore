@@ -17,3 +17,4 @@
 ^reports$
 ^codemeta\.json$
 ^review-reporting.txt$
+^\.github$

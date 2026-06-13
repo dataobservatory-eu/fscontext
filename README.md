@@ -1,10 +1,28 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# fscontext
+# The fscontext R Package <a href='https://fscontext.dataobservatory.eu/'><img src="man/figures/logo.png" align="right"/></a>
 
-`fscontext` provides a provenance-aware contextual reconstruction framework for file systems and related digital resource collections.
+<!-- badges: start -->
 
-The package creates reproducible observational snapshots of files, repository structures, and related operational resources, and supports their contextual abstraction, semantic stabilization, and reconstruction-oriented analysis.
+[![rhub](https://github.com/dataobservatory-eu/fscontext/actions/workflows/rhub.yaml/badge.svg)](https://github.com/dataobservatory-eu/dataset/actions/workflows/rhub.yaml)
+[![lifecycle](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Project Status:
+WIP](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![devel-version](https://img.shields.io/badge/devel%20version-0.2.0-blue.svg)](https://github.com/dataobservatory-eu/fscontext)
+[![dataobservatory](https://img.shields.io/badge/ecosystem-dataobservatory.eu-3EA135.svg)](https://dataobservatory.eu/)
+[![Coveralls test
+coverage](https://coveralls.io/repos/github/dataobservatory-eu/dataset/badge.svg)](https://coveralls.io/r/dataobservatory-eu/dataset?branch=master)
+[![R-CMD-check](https://github.com/dataobservatory-eu/fscontext/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dataobservatory-eu/fscontext/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+`fscontext` provides a provenance-aware contextual reconstruction
+framework for file systems and related digital resource collections.
+
+The package creates reproducible observational snapshots of files,
+repository structures, and related operational resources, and supports
+their contextual abstraction, semantic stabilization, and
+reconstruction-oriented analysis.
 
 Typical use cases include:
 
@@ -28,13 +46,19 @@ The package separates three complementary analytical layers:
 | contextual | contextual grouping of related resources into lightweight Record Sets, projects, collections, or reconstruction workspaces |
 | analytical | derived interpretations, temporal comparisons, summaries, activity metrics, semantic stabilization, and reconstruction-oriented analysis |
 
-The framework intentionally separates observational evidence, contextual abstraction, semantic interpretation, and analytical reconstruction. This layered design supports reproducible workflows while preserving the distinction between:
+The framework intentionally separates observational evidence, contextual
+abstraction, semantic interpretation, and analytical reconstruction.
+This layered design supports reproducible workflows while preserving the
+distinction between:
 
 - observed digital evidence,
 - contextual organisation of related resources,
 - and later analytical or professional archival interpretation.
 
-In operational archival terms, observed files and digital objects may later support the construction of contextual `Record Sets`, while still remaining separate observed `Instantiations` of evolving digital resources.
+In operational archival terms, observed files and digital objects may
+later support the construction of contextual `Record Sets`, while still
+remaining separate observed `Instantiations` of evolving digital
+resources.
 
 ## Installation
 
@@ -79,10 +103,14 @@ The package does not:
 
 ## Notes
 
-- Large scans may require substantial time on slower or networked storage systems.
-- Some files may be inaccessible due to permissions or synchronization state.
-- Observational snapshots are intended for reproducible local or institutional analysis workflows.
-- Contextual and analytical layers may evolve independently from the original observational corpus.
+- Large scans may require substantial time on slower or networked
+  storage systems.
+- Some files may be inaccessible due to permissions or synchronization
+  state.
+- Observational snapshots are intended for reproducible local or
+  institutional analysis workflows.
+- Contextual and analytical layers may evolve independently from the
+  original observational corpus.
 
 <!-- -->
 
