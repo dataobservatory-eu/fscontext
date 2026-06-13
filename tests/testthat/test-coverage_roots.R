@@ -2,7 +2,7 @@ test_that(
   "coverage_roots returns expected columns",
   {
     data("fscontextdemo_snapshot_01")
-    tmp <- file.path(tempdir(),"coverage_roots_structure_test")
+    tmp <- file.path(tempdir(), "coverage_roots_structure_test")
     dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
 
     saveRDS(
@@ -43,7 +43,7 @@ test_that(
   "coverage_roots includes selected roots",
   {
     data("fscontextdemo_snapshot_01")
-    tmp <- file.path(tempdir(),"coverage_roots_inclusion_test")
+    tmp <- file.path(tempdir(), "coverage_roots_inclusion_test")
     dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
 
     saveRDS(
@@ -91,13 +91,14 @@ test_that(
       ),
       stringsAsFactors = FALSE
     )
-    
+
     res <- coverage_roots(provenance = provenance, roots = "D:/beta")
-  
+
     expect_equal(sum(res$included), 1)
-    
+
     expect_equal(sum(!res$included), 2)
-})
+  }
+)
 
 test_that(
   "coverage_roots preserves aggregation semantics",
@@ -277,4 +278,3 @@ test_that(
     )
   }
 )
-

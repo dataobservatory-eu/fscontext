@@ -1,3 +1,6 @@
+#' @importFrom dplyr filter slice_head
+#' @keywords internal
+#' @noRd
 commit_select <- function(
   commit_index,
   max_commits = 100,
