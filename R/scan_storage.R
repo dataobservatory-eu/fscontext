@@ -73,6 +73,24 @@
 #' historical provenance.
 #'
 #' @seealso [snapshot_storage()]
+#' 
+#' @examples
+#' root <- system.file(
+#'   "testdata/minimal_R_folder",
+#'   package = "fscontext"
+#' )
+#'
+#' snapshot <- scan_storage(root)
+#'
+#' subset(
+#'   snapshot,
+#'   rel_path %in% c(
+#'     "DESCRIPTION",
+#'     "NAMESPACE",
+#'     "R/hello_world.R",
+#'     "vignettes/demo.Rmd"
+#'   )
+#' )[, c("rel_path", "extension")]
 #'
 #' @importFrom utils flush.console
 #'

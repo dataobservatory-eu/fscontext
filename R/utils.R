@@ -229,6 +229,7 @@ aggregation_depth <- function(x) {
 #' @return Character vector of normalized Git repository identifiers.
 #'
 #' @keywords internal
+#' @noRd
 normalize_git_remote <- function(x) {
   x <- sub(
     "^git@github\\.com:",

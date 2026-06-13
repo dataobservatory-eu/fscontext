@@ -46,6 +46,7 @@
 #' @importFrom labelled labelled
 #'
 #' @keywords internal
+#' @noRd
 
 validate_labelled_conversion <- function(x) {
   out <- tryCatch(

@@ -36,6 +36,7 @@
 #' )
 #'
 #' @keywords internal
+#' @noRd
 strip_storage_prefix <- function(x) {
   sub("^[^:]+::", "", x)
 }
