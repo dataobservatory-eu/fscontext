@@ -99,36 +99,36 @@
 #'
 #' @examples
 #' small_snapshot <- tibble::tibble(
-#' full_path = c(
-#' "D:/packages/fscontext/R/import/helpers.R",
-#' "D:/packages/fscontext/tests/testthat/test-import.R",
-#' "D:/packages/fscontext/data-raw/input.csv"
-#' ),
-#' rel_path = c(
-#' "R/import/helpers.R",
-#' "tests/testthat/test-import.R",
-#' "data-raw/input.csv"
-#' )
+#'   full_path = c(
+#'     "D:/packages/fscontext/R/import/helpers.R",
+#'     "D:/packages/fscontext/tests/testthat/test-import.R",
+#'     "D:/packages/fscontext/data-raw/input.csv"
+#'   ),
+#'   rel_path = c(
+#'     "R/import/helpers.R",
+#'     "tests/testthat/test-import.R",
+#'     "data-raw/input.csv"
+#'   )
 #' )
 #'
 #' small_context <- list(
-#' contexts = list(
-#' fscontext = list(
-#' roots = "D:/packages/fscontext",
-#' rules = list(
-#' path = c(
-#' "R" = "software_development",
-#' "tests/testthat" = "unit_testing",
-#' "data-raw" = "etl"
-#' )
-#' )
-#' )
-#' )
+#'   contexts = list(
+#'     fscontext = list(
+#'       roots = "D:/packages/fscontext",
+#'       rules = list(
+#'         path = c(
+#'           "R" = "software_development",
+#'           "tests/testthat" = "unit_testing",
+#'           "data-raw" = "etl"
+#'         )
+#'       )
+#'     )
+#'   )
 #' )
 #'
 #' coverage_rules_path(
-#' snapshot = small_snapshot,
-#' contexts = small_context
+#'   snapshot = small_snapshot,
+#'   contexts = small_context
 #' )
 #'
 #' @seealso

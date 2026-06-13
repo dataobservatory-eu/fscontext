@@ -73,7 +73,7 @@
 #' historical provenance.
 #'
 #' @seealso [snapshot_storage()]
-#' 
+#'
 #' @examples
 #' root <- system.file(
 #'   "testdata/minimal_R_folder",

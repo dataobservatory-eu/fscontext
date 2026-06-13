@@ -112,11 +112,12 @@
 #'
 #' @export
 summarise_observed_activity <- function(
-    df,
-    extensions = c("r", "bak"),
-    path_col = "rel_path",
-    time_unit = c("week", "month", "day", "year"),
-    max_files = 20) {
+  df,
+  extensions = c("r", "bak"),
+  path_col = "rel_path",
+  time_unit = c("week", "month", "day", "year"),
+  max_files = 20
+) {
   df <- normalise_snapshot_schema(df)
 
   time_unit <- match.arg(time_unit)

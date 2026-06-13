@@ -54,22 +54,22 @@
 #'
 #' @examples
 #' toy_universe <- tibble::tibble(
-#' observed_unit = c(
-#' "D:/projects/eviota",
-#' "D:/projects/eviota/tests",
-#' "D:/other"
-#' ),
-#' inst_id = c("a", "b", "c")
+#'   observed_unit = c(
+#'     "D:/projects/eviota",
+#'     "D:/projects/eviota/tests",
+#'     "D:/other"
+#'   ),
+#'   inst_id = c("a", "b", "c")
 #' )
 #'
 #' contextual_groups <- tibble::tibble(
-#' context = "eviota",
-#' root = "D:/projects/eviota"
+#'   context = "eviota",
+#'   root = "D:/projects/eviota"
 #' )
 #'
 #' derive_record_set(
-#' toy_universe,
-#' contextual_groups
+#'   toy_universe,
+#'   contextual_groups
 #' )
 #'
 #' @export
