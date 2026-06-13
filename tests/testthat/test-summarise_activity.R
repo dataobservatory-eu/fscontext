@@ -143,7 +143,7 @@ test_that("summarise_activity works on canonical snapshot", {
 test_that("summarise_activity works on canonical snapshot", {
   data(fscontextdemo_snapshot_02, package = "fscontext")
 
-  res <- summarise_activity(test_snapshot_12)
+  res <- summarise_activity(fscontextdemo_snapshot_02)
 
   expect_s3_class(res, "data.frame")
   expect_true(nrow(res) > 0)
