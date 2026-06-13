@@ -1,0 +1,31 @@
+#' @importFrom utils globalVariables
+utils::globalVariables(
+  c(
+    ".",
+    "storage_id",
+    "root",
+    "dir_path",
+    "full_path",
+    "rel_path",
+    "git_remote",
+    "git_branch",
+    "commit_time",
+    "size",
+    "event_time",
+    "explored_path",
+    "match_rule",
+    "observed_unit",
+    "snapshot_file",
+    "birth_time",
+    "scan_time",
+    "structural_path",
+    "n_observations",
+    "included",
+    "pattern",
+    "variable",
+    "avg_size_unit",
+    "matched_rule",
+    "refine_id",
+    "tmp_observed_unit"
+  )
+)
