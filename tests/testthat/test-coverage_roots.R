@@ -2,17 +2,8 @@ test_that(
   "coverage_roots returns expected columns",
   {
     data("fscontextdemo_snapshot_01")
-
-    tmp <- file.path(
-      tempdir(),
-      "coverage_roots_structure_test"
-    )
-
-    dir.create(
-      tmp,
-      recursive = TRUE,
-      showWarnings = FALSE
-    )
+    tmp <- file.path(tempdir(),"coverage_roots_structure_test")
+    dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
 
     saveRDS(
       fscontextdemo_snapshot_01,
@@ -52,17 +43,8 @@ test_that(
   "coverage_roots includes selected roots",
   {
     data("fscontextdemo_snapshot_01")
-
-    tmp <- file.path(
-      tempdir(),
-      "coverage_roots_inclusion_test"
-    )
-
-    dir.create(
-      tmp,
-      recursive = TRUE,
-      showWarnings = FALSE
-    )
+    tmp <- file.path(tempdir(),"coverage_roots_inclusion_test")
+    dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
 
     saveRDS(
       fscontextdemo_snapshot_01,
@@ -94,48 +76,28 @@ test_that(
 )
 
 test_that(
-  "coverage_roots excludes non-selected roots",
+  "coverage_roots marks included and excluded roots",
   {
-    data("fscontextdemo_snapshot_01")
-
-    tmp <- file.path(
-      tempdir(),
-      "coverage_roots_exclusion_test"
+    provenance <- data.frame(
+      observed_unit = c(
+        "D:/alpha",
+        "D:/beta",
+        "D:/gamma"
+      ),
+      aggregation_depth = c(
+        1,
+        1,
+        1
+      ),
+      stringsAsFactors = FALSE
     )
-
-    dir.create(
-      tmp,
-      recursive = TRUE,
-      showWarnings = FALSE
-    )
-
-    saveRDS(
-      fscontextdemo_snapshot_01,
-      file.path(tmp, "fscontextdemo_snapshot_01.rds")
-    )
-
-    provenance <- observe_universe(
-      snapshot_dir = tmp,
-      max_aggregation_depth = 2
-    )
-
-    all_roots <- unique(provenance$observed_unit)
-
-    skip_if(
-      length(all_roots) < 2,
-      "Fixture does not contain multiple aggregation units"
-    )
-
-    res <- coverage_roots(
-      provenance = provenance,
-      roots = all_roots[1]
-    )
-
-    expect_true(any(res$included))
-    expect_true(any(!res$included))
-  }
-)
-
+    
+    res <- coverage_roots(provenance = provenance, roots = "D:/beta")
+  
+    expect_equal(sum(res$included), 1)
+    
+    expect_equal(sum(!res$included), 2)
+})
 
 test_that(
   "coverage_roots preserves aggregation semantics",
@@ -315,3 +277,4 @@ test_that(
     )
   }
 )
+
