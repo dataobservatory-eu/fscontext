@@ -1,6 +1,6 @@
 Package: fscontext
 Title: Contextual Observation and Analysis of Filesystem Data
-Version: 0.1.45
+Version: 0.2.0
 Language: en-GB
 Authors@R: 
     person(given = "Daniel", family = "Antal", 

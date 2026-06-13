@@ -74,17 +74,14 @@ test_that("add_structural_groups fails without rel_path", {
 
 # Integration with snapshot --------------------------------------------
 
-test_that("add_structural_groups works on test_snapshot_12", {
-  data("test_snapshot_12", package = "fscontext")
+test_that("add_structural_groups works on fscontextdemo_snapshot_02", {
+  data("fscontextdemo_snapshot_02")
 
-  res <- add_structural_groups(test_snapshot_12)
+  res <- add_structural_groups(fscontextdemo_snapshot_02)
 
   expect_true(
     all(c("structural_group", "component") %in% names(res))
   )
 
-  expect_equal(
-    nrow(res),
-    nrow(test_snapshot_12)
-  )
+  expect_equal(nrow(res), nrow(fscontextdemo_snapshot_02))
 })

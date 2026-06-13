@@ -123,25 +123,26 @@ test_that("observation_id is unique", {
 
 test_that("roots filter observations", {
   data("fscontextdemo_snapshot_02")
-  
+
   f <- tempfile(fileext = ".rds")
   saveRDS(fscontextdemo_snapshot_02, f)
-  
+
   roots <- c(
     "D:/_packages/fscontextdemo/R",
     "D:/_packages/fscontextdemo/man"
   )
-  
+
   out <- snapshot_to_reconstruction_context(
     snapshot_files = f,
     roots = roots
   )
-  
-  matches_root <- vapply(out$full_path, 
-                         \(x) any(startsWith(x, roots)), logical(1))
-  
+
+  matches_root <- vapply(
+    out$full_path,
+    \(x) any(startsWith(x, roots)), logical(1)
+  )
+
   expect_true(all(matches_root))
-  
 })
 
 test_that(
@@ -169,4 +170,3 @@ test_that(
     )
   }
 )
-

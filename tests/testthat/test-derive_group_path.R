@@ -30,14 +30,6 @@ test_that("derive_group_path is vectorised", {
   )
 })
 
-test_that("derive_group_path handles short paths", {
-  x <- "file.R"
-
-  res <- derive_group_path(x)
-
-  expect_equal(res, "file.R")
-})
-
 test_that("derive_group_path does not leak filenames into group_path", {
   x <- "_packages/iotables/utils.R"
 
@@ -117,7 +109,15 @@ test_that("derive_group_path handles short and empty paths", {
 
   res <- derive_group_path(x)
 
-  expect_equal(res[1], "a.R")
+  expect_true(is.na(res[1]))
   expect_true(is.na(res[2]))
   expect_true(is.na(res[3]))
+})
+
+test_that("derive_group_path handles short paths", {
+  expect_true(
+    is.na(
+      derive_group_path("file.R")
+    )
+  )
 })

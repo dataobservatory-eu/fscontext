@@ -1,9 +1,7 @@
-library(testthat)
-
 test_that("add_snapshot_context adds contextual columns", {
-  data("schema_012_sample")
+  data("fscontextdemo_snapshot_02")
 
-  res <- add_snapshot_context(schema_012_sample)
+  res <- add_snapshot_context(fscontextdemo_snapshot_02)
 
   expect_true("storage_full_path" %in% names(res))
   expect_true("storage_path_id" %in% names(res))
@@ -11,9 +9,9 @@ test_that("add_snapshot_context adds contextual columns", {
 })
 
 test_that("storage_full_path combines storage and full path", {
-  data("schema_012_sample")
+  data("fscontextdemo_snapshot_02")
 
-  res <- add_snapshot_context(schema_012_sample)
+  res <- add_snapshot_context(fscontextdemo_snapshot_02)
 
   expect_equal(
     res$storage_full_path[1],
@@ -26,9 +24,9 @@ test_that("storage_full_path combines storage and full path", {
 })
 
 test_that("storage_path_id combines storage and relative path", {
-  data("schema_012_sample")
+  data("fscontextdemo_snapshot_02")
 
-  res <- add_snapshot_context(schema_012_sample)
+  res <- add_snapshot_context(fscontextdemo_snapshot_02)
 
   expect_equal(
     res$storage_path_id[1],
@@ -41,9 +39,9 @@ test_that("storage_path_id combines storage and relative path", {
 })
 
 test_that("observation_id includes scan time", {
-  data("schema_012_sample")
+  data("fscontextdemo_snapshot_02")
 
-  res <- add_snapshot_context(schema_012_sample)
+  res <- add_snapshot_context(fscontextdemo_snapshot_02)
 
   expected <- paste(
     res$storage_id[1],
@@ -86,12 +84,9 @@ test_that("observation_id distinguishes repeated observations", {
 })
 
 test_that("add_snapshot_context preserves row count", {
-  data("schema_012_sample")
+  data("fscontextdemo_snapshot_02")
 
-  res <- add_snapshot_context(schema_012_sample)
+  res <- add_snapshot_context(fscontextdemo_snapshot_02)
 
-  expect_equal(
-    nrow(res),
-    nrow(schema_012_sample)
-  )
+  expect_equal(nrow(res), nrow(fscontextdemo_snapshot_02))
 })

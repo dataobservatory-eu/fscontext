@@ -68,16 +68,13 @@
 #' where the first directory levels correspond to project boundaries and
 #' functional modules.
 #' @examples
-#' \dontrun{
-#' df <- scan_storage("D:/_eviota")
+#' @examples
+#' data("fscontextdemo_snapshot_02")
 #'
-#' # Weekly overview
-#' summarise_activity(df, time_unit = "week")
-#'
-#' # Monthly overview
-#' summarise_activity(df, time_unit = "month")
-#' }
-#'
+#' summarise_activity(
+#'   fscontextdemo_snapshot_02,
+#'   time_unit = "month"
+#' )
 #' @seealso [path_prefix()], [normalise_snapshot_schema()]
 #' @importFrom dplyr filter mutate group_by summarise arrange n desc n_distinct
 #' @importFrom rlang .data

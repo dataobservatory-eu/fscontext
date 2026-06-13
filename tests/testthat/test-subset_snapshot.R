@@ -1,10 +1,7 @@
 test_that(
   "subset_snapshot works on fscontextdemo_snapshot_02",
   {
-    data(
-      fscontextdemo_snapshot_02,
-      package = "fscontext"
-    )
+    data(fscontextdemo_snapshot_02, package = "fscontext")
 
     tmp <- tempfile(fileext = ".rds")
 

@@ -141,7 +141,7 @@ test_that("summarise_activity works on canonical snapshot", {
 # Realistic snapshot (canonical) ---------------------------------------
 
 test_that("summarise_activity works on canonical snapshot", {
-  data(test_snapshot_12, package = "fscontext")
+  data(fscontextdemo_snapshot_02, package = "fscontext")
 
   res <- summarise_activity(test_snapshot_12)
 
@@ -170,9 +170,18 @@ test_that("normalisation derives filename from legacy 'file'", {
 #  The same test in application for the main function
 
 test_that("group_path never contains file extensions", {
-  data(test_snapshot_12, package = "fscontext")
+  df <- tibble::tibble(
+    rel_path = c("pkg/R/hello.R", "pkg/tests/testthat/test-hello.R"),
+    filename = c("hello.R", "test-hello.R"),
+    extension = c("r", "r"),
+    mtime = as.POSIXct(c(
+      "2026-01-01 10:00:00",
+      "2026-01-02 10:00:00"
+    )),
+    git_tracked = c(TRUE, FALSE)
+  )
 
-  res <- summarise_activity(test_snapshot_12)
+  res <- summarise_activity(df)
 
   expect_false(any(grepl("\\.[A-Za-z0-9]+$", res$group_path)))
 })

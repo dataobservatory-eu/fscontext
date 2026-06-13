@@ -3,7 +3,7 @@
 #' Extracts a deterministic grouping key from `rel_path` by combining
 #' the first path components: usually collection/project, optionally module.
 #'
-#' #' @details
+#' @details
 #' This function implements a lightweight operational grouping heuristic
 #' based on shallow relative path structure.
 #'
@@ -36,7 +36,7 @@ derive_group_path <- function(rel_path, repo_root = NULL) {
     }
 
     if (length(p) == 1) {
-      return(p[1])
+      return(NA_character_)
     }
 
     project <- paste(p[1], p[2], sep = "/")

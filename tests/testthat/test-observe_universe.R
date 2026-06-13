@@ -1,10 +1,10 @@
 create_demo_snapshot_dir <- function() {
   data("fscontextdemo_snapshot_01")
   data("fscontextdemo_snapshot_02")
-  
+
   tmp <- tempfile("observe-universe-")
   dir.create(tmp)
-  
+
   saveRDS(fscontextdemo_snapshot_01, file.path(tmp, "snapshot_01.rds"))
   saveRDS(fscontextdemo_snapshot_02, file.path(tmp, "snapshot_02.rds"))
   tmp
@@ -19,13 +19,13 @@ test_that(
   {
     tmp <- tempfile("observe-repeat-")
     dir.create(tmp)
-    
+
     saveRDS(fscontextdemo_snapshot_01, file.path(tmp, "a.rds"))
-    
+
     saveRDS(fscontextdemo_snapshot_01, file.path(tmp, "b.rds"))
-    
+
     res <- observe_universe(snapshot_dir = tmp, max_aggregation_depth = 2)
-    
+
     expect_true(
       any(res$n_observations == 2)
     )
@@ -138,7 +138,7 @@ test_that(
   "observe_universe returns positive size summaries",
   {
     tmp <- create_demo_snapshot_dir()
-    
+
     dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
 
     res <- observe_universe(
@@ -169,7 +169,7 @@ test_that(
   "observe_universe records operational aggregation depth",
   {
     tmp <- create_demo_snapshot_dir()
-    
+
     dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
 
     test_depth_snapshot <- tibble::tibble(
@@ -221,7 +221,7 @@ test_that(
   {
     tmp <- tempfile("observe-depth-")
     dir.create(tmp)
-    
+
     saveRDS(
       tibble::tibble(
         full_path = "D:/packages/R/hello.R",
@@ -231,15 +231,15 @@ test_that(
       ),
       file.path(tmp, "depth_test.rds")
     )
-    
+
     res_depth_1 <- observe_universe(tmp, 1)
     res_depth_2 <- observe_universe(tmp, 2)
     res_depth_3 <- observe_universe(tmp, 3)
-    
+
     expect_equal(res_depth_1$observed_unit, "D:/packages")
     expect_equal(res_depth_2$observed_unit, "D:/packages/R")
     expect_equal(res_depth_3$observed_unit, "D:/packages/R")
-    
+
     expect_equal(res_depth_1$aggregation_depth, 1)
     expect_equal(res_depth_2$aggregation_depth, 2)
     expect_equal(res_depth_3$aggregation_depth, 2)
@@ -250,7 +250,7 @@ test_that(
   "observe_universe excludes operational artefacts by default",
   {
     tmp <- create_demo_snapshot_dir()
-    
+
     dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
 
     test_snapshot <- tibble::tibble(
@@ -278,7 +278,7 @@ test_that(
   "observe_universe supports custom exclusion patterns",
   {
     tmp <- create_demo_snapshot_dir()
-    
+
     dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
 
     test_snapshot <- tibble::tibble(
@@ -308,7 +308,7 @@ test_that(
   {
     tmp <- tempfile("observe-files-")
     dir.create(tmp)
-    
+
     test_snapshot <- tibble::tibble(
       full_path = c(
         "D:/_packages/fscontextdemo/docs/sitemap.xml",
@@ -319,19 +319,19 @@ test_that(
       storage_id = "fscontextdemo",
       person_id = "demo_user"
     )
-    
+
     saveRDS(test_snapshot, file.path(tmp, "file_test.rds"))
-    
+
     res <- observe_universe(
       snapshot_dir = tmp,
       max_aggregation_depth = 3
     )
-    
+
     # No aggregation unit should end with a filename extension
     expect_false(
       any(grepl("\\.(xml|md|Rmd)$", res$observed_unit))
     )
-    
+
     # Aggregation units must be derived from folders
     expect_true(all(aggregation_depth(res$observed_unit) >= 0))
   }
@@ -341,13 +341,15 @@ test_that(
   "observe_universe errors on non-tabular RDS objects",
   {
     tmp <- create_demo_snapshot_dir()
-    
+
     dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
 
     saveRDS(list(a = 1), file.path(tmp, "bad.rds"))
 
-    expect_error(observe_universe(snapshot_dir = tmp), 
-                 "does not contain a data frame")
+    expect_error(
+      observe_universe(snapshot_dir = tmp),
+      "does not contain a data frame"
+    )
   }
 )
 
@@ -355,11 +357,13 @@ test_that(
   "observe_universe errors on empty snapshot directories",
   {
     tmp <- tempfile("observe-universe-empty-")
-    
+
     dir.create(tmp, recursive = TRUE, showWarnings = FALSE)
-    
-    expect_error(observe_universe(snapshot_dir = tmp),
-                 "No snapshot files found")
+
+    expect_error(
+      observe_universe(snapshot_dir = tmp),
+      "No snapshot files found"
+    )
   }
 )
 

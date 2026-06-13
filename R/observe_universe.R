@@ -2,7 +2,7 @@
 #'
 #' Aggregates repeated filesystem observations into a lightweight
 #' longitudinal observational universe.
-#' 
+#'
 #' @details
 #' The function operates on snapshot `.rds` files created by
 #' [scan_storage()] and summarises repeated observations of

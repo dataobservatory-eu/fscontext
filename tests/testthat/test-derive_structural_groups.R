@@ -81,12 +81,12 @@ test_that("derive_structural_groups  is deterministic", {
 
 # Integration with snapshot --------------------------------------------
 
-test_that("derive_structural_groups  works on test_snapshot_12", {
-  data("test_snapshot_12", package = "fscontext")
+test_that("derive_structural_groups  works on fscontextdemo_snapshot_02", {
+  data(fscontextdemo_snapshot_02, package = "fscontext")
 
-  res <- derive_structural_groups(test_snapshot_12$rel_path)
+  res <- derive_structural_groups(fscontextdemo_snapshot_02$rel_path)
 
-  expect_equal(nrow(res), nrow(test_snapshot_12))
+  expect_equal(nrow(res), nrow(fscontextdemo_snapshot_02))
 
   expect_true(all(!is.na(res$structural_group)))
 })
