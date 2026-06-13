@@ -3,10 +3,7 @@ test_that(
   {
     expect_equal(
       matches_context_root(
-        x = c(
-          "D:/alpha",
-          "D:/beta"
-        ),
+        x = c("D:/alpha", "D:/beta"),
         roots = "D:/alpha"
       ),
       c(TRUE, FALSE)
