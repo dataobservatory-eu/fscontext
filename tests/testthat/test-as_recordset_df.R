@@ -159,9 +159,7 @@ test_that(
 test_that(
   "as_recordset_df errors when semantic source column is missing",
   {
-    toy_resources <- tibble::tibble(
-      x = 1:3
-    )
+    toy_resources <- tibble::tibble(x = 1:3)
 
     expect_error(
       as_recordset_df(

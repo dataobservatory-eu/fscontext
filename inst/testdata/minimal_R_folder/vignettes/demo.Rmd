@@ -1,0 +1,375 @@
+---
+title: "Building a Minimal Provenance Playground with fscontextdemo"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Building a Minimal Provenance Playground with fscontextdemo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+The `fscontextdemo` package is a small self-contained demonstration
+repository used to develop and test provenance-aware filesystem
+reconstruction workflows.
+
+This vignette intentionally creates:
+
+- tabular artefacts
+- derived graphical artefacts
+- multiple file formats
+- nested folders
+- rendered outputs
+
+to generate realistic provenance and filesystem activity for
+`fscontext` workflows.
+
+```{r setup}
+library(fscontextdemo)
+library(dataset)
+library(fscontext)
+library(here)
+```
+
+# Creating Example Data
+
+The package includes a small synthetic country dataset.
+
+```{r loaddata}
+data("fsdemo_country_data")
+```
+
+
+```{r writecsv, eval=FALSE}
+if (!dir.exists(here::here(
+  "inst", "extdata"
+))) {
+  dir.create(
+    here::here("inst", "extdata"),
+    recursive = TRUE
+  )
+}
+
+write.csv(
+  fsdemo_country_data,
+  here::here(
+    "inst", "extdata", "fsdemo_country_data.csv"
+  ),
+  row.names = FALSE
+)
+```
+
+The dataset is now stored in both:
+
+- CSV format
+- R serialized format (`.rds`)
+
+creating multiple representations of the same logical resource.
+
+# Creating Derived Plot Artefacts
+
+The next step creates graphical derivatives of the dataset.
+
+The same plot is exported into several formats:
+
+- PNG
+- JPEG
+- SVG
+
+This simulates realistic analytical and publication workflows.
+
+```{r pngbarplot}
+if (!dir.exists(here::here(
+  "inst", "extdata", "plots"
+))) {
+  dir.create(
+    here::here(
+      "inst", "extdata", "plots"
+    ),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
+}
+
+country_colors <- c(
+    "AD" = "#FAE000",
+    "LI" = "#00348A",
+    "SM" = "#4EC0E4"
+  )
+  
+plot_country_values <- function() {
+
+  bar_colors <- country_colors[
+    fsdemo_country_data$code
+  ]
+
+  bar_labels <- paste0(
+    fsdemo_country_data$code,
+    "\n",
+    fsdemo_country_data$time
+  )
+
+  barplot(
+    height = fsdemo_country_data$value,
+    names.arg = bar_labels,
+    col = bar_colors,
+    main = "Demo country values by year",
+    xlab = "Country and year",
+    ylab = "Value",
+    border = "grey30"
+  )
+
+  legend(
+    "topright",
+    legend = names(country_colors),
+    fill = country_colors,
+    title = "Country"
+  )
+}
+
+
+bar_colors <- country_colors[
+  fsdemo_country_data$code
+]
+
+bar_labels <- paste0(
+  fsdemo_country_data$code,
+  "\n",
+  fsdemo_country_data$time
+)
+
+plot_path_png <- here::here(
+  "inst", "extdata", "plots", "country_barplot.png"
+)
+
+plot_path_jpg <- here::here(
+  "inst", "extdata", "plots", "country_barplot.jpg"
+)
+
+plot_path_svg <- here::here(
+    "inst", "extdata", "plots", "country_barplot.svg"
+)
+  
+# PNG ----------------------------------------------------------
+
+png(
+  filename = plot_path_png,
+  width = 900,
+  height = 700
+)
+
+plot_country_values()
+
+dev.off()
+
+# JPEG ---------------------------------------------------------
+
+jpeg(
+  filename = plot_path_jpg,
+  width = 900,
+  height = 700,
+  quality = 95
+)
+
+plot_country_values()
+
+dev.off()
+
+# SVG ---------------------------------------------------------  
+svg(
+  filename = plot_path_svg,
+  width = 9,  height = 7
+)
+  
+plot_country_values()
+
+dev.off()
+```
+# Example Plot
+
+The generated PNG plot can be included directly in the vignette.
+
+```{r renderpng}
+knitr::include_graphics(
+  here::here(
+    "man", "figures", "country_barplot.png"
+  )
+)
+```
+
+# Creating Filesystem Snapshots
+
+The generated files can now be observed with `fscontext`.
+
+A filesystem snapshot records observable properties of files and folders,
+including:
+
+- filesystem paths
+- timestamps
+- file sizes
+- signatures
+- Git repository context
+- repository tracking state
+
+The snapshot itself becomes a provenance artefact that can later support:
+
+- reconstruction workflows
+- provenance-aware reporting
+- repository archaeology
+- contextual event projection
+
+```{r,eval = FALSE}
+snapshot_path <-
+  fscontext::snapshot_storage(
+    root = here::here(),
+    path = here::here("inst", "extdata"),
+    storage_id = "fscontextdemo",
+    person_id = "demo_user"
+  )
+```
+
+```
+Starting scan_storage() on: D:/_packages/fscontextdemo
+Scanning 309 files.
+  computing signatures [======================] 100% (78/78)
+Signatures computed. Detecting repositories and Git status...
+Checking Git tracked files...
+Files scanned: 78
+Files in Git repos: 78
+Files tracked by Git: 28
+Skipped approximately 231 inaccessible files
+scan_storage completed in 1.59 seconds
+Saved: D:/_packages/fscontextdemo/inst/extdata/scan_fscontextdemo_d_fscontextdemo_20260525-170346_f93791.rds
+```
+
+The snapshot is stored as an `.rds` artefact inside the package
+`inst/extdata` directory.
+
+```{r reread}
+fscontextdemo_snapshot <- readRDS(
+  here::here(
+    "inst", "extdata",
+    "scan_fscontextdemo_d_fscontextdemo_20260525-170346_f93791.rds"
+  )
+)
+```
+
+The snapshot contains both tabular observations and snapshot-level
+provenance metadata.
+
+```{r attributes}
+attributes(fscontextdemo_snapshot)
+```
+
+The structure of the snapshot can be inspected directly.
+
+```{r structure}
+str(fscontextdemo_snapshot)
+```
+
+The snapshot can also be included as package data for reproducible
+examples, tests, and vignettes.
+
+```{r, eval=FALSE}
+fscontextdemo_snapshot_01 <- fscontextdemo_snapshot
+usethis::use_data(
+  fscontextdemo_snapshot_01,
+  overwrite = TRUE
+)
+```
+
+# Adding more artefacts
+
+After creating the first snapshot, we created a little helper function that demonstrates the idea of gradual semantic stabilisation. The original dataset describes countries with either ISO-3166 codes or with literal country name.
+
+```{r}
+data("fsdemo_country_data")
+fsdemo_country_data$country
+```
+
+```{r prelabel}
+fsdemo_prelabelled_country_data <- label_country_data(
+  df = fsdemo_country_data, 
+  prelabel_map =  c(
+    "Andorra" = "AD",
+    "Liechtenstein" = "LI",
+    "San Marino" = "SM")
+  )
+```
+
+The new `country` column coerces to clean ISO-3166 alpha-2 codes:
+
+```{r coercion}
+as.character(fsdemo_prelabelled_country_data$country)
+```
+
+It also retains the provenance:
+
+
+```{r provenance}
+fsdemo_prelabelled_country_data$country
+```
+```{r rds, eval=FALSE}
+saveRDS(
+  fsdemo_prelabelled_country_data,
+  here::here(
+    "inst", "extdata", "fsdemo_prelabelled_country_data.rds"
+  )
+)
+```
+
+# Creating a Second Snapshot
+
+After generating additional artefacts and semantic enrichments,
+a second filesystem snapshot can be created.
+
+This allows comparison of:
+
+- filesystem growth
+- new artefacts
+- overwritten files
+- derived outputs
+- semantic enrichment workflows
+
+```{r secondsnapshot, eval = FALSE}
+snapshot_path_02 <-
+  fscontext::snapshot_storage(
+    root = here::here(),
+    path = here::here("inst", "extdata"),
+    storage_id = "fscontextdemo",
+    person_id = "demo_user"
+  )
+```
+```
+Starting scan_storage() on: D:/_packages/fscontextdemo
+Scanning 352 files.
+  computing signatures [======================] 100% (88/88)
+Signatures computed. Detecting repositories and Git status...
+Checking Git tracked files...
+Files scanned: 88
+Files in Git repos: 88
+Files tracked by Git: 35
+Skipped approximately 264 inaccessible files
+scan_storage completed in 1.07 seconds
+Saved: D:/_packages/fscontextdemo/inst/extdata/scan_fscontextdemo_d_fscontextdemo_20260525-174640_ca9789.rds
+```
+
+Saving it to an exported package dataset:
+
+```{r secondsnapshotdata, eval = FALSE}
+fscontextdemo_snapshot_02 <- readRDS(
+  snapshot_path_02
+)
+
+usethis::use_data(
+  fscontextdemo_snapshot_02,
+  overwrite = TRUE
+)
+```

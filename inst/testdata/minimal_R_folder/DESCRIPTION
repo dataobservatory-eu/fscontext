@@ -1,0 +1,32 @@
+Package: fscontextdemo
+Title: Minimal Demonstration Package for fscontext Workflows
+Version: 0.1.0
+Language: en-GB
+Authors@R: 
+    person(given = "Daniel", family = "Antal", 
+           email = "daniel.antal@dataobservatory.eu", 
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0001-7513-6760")
+           )
+Description: A small self-contained R package used to demonstrate,
+    test, and document provenance-aware filesystem reconstruction
+    workflows with fscontext and dataset.
+License: GPL (>= 3)
+URL: https://dataobservatory-eu.github.io/fscontextdemo
+BugReports: https://github.com/dataobservatory-eu/fscontextdemo/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 8.0.0
+Suggests: 
+    fscontext,
+    here,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Depends: 
+    R (>= 3.5)
+LazyData: true
+VignetteBuilder: knitr
+Imports: 
+    dataset
