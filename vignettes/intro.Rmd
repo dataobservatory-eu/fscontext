@@ -22,51 +22,41 @@ library(dplyr)
 
 ## What is fscontext?
 
-`fscontext` provides tools for observing, contextualising, and analysing filesystem environments.
+`fscontext` is an experimental toolkit for observing, contextualising, and reconstructing digital information environments.
 
-The package creates reproducible snapshots of files, directories, and related digital resources, then supports their transformation into contextualised analytical objects.
+Many digital collections contain valuable contextual information, but that information is distributed across folders, filenames, inventories, metadata records, digital surrogates, spreadsheets, repositories, and other partially documented resources. Before semantic integration, knowledge graph construction, or archival description can begin, this contextual evidence must first be identified, organised, and interpreted.
 
-Typical applications include:
+The package provides a reproducible framework for treating filesystem structures and related metadata as observations. These observations can then be transformed into contextual groupings and candidate Record Sets that support further analytical, archival, and semantic workflows.
 
-- software repositories;
+The package is particularly relevant for:
 
-- research data collections;
+* born-digital archives;
+* research repositories;
+* shared drives and network storage;
+* audiovisual production environments;
+* digitised cultural heritage collections;
+* provenance and reconstruction workflows.
 
-- shared drives;
+Rather than treating files as isolated technical objects, `fscontext` treats them as traces of activities, processes, and documentary contexts.
 
-- audiovisual production environments;
+# Context before semantics
 
-- digitised archival collections;
+Many interoperability projects begin with semantic models, ontologies, or knowledge graphs. In practice, however, organisations often face a more immediate challenge: understanding the information environments they already possess.
 
-- digital preservation workflows.
+A cultural heritage institution may hold thousands of digital surrogates whose relationship to physical collections is only partially documented. A research organisation may maintain decades of project folders spread across multiple drives and repositories. An audiovisual archive may preserve recordings, contracts, metadata, and production artefacts that evolved through complex workflows.
 
-Rather than treating files as isolated technical objects, `fscontext` treats them as evidence of activities that occurred within a broader operational context.
+In such situations the primary problem is not semantic integration but contextual reconstruction.
 
-## Why filesystem observations matter
+Before records can be linked, classified, harmonised, or federated, it is often necessary to reconstruct how digital resources relate to projects, activities, collections, and people.
 
-Many organisations possess large collections of files but limited contextual information about how those files relate to projects, activities, workflows, or documentary processes.
+`fscontext` provides a reproducible observational layer for this purpose.
 
-Examples include:
-
-- research organisations with many partially documented projects;
-
-- cultural heritage institutions holding digitised surrogates;
-
-- audiovisual archives with complex production workflows;
-
-- software development environments spread across multiple devices;
-
-- shared drives that have evolved over many years.
-
-In these environments the challenge is often not storage, but understanding.
-
-Filesystem observations provide a starting point for reconstructing how digital resources relate to one another.
 
 ## The fscontext workflow
 
 The package follows a layered workflow:
 
-```
+```         
 Filesystem observations
 ↓
 Snapshots
@@ -76,6 +66,8 @@ Contextualisation
 Record Sets
 ↓
 Semantic stabilisation
+↓
+Knowledge systems
 ```
 
 *Filesystem observations* capture what was observed at a particular point in time.
@@ -84,7 +76,8 @@ Semantic stabilisation
 
 *Record Sets* provide higher-level documentary groupings inspired by the Records in Contexts (RiC) conceptual model.
 
-*Semantic stabilisation* supports the progressive enrichment and refinement of contextual information.
+Subsequent  *semantic stabilisation* semantic stabilisation activities can then refine these structures into more formal semantic representations.
+
 
 ## Creating a snapshot
 
@@ -139,7 +132,6 @@ snapshots |>
   ) |>
   head()
 ```
-
 
 This creates lightweight contextual structures that support later reconstruction and analysis.
 

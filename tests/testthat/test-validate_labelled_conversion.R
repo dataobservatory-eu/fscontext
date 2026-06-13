@@ -32,7 +32,7 @@ test_that(
     result <- validate_labelled_conversion(x)
 
     expect_named(result, c("valid", "message"))
-    
+
     expect_type(result$valid, "logical")
   }
 )
