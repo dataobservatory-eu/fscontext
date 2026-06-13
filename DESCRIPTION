@@ -1,5 +1,5 @@
 Package: fscontext
-Title: Contextual Observation and Analysis of Filesystem Data
+Title: Filesystem Contextualisation and Record Set Reconstruction
 Version: 0.2.0
 Language: en-GB
 Authors@R: 
@@ -25,6 +25,8 @@ Description:
     contextual knowledge representation models such as RiC-CM, RiC-O, and 
     PROV-O.
 License: file LICENSE
+URL: https://fscontext.dataobservatory.eu/
+BugReports: https://github.com/dataobservatory-eu/fscontext/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports: 
