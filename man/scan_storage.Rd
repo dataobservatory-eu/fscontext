@@ -71,10 +71,7 @@ This creates a reproducible observational snapshot suitable for:
 \item alignment with version-controlled repositories.
 }
 
-The returned dataset is normalised to the canonical snapshot schema
-via \code{\link[=normalise_snapshot_schema]{normalise_snapshot_schema()}}.
-
-At minimum, the result contains:
+The returned dataset at minimum contains:
 \itemize{
 \item \code{rel_path}: relative filesystem locator within the observed root;
 \item \code{storage_path_id}: deterministic storage-scoped identifier derived
@@ -97,5 +94,5 @@ The result represents observed filesystem state rather than complete
 historical provenance.
 }
 \seealso{
-\code{\link[=snapshot_storage]{snapshot_storage()}}, \code{\link[=normalise_snapshot_schema]{normalise_snapshot_schema()}}
+\code{\link[=snapshot_storage]{snapshot_storage()}}
 }

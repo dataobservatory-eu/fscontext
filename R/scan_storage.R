@@ -52,10 +52,7 @@
 #' A `data.frame` where each row represents one filesystem observation.
 #'
 #' @details
-#' The returned dataset is normalised to the canonical snapshot schema
-#' via [normalise_snapshot_schema()].
-#'
-#' At minimum, the result contains:
+#' The returned dataset at minimum contains:
 #'
 #' - `rel_path`: relative filesystem locator within the observed root;
 #' - `storage_path_id`: deterministic storage-scoped identifier derived
@@ -75,7 +72,7 @@
 #' The result represents observed filesystem state rather than complete
 #' historical provenance.
 #'
-#' @seealso [snapshot_storage()], [normalise_snapshot_schema()]
+#' @seealso [snapshot_storage()]
 #'
 #' @importFrom utils flush.console
 #'
