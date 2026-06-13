@@ -7,6 +7,9 @@
 ^\.positai$
 ^\.claude$
 ^README\.Rmd$
+^CODE_OF_CONDUCT\.md$
+^CODING-GUIDELINES\.md$
+^CONTRIBUTING\.md$
 ^doc$
 ^Meta$
 ^_pkgdown\.yml$
