@@ -12,8 +12,8 @@ WIP](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.o
 [![devel-version](https://img.shields.io/badge/devel%20version-0.2.0-blue.svg)](https://github.com/dataobservatory-eu/fscontext)
 [![dataobservatory](https://img.shields.io/badge/ecosystem-dataobservatory.eu-3EA135.svg)](https://dataobservatory.eu/)
 [![Coveralls test
-coverage](https://coveralls.io/repos/github/dataobservatory-eu/dataset/badge.svg)](https://coveralls.io/r/dataobservatory-eu/dataset?branch=master)
-[![R-CMD-check](https://github.com/dataobservatory-eu/fscontext/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/dataobservatory-eu/fscontext/actions/workflows/R-CMD-check.yaml)
+coverage](https://coveralls.io/repos/github/dataobservatory-eu/dataset/badge.svg)](https://coveralls.io/r/dataobservatory-eu/fscontext?branch=main)
+
 <!-- badges: end -->
 
 `fscontext` provides a provenance-aware contextual reconstruction
