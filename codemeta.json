@@ -2,12 +2,12 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "fscontext",
-  "description": " Provides a provenance-aware contextual reconstruction framework for file systems and related digital resource collections by creating reproducible snapshots of file-level metadata, paths, repository context, and optional content signatures. The package supports contextual reconstruction workflows for research infrastructure, analytical provenance, audit, preservation, and computational workflow reconstruction. It enables contextual grouping, structural abstraction, temporal event projection, semantic stabilization, duplicate and reuse detection, and lightweight workflow reconstruction from filesystem observations while deliberately separating observational evidence, contextual abstraction, semantic interpretation, and analytical reconstruction layers. The framework is designed to support reproducible and inspectable provenance-aware workflows and future alignment with archival and contextual knowledge representation models such as RiC-CM, RiC-O, and PROV-O.",
+  "description": " Provides a provenance-aware framework for contextual reconstruction from file systems and related digital resource collections. The package creates reproducible snapshots of file-level metadata, paths, repository context, and optional content signatures. It supports contextual grouping, structural abstraction, temporal analysis, semantic stabilization, duplicate and reuse detection, and lightweight workflow reconstruction from filesystem observations. The framework deliberately separates observational evidence, contextual abstraction, semantic interpretation, and analytical reconstruction, enabling reproducible and inspectable workflows. It is designed to support future alignment with archival and contextual knowledge representation models, including RiC-CM, RiC-O, and PROV-O.",
   "name": "fscontext: Filesystem Contextualisation and Record Set Reconstruction",
   "codeRepository": "https://fscontext.dataobservatory.eu/",
   "issueTracker": "https://github.com/dataobservatory-eu/fscontext/issues",
   "license": "file LICENSE",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -275,7 +275,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "578.252KB",
+  "fileSize": "578.488KB",
   "citation": [
     {
       "@type": "CreativeWork",
