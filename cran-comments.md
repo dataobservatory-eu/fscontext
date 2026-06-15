@@ -6,7 +6,7 @@ This is the first CRAN submission of `fscontext`. From the pre-test the followin
 
 - Two misformatted URLs. URLs have been checked with `urlchecker::url_check()`.
 
-- `.Rbuildignore` now ignores `cran-comments.md`
+- The words "filesystem", "Filesystem", "RiC" (Records in Contexts), and "inspectable" are intentional technical terms used throughout the package documentation and are not misspellings.
 
 ## Package purpose
 
