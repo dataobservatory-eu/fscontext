@@ -20,7 +20,7 @@ Description:
     reconstruction, enabling reproducible and inspectable workflows. 
     It is designed to support future alignment with archival and contextual 
     knowledge representation models, including RiC-CM, RiC-O, and PROV-O.
-License: file LICENSE
+License: GPL (>= 3)
 URL: https://fscontext.dataobservatory.eu/
 BugReports: https://github.com/dataobservatory-eu/fscontext/issues
 Encoding: UTF-8

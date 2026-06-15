@@ -1,38 +1,45 @@
+## Resubmission
+
+This is the first CRAN submission of `fscontext`. From the pre-test the following was corrected:
+
+- missing GPL-3 LICENSE
+
+- Two misformatted URLs. URLs have been checked with `urlchecker::url_check()`.
+
+- `.Rbuildignore` now ignores `cran-comments.md`
+
+## Package purpose
+
+`fscontext` provides a provenance-aware framework for contextual reconstruction from filesystem observations. It creates reproducible snapshots of file-level metadata, paths, repository context, and optional content signatures, and supports contextual grouping, structural abstraction, semantic stabilisation, duplicate detection, and reconstruction-oriented analysis.
+
+The package is intended for analytical workflows involving research infrastructures, software repositories, digital collections, preservation environments, and other contexts where filesystem observations provide evidence about activities, resources, and their relationships.
+
+The package is inspired by archival contextualisation approaches, particularly the Records in Contexts (RiC) family of conceptual models, but it is not an implementation of RiC-CM or RiC-O.
+
 ## Test environments
 
 Local:
-* Windows10 x86_64-w64-mingw32 (64-bit), R version 4.4.0, locally.
 
-r_hub:
-* macos (latest release)
-* macos-arm64
-* windows-latest (release)
-* windows x86_64-w64-mingw32 with R version 4.3.3 (2024-02-29 ucrt)
-* ubuntu-latest (release) - ubuntu-latest pipelines will use ubuntu-24.04 soon. 
-* ubuntu-latest (oldrel)  - ubuntu-latest pipelines will use ubuntu-24.04 soon.
-* ubuntu-latest (devel)
-* atlas
+- Windows 11, R 4.5.x
 
-0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+Continuous integration:
 
-Comment:
-The 0.3.1 version of this package was on CRAN but archived due to a documentation problem.
-- From the previous submission resolved issues:
-  Version contains large components (0.3.3009) -> 0.3.4
+- Ubuntu Linux (GitHub Actions)
 
-- Please add \value to .Rd files regarding exported methods and explain the functions results in the documentation. Please write about the structure of the output (class) and also what the output means. (If a function does not return a value, please document that too, e.g. \value{No return value, called for side effects} or similar)
-  Missing Rd-tags:
-     var_label.Rd: \value
-  Value tags were very thoroughly checked, and hopefully not only there is no missing but the
-  wording is more meaningful when objects are invisibly returned (because only attributes are 
-  changed)
-     
-- Some code lines in examples are commented out. Please never do that. Ideally find toy examples that can be regularly executed and checked. Lengthy examples (> 5 sec), can be wrapped in \donttest{}.
-  Examples in comments in:
-      xsd_convert.Rd
-  This was a copying mistake and did not find any further instances, this is corrected, of course.
+- macOS (GitHub Actions)
 
-- \dontrun{} should only be used if the example really cannot be executed (e.g. because of missing additional software, missing API keys, ...) by the user. That's why wrapping examples in \dontrun{} adds the comment ("# Not run:") as a warning for the user. Does not seem necessary. Please replace \dontrun with \donttest.
-   Examples within \dontrun in var_unit.Rd
-   This was also unnecessary and there are no \dontrun{} tags anymore.
+- Windows (GitHub Actions)
 
+Additional checks:
+
+- R-hub checks on the standard CRAN target platforms.
+
+## R CMD check results
+
+There are no ERRORs, WARNINGs, or NOTEs.
+
+## Notes
+
+The package includes two small example filesystem snapshots (`fscontextdemo_snapshot_01` and `fscontextdemo_snapshot_02`) that are used in examples and vignettes. These are synthetic demonstration datasets created specifically for reproducible package documentation and testing.
+
+The package does not access network resources during examples, tests, or vignette builds.

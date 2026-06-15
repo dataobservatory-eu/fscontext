@@ -35,11 +35,13 @@ reconstruction-oriented analysis.
 
 The package includes two introductory vignettes:
 
-- [Introduction to fscontext](articles/intro.html) introduces filesystem
-  observations, contextualisation, and Record Set construction.
+- [Introduction to
+  fscontext](https://fscontext.dataobservatory.eu/articles/intro.html)
+  introduces filesystem observations, contextualisation, and Record Set
+  construction.
 - [Prelabelled values and semantic
-  stabilisation](articles/prelabelled.html) demonstrates progressive
-  semantic enrichment and refinement workflows.
+  stabilisation](https://fscontext.dataobservatory.eu/articles/prelabelled.html)
+  demonstrates progressive semantic enrichment and refinement workflows.
 
 These vignettes provide a guided introduction to the observational,
 contextual, and semantic layers of the package.

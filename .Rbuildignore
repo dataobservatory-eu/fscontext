@@ -20,3 +20,6 @@
 ^\.github$
 ^fscontext\.Rproj$
 ^review-fscontext.txt$
+^CRAN-SUBMISSION$
+^LICENSE\.md$
+^cran-comments\.md$
