@@ -1,5 +1,5 @@
 Package: fscontext
-Title: Filesystem Contextualisation and Record Set Reconstruction
+Title: File System Contextualisation and Record Set Reconstruction
 Version: 0.2.0
 Language: en-GB
 Authors@R: 
@@ -17,9 +17,10 @@ Description:
     detection, and lightweight workflow reconstruction from filesystem 
     observations. The framework deliberately separates observational evidence,
     contextual abstraction, semantic interpretation, and analytical
-    reconstruction, enabling reproducible and inspectable workflows. 
-    It is designed to support future alignment with archival and contextual 
-    knowledge representation models, including RiC-CM, RiC-O, and PROV-O.
+    reconstruction, enabling reproducible and workflows that can be inspected 
+    by reviewers. It is designed to support future alignment with archival and
+    contextual knowledge representation models, including Records in Contexts, 
+    and PROV.
 License: GPL (>= 3)
 URL: https://fscontext.dataobservatory.eu/
 BugReports: https://github.com/dataobservatory-eu/fscontext/issues

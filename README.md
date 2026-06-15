@@ -37,7 +37,7 @@ The package includes two introductory vignettes:
 
 - [Introduction to
   fscontext](https://fscontext.dataobservatory.eu/articles/intro.html)
-  introduces filesystem observations, contextualisation, and Record Set
+  introduces file system observations, contextualisation, and Record Set
   construction.
 - [Prelabelled values and semantic
   stabilisation](https://fscontext.dataobservatory.eu/articles/prelabelled.html)
@@ -83,7 +83,7 @@ Rather than replacing archival description or provenance models,
 The package is inspired by the archival conceptual model [Records in
 Contexts](https://www.ica.org/ica-network/expert-groups/egad/records-in-contexts-ric/)
 (RiC), developed by the *International Council on Archives*. Rather than
-implementing RiC-CM or RiC-O directly, `fscontext` focuses on the
+implementing `RiC-CM` or `RiC-O` directly, `fscontext` focuses on the
 earlier task of contextual reconstruction: deriving contextual
 relationships and candidate `Record Sets` from filesystem observations,
 repository structures, inventories, and other digital traces.
