@@ -114,13 +114,13 @@ in time, allowing reconstruction and longitudinal analysis workflows to
 be demonstrated reproducibly.
 
 ``` r
-library(fscontext)  
-data("fscontextdemo_snapshot_02")  
+library(fscontext)
+data("fscontextdemo_snapshot_02")
 fscontextdemo_snapshot_02 |>
   subset(
-    select=c(storage_id, rel_path, filename, quick_sig)
-    ) |>
-  head() 
+    select = c(storage_id, rel_path, filename, quick_sig)
+  ) |>
+  head()
 #>      storage_id                           rel_path
 #> 1 fscontextdemo                 .github/.gitignore
 #> 2 fscontextdemo     .github/workflows/pkgdown.yaml
@@ -150,8 +150,8 @@ snapshot <- add_snapshot_context(fscontextdemo_snapshot_02)
 snapshot |>
   subset(
     select = c(storage_path_id, observation_id, rel_path)
-  )|>
-  head() 
+  ) |>
+  head()
 #>                                     storage_path_id
 #> 1                 fscontextdemo::.github/.gitignore
 #> 2     fscontextdemo::.github/workflows/pkgdown.yaml

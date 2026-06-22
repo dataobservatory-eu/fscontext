@@ -62,6 +62,11 @@
 #' - provenance metadata;
 #' - RiC-aligned contextual semantics.
 #'
+#' @references
+#' International Council on Archives Expert Group on Archival Description
+#' (2023). Records in Contexts (RiC).
+#' <https://www.ica.org/ica-network/expert-groups/egad/records-in-contexts-ric/>
+#'
 #' @importFrom dplyr mutate select all_of
 #' @importFrom dataset provenance provenance<-
 #' @importFrom dataset dublincore subject_create n_triple n_triples

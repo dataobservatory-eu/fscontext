@@ -1,25 +1,35 @@
-
 test_that("save_scan requires a path", {
   df <- data.frame(x = 1)
   attr(df, "created_at") <- as.POSIXct("2026-04-30 16:00:59", tz = "UTC")
-  
-  expect_error(save_scan(df = df, 
-                         storage_id = "test-storage",
-                         path = 1,
-                         label = "tmp"), 
-               "'path' must be supplied explicitly")
-  
-  expect_error(save_scan(df = df, 
-                         storage_id = "test-storage",
-                         label = "tmp"), 
-               "'path' must be supplied explicitly")
-  
-  expect_error(save_scan(df = df, 
-                         storage_id = "test-storage",
-                         path = NULL,
-                         label = "tmp"), 
-               "'path' must be supplied explicitly")
-  
+
+  expect_error(
+    save_scan(
+      df = df,
+      storage_id = "test-storage",
+      path = 1,
+      label = "tmp"
+    ),
+    "'path' must be supplied explicitly"
+  )
+
+  expect_error(
+    save_scan(
+      df = df,
+      storage_id = "test-storage",
+      label = "tmp"
+    ),
+    "'path' must be supplied explicitly"
+  )
+
+  expect_error(
+    save_scan(
+      df = df,
+      storage_id = "test-storage",
+      path = NULL,
+      label = "tmp"
+    ),
+    "'path' must be supplied explicitly"
+  )
 })
 
 test_that("save_scan writes file and returns path", {
@@ -41,7 +51,7 @@ test_that("save_scan fails without created_at", {
   df <- data.frame(x = 1)
 
   expect_error(
-    save_scan(df, "test-storage", path=tempdir()),
+    save_scan(df, "test-storage", path = tempdir()),
     "created_at"
   )
 })

@@ -17,7 +17,7 @@
 #' - uniqueness
 #' - reproducibility of stored observations
 #'
-#' @param df Data.frame. Scan result with created with [scan_storage()] that 
+#' @param df Data.frame. Scan result with created with [scan_storage()] that
 #' has a `created_at` attribute.
 #' @param storage_id Character. Identifier of the storage.
 #' @param path Character. Directory where the file will be saved.
@@ -31,19 +31,20 @@
 #' \dontrun{
 #' root <- tempfile()
 #' dir.create(root)
-#' 
+#'
 #' dir.create(file.path(root, "R"))
 #' dir.create(file.path(root, "data"))
-#' 
+#'
 #' file.create(file.path(root, "R", "a.R"))
 #' file.create(file.path(root, "R", "b.R"))
 #' file.create(file.path(root, "data", "c.csv"))
-#' 
+#'
 #' scan_storage(
 #'   root = root,
 #'   storage_id = "test-storage",
-#'   path = tmp)
-#' 
+#'   path = tmp
+#' )
+#'
 #' save_scan(scan, "test-storage")
 #' }
 #'
@@ -52,11 +53,10 @@ save_scan <- function(df,
                       storage_id,
                       path,
                       label = NULL) {
-  
   if (missing(path) || is.null(path) || !is.character(path)) {
     stop("save_scan(): 'path' must be supplied explicitly.", call. = FALSE)
   }
-  
+
   if (is.null(attr(df, "created_at"))) {
     stop("save_scan(): df must have a 'created_at' attribute", call. = FALSE)
   }

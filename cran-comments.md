@@ -1,12 +1,13 @@
 ## Resubmission
 
-This is the first CRAN submission of `fscontext`. From the pre-test the following was corrected:
+This is the first CRAN resubmission of `fscontext`.
 
-- missing GPL-3 LICENSE
+- Examples from internal, not exported function documentations were removed.
 
-- Two misformatted URLs. URLs have been checked with `urlchecker::url_check()`.
+- The PROV and RiC abbreviations are spelled out, both n the DESCRIPTION and among the function roxygen documentations with a `reference` tag.
 
-- The words "filesystem", "Filesystem", "RiC" (Records in Contexts), and "inspectable" are intentional technical terms used throughout the package documentation and are not misspellings.
+- Default parameters that would save into any user environment were removed and those examples\
+  in the roxygen documentation now save to `tempdir()`
 
 ## Package purpose
 

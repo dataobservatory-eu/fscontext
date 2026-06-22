@@ -84,5 +84,5 @@ snapshot_storage(
   storage_id = "test-storage",
   path = root
 )
-  
+
 }

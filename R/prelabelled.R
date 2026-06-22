@@ -72,14 +72,20 @@
 #' - [as_character()] for provenance-preserving semantic
 #'   workspaces.
 #'
+#' @references
+#' Lebo, T., Sahoo, S., McGuinness, D. et al. (2013).
+#' PROV-O: The PROV Ontology.
+#' <https://www.w3.org/TR/prov-o/>
+#'
+#' International Council on Archives Expert Group on Archival Description
+#' (2023). Records in Contexts (RiC).
+#' <https://www.ica.org/ica-network/expert-groups/egad/records-in-contexts-ric/>
+#'
+#' @export
+#'
 #' @examples
 #'
-#' x <- c(
-#'   "R",
-#'   "png",
-#'   "csv",
-#'   "unknown"
-#' )
+#' x <- c("R", "png", "csv", "unknown")
 #'
 #' extension_map <- c(
 #'   R = "functional_programming",
@@ -87,10 +93,7 @@
 #'   csv = "tabular_data"
 #' )
 #'
-#' x <- prelabel(
-#'   x,
-#'   labels = extension_map
-#' )
+#' x <- prelabel(x, labels = extension_map)
 #'
 #' x
 #'

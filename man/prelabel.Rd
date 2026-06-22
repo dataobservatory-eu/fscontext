@@ -88,12 +88,7 @@ workspaces.
 }
 \examples{
 
-x <- c(
-  "R",
-  "png",
-  "csv",
-  "unknown"
-)
+x <- c("R", "png", "csv", "unknown")
 
 extension_map <- c(
   R = "functional_programming",
@@ -101,10 +96,7 @@ extension_map <- c(
   csv = "tabular_data"
 )
 
-x <- prelabel(
-  x,
-  labels = extension_map
-)
+x <- prelabel(x, labels = extension_map)
 
 x
 
@@ -114,6 +106,15 @@ semantic_workspace <- as_character(x)
 
 attributes(semantic_workspace)
 
+}
+\references{
+Lebo, T., Sahoo, S., McGuinness, D. et al. (2013).
+PROV-O: The PROV Ontology.
+\url{https://www.w3.org/TR/prov-o/}
+
+International Council on Archives Expert Group on Archival Description
+(2023). Records in Contexts (RiC).
+\url{https://www.ica.org/ica-network/expert-groups/egad/records-in-contexts-ric/}
 }
 \seealso{
 \code{\link[dataset:prelabel]{dataset::prelabel()}},

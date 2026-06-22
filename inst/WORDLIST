@@ -1,11 +1,14 @@
 HDTO
 ICA
 IIIF
+Lebo
 POSIXct
 PROV
+Prelabelled
 RDF
 RStudio
 RiC
+Sahoo
 URIs
 WACZ
 WARC
@@ -18,7 +21,6 @@ dataobservatory
 deduplicate
 eviota
 fonds
-inspectable
 lifecycle
 oaicite
 operationalisation
@@ -33,4 +35,3 @@ testthat
 tibble
 tibbles
 tidyverse
-timesheets

@@ -1,63 +1,81 @@
 make_minimal_fs <- function() {
   root <- tempfile()
   dir.create(root)
-  
+
   dir.create(file.path(root, "R"))
   dir.create(file.path(root, "data"))
-  
+
   file.create(file.path(root, "R", "a.R"))
   file.create(file.path(root, "R", "b.R"))
   file.create(file.path(root, "data", "c.csv"))
-  
+
   root
 }
 
 test_that("snapshot_storage parameter validation", {
   tmp <- fs::dir_create(fs::file_temp())
   root <- make_minimal_fs()
-  
-  expect_error(snapshot_storage(
-    root = root,
-    storage_id = "test-storage",
-    path = 1,
-    label = "tmp"), 
-    "'path' must be supplied explicitly")
-  
-  expect_error(snapshot_storage(
-    root = root,
-    storage_id = "test-storage",
-    label = "tmp"), 
-    "'path' must be supplied explicitly")
-  
-  expect_error(snapshot_storage(
-    root = root,
-    storage_id = "test-storage",
-    path = NULL,
-    label = "tmp"), 
-    "'path' must be supplied explicitly")
-  
-  expect_error(snapshot_storage(
-    root = root,
-    person_id = 1, 
-    storage_id = "test-storage",
-    label = "tmp"), 
-    "'path' must be supplied explicitly")
-  
-  expect_error(snapshot_storage(
-    root = root,
-    person_id = 1,
-    path = root, 
-    storage_id = "test-storage",
-    label = "tmp"), 
-    "'person_id' must be a character vector of length 1")
-  
-  expect_error(snapshot_storage(
-    root = root,
-    person_id = "testuser", 
-    path = root, 
-    storage_id = NULL,
-    label = "tmp"), 
-    "'storage_id' must be a character vector of length 1")
+
+  expect_error(
+    snapshot_storage(
+      root = root,
+      storage_id = "test-storage",
+      path = 1,
+      label = "tmp"
+    ),
+    "'path' must be supplied explicitly"
+  )
+
+  expect_error(
+    snapshot_storage(
+      root = root,
+      storage_id = "test-storage",
+      label = "tmp"
+    ),
+    "'path' must be supplied explicitly"
+  )
+
+  expect_error(
+    snapshot_storage(
+      root = root,
+      storage_id = "test-storage",
+      path = NULL,
+      label = "tmp"
+    ),
+    "'path' must be supplied explicitly"
+  )
+
+  expect_error(
+    snapshot_storage(
+      root = root,
+      person_id = 1,
+      storage_id = "test-storage",
+      label = "tmp"
+    ),
+    "'path' must be supplied explicitly"
+  )
+
+  expect_error(
+    snapshot_storage(
+      root = root,
+      person_id = 1,
+      path = root,
+      storage_id = "test-storage",
+      label = "tmp"
+    ),
+    "'person_id' must be a character vector of length 1"
+  )
+
+  expect_error(
+    snapshot_storage(
+      root = root,
+      person_id = "testuser",
+      path = root,
+      storage_id = NULL,
+      label = "tmp"
+    ),
+    "'storage_id' must be a character vector of length 1"
+  )
 })
 
 test_that("snapshot_storage creates a file", {

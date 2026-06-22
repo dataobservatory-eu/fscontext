@@ -78,3 +78,8 @@ adding a lightweight semantic preservation layer based on:
 \item RiC-aligned contextual semantics.
 }
 }
+\references{
+International Council on Archives Expert Group on Archival Description
+(2023). Records in Contexts (RiC).
+\url{https://www.ica.org/ica-network/expert-groups/egad/records-in-contexts-ric/}
+}
