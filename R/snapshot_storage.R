@@ -41,21 +41,53 @@
 #' @return Invisibly returns the full path to the saved snapshot.
 #'
 #' @examples
-#' \dontrun{
-#' snapshot_storage("D:/_markdown", "l480-ssd", label = "d_markdown")
-#' }
-#'
+#' root <- tempfile()
+#' dir.create(root)
+#' 
+#' dir.create(file.path(root, "R"))
+#' dir.create(file.path(root, "data"))
+#' 
+#' file.create(file.path(root, "R", "a.R"))
+#' file.create(file.path(root, "R", "b.R"))
+#' file.create(file.path(root, "data", "c.csv"))
+#' 
+#' snapshot_storage(
+#'   root = root,
+#'   storage_id = "test-storage",
+#'   path = root
+#' )
+#'   
 #' @export
 snapshot_storage <- function(
   root,
-  storage_id = "l480-ssd",
-  person_id = "antaldaniel",
+  storage_id = "local-storage",
+  person_id = "user",
   scan_time = Sys.time(),
   label = NULL,
   path = here::here("data-raw", "snapshots"),
   compute_signature = TRUE,
   max_signature_size = 200 * 1024 * 1024
 ) {
+  
+  if (missing(path) || is.null(path) || !is.character(path)) {
+    stop("snapshot_storage(): 'path' must be supplied explicitly.", 
+         call. = FALSE)
+  }
+  
+  if (is.null(person_id) || !is.character(person_id) || is.na(person_id)) {
+    stop(
+      "snapshot_storage(): 'person_id' must be a character vector of length 1.",
+      call. = FALSE
+      )
+  }
+  
+  if (is.null(storage_id) || !is.character(storage_id) || is.na(storage_id)) {
+    stop(
+      "snapshot_storage(): 'storage_id' must be a character vector of length 1.",
+      call. = FALSE
+    )
+  }
+  
   df <- scan_storage(
     root = root,
     storage_id = storage_id,
@@ -67,16 +99,9 @@ snapshot_storage <- function(
 
   if (is.null(label) || !nzchar(label)) {
     root_norm <- fs::path_abs(root)
-
     drive <- tolower(substr(root_norm, 1, 1))
-
     folder <- basename(root_norm)
-
-    label <- paste0(
-      drive,
-      "_",
-      gsub("[^a-zA-Z0-9]+", "_", folder)
-    )
+    label <- paste0(drive, "_", gsub("[^a-zA-Z0-9]+", "_", folder))
   }
 
   out <- save_scan(

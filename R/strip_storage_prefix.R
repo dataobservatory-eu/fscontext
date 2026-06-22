@@ -23,18 +23,6 @@
 #' @return
 #' Character vector with storage prefixes removed.
 #'
-#' @examples
-#' strip_storage_prefix(
-#'   "l460::C:/_packages/eviota/R/file.R"
-#' )
-#'
-#' strip_storage_prefix(
-#'   c(
-#'     "l460::C:/test.txt",
-#'     "l480::D:/data.csv"
-#'   )
-#' )
-#'
 #' @keywords internal
 #' @noRd
 strip_storage_prefix <- function(x) {

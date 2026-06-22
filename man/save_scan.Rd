@@ -4,22 +4,18 @@
 \alias{save_scan}
 \title{Persist an observational snapshot to disk}
 \usage{
-save_scan(
-  df,
-  storage_id,
-  path = here::here("data-raw", "snapshots"),
-  label = NULL
-)
+save_scan(df, storage_id, path, label = NULL)
 }
 \arguments{
-\item{df}{Data.frame. Scan result with a \code{created_at} attribute.}
+\item{df}{Data.frame. Scan result with created with \code{\link[=scan_storage]{scan_storage()}} that
+has a \code{created_at} attribute.}
 
 \item{storage_id}{Character. Identifier of the storage.}
 
 \item{path}{Character. Directory where the file will be saved.}
 
 \item{label}{Character. Optional human-readable label describing
-the scanned scope (e.g. "d_eviota").}
+the scanned scope (e.g. "d_eviota"). Default is \code{NULL} (no label).}
 }
 \value{
 Invisibly returns the full file path of the saved \code{.rds} file.
@@ -46,8 +42,22 @@ This ensures:
 }
 \examples{
 \dontrun{
-scan <- scan_storage("D:/_markdown")
-save_scan(scan, "l480-ssd")
+root <- tempfile()
+dir.create(root)
+
+dir.create(file.path(root, "R"))
+dir.create(file.path(root, "data"))
+
+file.create(file.path(root, "R", "a.R"))
+file.create(file.path(root, "R", "b.R"))
+file.create(file.path(root, "data", "c.csv"))
+
+scan_storage(
+  root = root,
+  storage_id = "test-storage",
+  path = tmp)
+
+save_scan(scan, "test-storage")
 }
 
 }

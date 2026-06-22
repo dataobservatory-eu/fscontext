@@ -6,8 +6,8 @@
 \usage{
 snapshot_storage(
   root,
-  storage_id = "l480-ssd",
-  person_id = "antaldaniel",
+  storage_id = "local-storage",
+  person_id = "user",
   scan_time = Sys.time(),
   label = NULL,
   path = here::here("data-raw", "snapshots"),
@@ -69,8 +69,20 @@ This prevents collisions between similar local folder structures
 observed on different machines or storage contexts.
 }
 \examples{
-\dontrun{
-snapshot_storage("D:/_markdown", "l480-ssd", label = "d_markdown")
-}
+root <- tempfile()
+dir.create(root)
 
+dir.create(file.path(root, "R"))
+dir.create(file.path(root, "data"))
+
+file.create(file.path(root, "R", "a.R"))
+file.create(file.path(root, "R", "b.R"))
+file.create(file.path(root, "data", "c.csv"))
+
+snapshot_storage(
+  root = root,
+  storage_id = "test-storage",
+  path = root
+)
+  
 }
