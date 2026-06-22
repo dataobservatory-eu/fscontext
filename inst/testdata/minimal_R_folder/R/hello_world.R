@@ -11,6 +11,10 @@
 #'
 #' The function currently supports English (`"en"`)
 #' and Hungarian (`"hu"`) greetings.
+#' 
+#' @details
+#' This function serves only testing purposes and therefore it is not
+#' exported and has no examples.
 #'
 #' @param language_code A character language code.
 #' Defaults to `"en"`.
@@ -18,12 +22,8 @@
 #' @return
 #' A character string containing a friendly greeting.
 #'
-#' @examples
-#' hello_world()
 #'
-#' hello_world("hu")
-#'
-#' @export
+#' @keywords internal
 hello_world <- function(language_code = "en") {
   hello_world_string <- ""
 

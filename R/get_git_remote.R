@@ -32,12 +32,9 @@
 #'
 #' @return Character. Remote URL, or `NA_character_` if not found.
 #'
-#' @examples
-#' \dontrun{
-#' get_git_remote("/path/to/repo")
-#' }
-#'
+#' @importFrom fs path
 #' @keywords internal
+#' @noRd
 
 get_git_remote <- function(repo_root) {
   stopifnot(is.character(repo_root), length(repo_root) == 1)
@@ -62,15 +59,8 @@ get_git_remote <- function(repo_root) {
   # --- extract remote URL ---
   # inspect only nearby lines to avoid unrelated remotes
 
-  block <- lines[
-    origin_idx:min(origin_idx + 5, length(lines))
-  ]
-
-  url_line <- grep(
-    "url\\s*=\\s*",
-    block,
-    value = TRUE
-  )
+  block <- lines[origin_idx:min(origin_idx + 5, length(lines))]
+  url_line <- grep("url\\s*=\\s*", block, value = TRUE)
 
   if (length(url_line) == 0) {
     return(NA_character_)

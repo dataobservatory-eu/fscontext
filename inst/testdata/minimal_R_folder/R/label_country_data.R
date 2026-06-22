@@ -3,6 +3,11 @@
 #' A minimal example wrapper around `dataset::prelabel()`
 #' used in `fscontextdemo` to demonstrate semantic enrichment
 #' workflows and provenance-aware data transformations.
+#' 
+#' @details
+#' This function serves only testing purposes and therefore it is not
+#' exported and has no examples.
+#' 
 #'
 #' @param df A data frame.
 #'
@@ -12,20 +17,8 @@
 #' @return
 #' A data frame with a labelled `country` variable.
 #'
-#' @examples
-#' country_map <- c(
-#'   "Andorra" = "AD",
-#'   "Liechtenstein" = "LI",
-#'   "San Marino" = "SM"
-#' )
-#'
-#' label_country_data(
-#'   fsdemo_country_data,
-#'   prelabel_map = country_map
-#' )
-#'
 #' @importFrom dataset prelabel
-#' @export
+#' @keywords internal
 label_country_data <- function(
     df,
     prelabel_map

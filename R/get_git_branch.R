@@ -7,12 +7,10 @@
 #'
 #' @return Character. Branch name, "DETACHED", or NA if not available.
 #'
-#' @examples
-#' \dontrun{
-#' get_git_branch("/path/to/repo")
-#' }
-#'
 #' @keywords internal
+#' @importFrom fs path
+#' @noRd
+
 get_git_branch <- function(repo_root) {
   stopifnot(is.character(repo_root), length(repo_root) == 1)
 
