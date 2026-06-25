@@ -29,6 +29,13 @@ articles:
     contents:
       - intro
       - prelabelled
+  - title: "Organising Evidence"
+    desc: >
+      Learn how structural aggregation metadata can support the
+      identification of potentially informative objects and candidate
+      Record Sets across folders, ZIP archives, and WACZ packages.
+    contents:
+      - structural_aggregations
 
 reference:
 

@@ -1,9 +1,12 @@
+ARChive
 HDTO
 ICA
 IIIF
+ISAD
 Lebo
 POSIXct
 PROV
+Pomerantz
 Prelabelled
 RDF
 RStudio
@@ -19,13 +22,16 @@ codecov
 contentReference
 dataobservatory
 deduplicate
+dplyr
 eviota
 fonds
 lifecycle
 oaicite
 operationalisation
 operationalisations
+pacakage
 prelabelled
+purrr
 recontextualisation
 regex
 rel
@@ -34,4 +40,5 @@ roundtrip
 testthat
 tibble
 tibbles
+tidyr
 tidyverse

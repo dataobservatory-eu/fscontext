@@ -6,8 +6,8 @@
 \usage{
 scan_storage(
   root,
-  storage_id = "l480-1-ssd",
-  person_id = "antaldaniel",
+  storage_id = "local-storage",
+  person_id = "local-user",
   scan_time = Sys.time(),
   compute_signature = TRUE,
   max_signature_size = 200 * 1024 * 1024

@@ -24,9 +24,9 @@ knitr::opts_chunk$set(
 [![lifecycle](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status:
 WIP](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-[![devel-version](https://img.shields.io/badge/devel%20version-0.2.0-blue.svg)](https://github.com/dataobservatory-eu/fscontext)
+[![devel-version](https://img.shields.io/badge/devel%20version-0.2.0001-blue.svg)](https://github.com/dataobservatory-eu/fscontext/tree/devel)
 [![dataobservatory](https://img.shields.io/badge/ecosystem-dataobservatory.eu-3EA135.svg)](https://dataobservatory.eu/)
-[![codecov](https://app.codecov.io/gh/dataobservatory-eu/fscontext/graph/badge.svg)](https://app.codecov.io/gh/dataobservatory-eu/fscontext)
+[![codecov](https://codecov.io/gh/dataobservatory-eu/fscontext/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dataobservatory-eu/fscontext)
 
 <!-- badges: end -->
 

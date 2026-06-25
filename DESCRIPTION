@@ -1,6 +1,6 @@
 Package: fscontext
 Title: File System Contextualisation and Record Set Reconstruction
-Version: 0.2.0
+Version: 0.2.001
 Language: en-GB
 Authors@R: 
     person(given = "Daniel", 

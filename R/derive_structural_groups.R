@@ -1,124 +1,120 @@
-#' Derive structural grouping heuristics from relative paths
+#' Derive structural aggregation metadata from relative paths
 #'
-#' Derives lightweight structural grouping heuristics from relative
-#' filesystem paths.
+#' Derives lightweight structural aggregation metadata from observed
+#' filesystem locators.
 #'
-#' The function extracts shallow structural patterns commonly found in
-#' software projects, research workflows, and digital working environments.
+#' The function identifies shallow structural patterns in relative
+#' filesystem paths and creates candidate aggregations that may help
+#' users explore, navigate, and contextualise observed resources.
 #'
-#' It assigns:
+#' The resulting groupings are structural projections derived from
+#' path organisation alone. They do not represent authoritative
+#' documentary structure, provenance relationships, or Record Set
+#' assertions.
 #'
-#' - `structural_group`:
-#'   grouping heuristic derived from the first path component
-#'   (e.g. `innolab25`, `_packages`, `_markdown`)
-#'
-#' - `component`:
-#'   immediate structural subdivision within the grouping,
-#'   if present
-#'   (e.g. `eviota`, `filmledgerimport`, `iotables`)
-#'
-#' These derived structures support:
-#'
-#' - exploratory grouping of filesystem observations
-#' - navigation of large observational snapshots
-#' - reconstruction of operational project environments
-#' - identification of candidate documentary aggregations
-#'
-#' The function performs deterministic structural projection only.
-#' It does not validate repository semantics, documentary structure,
-#' or authoritative Record Set boundaries.
+#' Structural aggregation metadata can increase the potential
+#' informativeness of filesystem observations by exposing recurring
+#' organisational patterns that may support later analytical,
+#' curatorial, or archival interpretation.
 #'
 #' @param rel_path Character vector of relative filesystem paths.
 #'
 #' @return A `data.frame` with columns:
 #' \describe{
 #'   \item{structural_group}{
-#'   Filesystem-based structural grouping heuristic derived from
-#'   the first path component.
+#'   Candidate aggregation derived from the leading path components.
 #'   }
 #'   \item{component}{
-#'   Immediate structural subdivision within the grouping,
-#'   if present.
+#'   Immediate structural subdivision within the aggregation,
+#'   when present.
 #'   }
 #' }
 #'
 #' @details
-#' This function provides a lightweight structural interpretation layer
-#' on top of observational filesystem data.
+#' The function operates on observed locators and derives aggregation
+#' metadata from structural organisation alone.
 #'
-#' In RiC-aligned operational terms:
+#' In the fscontext workflow:
 #'
-#' - rows in observational snapshots represent filesystem
-#'   Instantiations
+#' - filesystem observations provide evidence about observed resources;
+#' - relative paths provide structural information about those resources;
+#' - structural aggregation metadata exposes candidate groupings that
+#'   may later support contextual reconstruction, exploratory analysis,
+#'   semantic stabilisation, or Record Set construction.
 #'
-#' - `rel_path` acts as an operational locator associated with
-#'   observed filesystem occurrences
+#' The resulting groupings are analytical projections rather than
+#' semantic assertions. They are intended to help identify potentially
+#' informative objects and candidate aggregations, not to establish
+#' authoritative documentary relationships.
 #'
-#' - the derived structural groupings provide analytical heuristics
-#'   that may later support Record Set construction
-#'
-#' The derived groupings are operational analytical projections,
-#' not authoritative RiC Record Sets.
-#'
-#' The function is intended for analytical, navigational,
-#' and exploratory reconstruction workflows.
-#'
-#' Future versions of the package may replace or extend this logic with
-#' more explicit provenance-aware Record Set construction workflows
-#' (for example via `create_record_set()`).
-
-#' @examples
-#' data("fscontextdemo_snapshot_02")
-#'
-#' example_paths <- c(
-#'   "_packages/fscontextdemo/R/derive_fsdemo_country_data.R",
-#'   "_packages/fscontextdemo/tests/testthat/test-country-data.R",
-#'   "_packages/fscontextdemo/data-raw/create_fsdemo_country_data.R",
-#'   "_packages/fscontextdemo/docs/index.html"
-#' )
-#'
-#' data.frame(
-#'   rel_path = example_paths,
-#'   derive_structural_groups(example_paths)
-#' )
+#' Future versions may introduce alternative aggregation strategies
+#' based on other observational evidence such as provenance,
+#' authorship, temporal patterns, repository context, or content-based
+#' signals.
 #'
 #' @importFrom dplyr bind_rows
 #' @export
 
-derive_structural_groups <- function(rel_path) {
+derive_structural_groups <- function(
+  rel_path,
+  profile = "folder-depth-2"
+) {
+  if (is.null(rel_path) || !is.character(rel_path)) {
+    stop(
+      "rel_path must be a character vector",
+      call. = FALSE
+    )
+  }
+
+  rel_path <- gsub("\\\\", "/", rel_path)
+
   parts <- strsplit(rel_path, "/", fixed = TRUE)
+
+  depth <- switch(profile,
+    "folder-depth-1" = 1L,
+    "folder-depth-2" = 2L,
+    "folder-depth-3" = 3L,
+    "folder-depth-4" = 4L,
+    "wacz" = NA_integer_,
+    stop(
+      "Unknown profile: ",
+      profile,
+      call. = FALSE
+    )
+  )
 
   res <- lapply(parts, function(p) {
     p <- p[nzchar(p)]
 
-    if (length(p) == 0) {
+    if (length(p) == 0 || all(is.na(p))) {
       return(list(
         structural_group = NA_character_,
         component = NA_character_
       ))
     }
 
-    if (length(p) == 1) {
-      return(list(
-        structural_group = p[1],
-        component = NA_character_
-      ))
+    if (profile == "wacz") {
+      structural_group <- p[1]
+
+      component <- if (length(p) > 1) {
+        p[2]
+      } else {
+        NA_character_
+      }
+    } else {
+      group_depth <- min(depth, length(p))
+
+      structural_group <- paste(
+        p[seq_len(group_depth)],
+        collapse = "/"
+      )
+
+      component <- if (length(p) > group_depth) {
+        p[group_depth + 1]
+      } else {
+        NA_character_
+      }
     }
-
-    if (length(p) == 2) {
-      return(list(
-        structural_group = paste(p[1], p[2], sep = "/"),
-        component = NA_character_
-      ))
-    }
-
-    structural_group <- paste(
-      p[1],
-      p[2],
-      sep = "/"
-    )
-
-    component <- p[3]
 
     list(
       structural_group = structural_group,
