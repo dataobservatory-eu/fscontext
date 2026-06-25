@@ -47,7 +47,8 @@ Imports:
     tidyr,
     magrittr,
     stringr,
-    labelled
+    labelled,
+    jsonlite
 Suggests: 
     knitr,
     rmarkdown,
