@@ -34,7 +34,6 @@ Imports:
     digest,
     fs,
     progress,
-    here,
     dplyr,
     utils,
     rlang,

@@ -54,7 +54,7 @@ file.create(file.path(root, "data", "c.csv"))
 scan_storage(
   root = root,
   storage_id = "test-storage",
-  path = tmp
+  path = root
 )
 
 save_scan(scan, "test-storage")

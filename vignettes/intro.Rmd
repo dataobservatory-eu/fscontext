@@ -147,7 +147,7 @@ record_set <- snapshot_to_recordset_df(
   creator = utils::person("Jane", "Doe"),
   snapshot_files = tmp,
   roots = "D:/_packages/fscontextdemo",
-  record_set_id = "fscontextdemo"
+  record_set_identifier = "fscontextdemo"
 )
 ```
 
@@ -156,7 +156,7 @@ Record Sets provide contextual documentary groupings derived from filesystem evi
 ```{r subsettingrecordset}
 set.seed(12)
 record_set |>
-  dplyr::select(record_set_id, filename, quick_sig, size) |>
+  dplyr::select(record_set_identifier, filename, quick_sig, size) |>
   sample_n(10)
 ```
 

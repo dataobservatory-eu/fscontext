@@ -24,11 +24,11 @@ identifier of the resulting Record Set.}
 
 \item{record_set_title}{Optional human-readable title.}
 
+\item{creator}{A \code{\link[utils:person]{utils::person()}} object describing the creator
+of the semantic Record Set assertion.}
+
 \item{exclude_patterns}{Character vector of exclusion patterns
 passed to \code{\link[=subset_snapshot]{subset_snapshot()}}.}
-
-\item{person}{A \code{\link[utils:person]{utils::person()}} object describing the creator
-of the semantic Record Set assertion.}
 }
 \value{
 A semantically enriched \code{recordset_df} object inheriting from

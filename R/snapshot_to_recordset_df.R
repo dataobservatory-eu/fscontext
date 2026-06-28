@@ -37,7 +37,7 @@
 #'
 #' @param record_set_title Optional human-readable title.
 #'
-#' @param person A [utils::person()] object describing the creator
+#' @param creator A [utils::person()] object describing the creator
 #'   of the semantic Record Set assertion.
 #'
 #' @param exclude_patterns Character vector of exclusion patterns

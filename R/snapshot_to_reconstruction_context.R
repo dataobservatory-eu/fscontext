@@ -61,7 +61,7 @@
 #' - `observation_id`;
 #' - `structural_group`;
 #' - `component`;
-#' - `record_set_id`;
+#' - `record_set_identifier`;
 #' - `resource_id`;
 #' - `locator_path`.
 #'
@@ -261,7 +261,7 @@ snapshot_to_reconstruction_context <- function(
 
   contextual_snapshot |>
     record_set_projection(
-      record_set_id = "structural_group",
+      record_set_identifier = "structural_group",
       resource_id = "inst_id",
       locator_path = "rel_root_path",
       construction_rule = c(

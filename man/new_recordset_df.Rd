@@ -14,8 +14,6 @@ Record identifiers.}
 
 \item{record_part_identifier}{Optional name of the column containing
 Record Part identifiers.}
-
-\item{record_set_identifier}{Optional identifier of the Record Set.}
 }
 \value{
 A recordset_df object inheriting from dataset_df.

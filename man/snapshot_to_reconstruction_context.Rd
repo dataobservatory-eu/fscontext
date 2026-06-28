@@ -48,7 +48,7 @@ Contextual enrichment variables may include:
 \item \code{observation_id};
 \item \code{structural_group};
 \item \code{component};
-\item \code{record_set_id};
+\item \code{record_set_identifier};
 \item \code{resource_id};
 \item \code{locator_path}.
 }

@@ -144,8 +144,6 @@ recordset_df <- function(
 #'
 #' @param x A dataset_df object.
 #'
-#' @param record_set_identifier Optional identifier of the Record Set.
-#'
 #' @param record_identifier Optional name of the column containing
 #' Record identifiers.
 #'
