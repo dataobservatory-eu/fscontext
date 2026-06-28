@@ -66,21 +66,20 @@
 #' @export
 
 observe_wacz <- function(wacz) {
-  
   tmp <- tempfile("wacz")
-  
+
   extract_storage(
     archive = wacz,
     exdir = tmp
   )
-  
+
   datapackage <- read_datapackage(tmp)
-  
+
   pages <- read_pages_jsonl(tmp)
-  
+
   cdx <- read_cdx(tmp) |>
     collapse_cdx_versions()
-  
+
   observations <- match_pages_to_cdx(
     pages,
     cdx
@@ -89,23 +88,22 @@ observe_wacz <- function(wacz) {
       archive = basename(wacz),
       full_path = normalizePath(wacz)
     )
-  
+
   attr(observations, "datapackage") <- datapackage
   attr(observations, "wacz") <- normalizePath(wacz)
-  
+
   observations
 }
 
 #' @keywords internal
 #' @importFrom jsonlite stream_in
-#' @importFrom dplyr filter mutate rename 
+#' @importFrom dplyr filter mutate rename
 #' @importFrom tibble as_tibble
 #' @noRd
 
 read_pages_jsonl <- function(path) {
-  
   pages_file <- file.path(path, "pages", "pages.jsonl")
-  
+
   if (!file.exists(pages_file)) {
     stop(
       "Cannot find 'pages/pages.jsonl' in ",
@@ -113,7 +111,7 @@ read_pages_jsonl <- function(path) {
       call. = FALSE
     )
   }
-  
+
   pages <- suppressWarnings(
     jsonlite::stream_in(
       file(pages_file),
@@ -143,9 +141,8 @@ read_pages_jsonl <- function(path) {
 #' @noRd
 
 read_cdx <- function(path) {
-  
   cdx_file <- file.path(path, "indexes", "index.cdx")
-  
+
   if (!file.exists(cdx_file)) {
     stop(
       "Cannot find 'indexes/index.cdx' in ",
@@ -153,38 +150,37 @@ read_cdx <- function(path) {
       call. = FALSE
     )
   }
-  
+
   lines <- readLines(
     cdx_file,
     warn = FALSE,
     encoding = "UTF-8"
   )
-  
+
   lines <- lines[nzchar(lines)]
-  
+
   parsed <- purrr::map_dfr(
     lines,
     function(line) {
-      
       parts <- strsplit(
         line,
         " ",
         fixed = TRUE
       )[[1]]
-      
+
       if (length(parts) < 3) {
         return(NULL)
       }
-      
+
       urlkey <- parts[1]
       timestamp <- parts[2]
       json <- paste(
         parts[-c(1, 2)],
         collapse = " "
       )
-      
+
       meta <- jsonlite::fromJSON(json)
-      
+
       tibble::tibble(
         urlkey = urlkey,
         cdx_timestamp = timestamp,
@@ -199,7 +195,7 @@ read_cdx <- function(path) {
       )
     }
   )
-  
+
   parsed
 }
 
@@ -209,14 +205,13 @@ read_cdx <- function(path) {
 #' @noRd
 
 collapse_cdx_versions <- function(cdx) {
-  
   version_count <-
     cdx |>
     dplyr::count(
       resource_locator,
       name = "n_versions"
     )
-  
+
   cdx |>
     dplyr::filter(
       mime == "text/html"
@@ -237,10 +232,9 @@ collapse_cdx_versions <- function(cdx) {
 #' @noRd
 
 match_pages_to_cdx <- function(
-    pages,
-    cdx
+  pages,
+  cdx
 ) {
-  
   dplyr::left_join(
     pages,
     cdx,
@@ -254,9 +248,8 @@ match_pages_to_cdx <- function(
 #' @noRd
 
 read_datapackage <- function(path) {
-  
   datapackage_file <- file.path(path, "datapackage.json")
-  
+
   if (!file.exists(datapackage_file)) {
     stop(
       "Cannot find 'datapackage.json' in ",
@@ -264,11 +257,11 @@ read_datapackage <- function(path) {
       call. = FALSE
     )
   }
-  
+
   dp <- jsonlite::read_json(
     datapackage_file,
     simplifyVector = TRUE
   )
-  
+
   dp
 }

@@ -59,7 +59,7 @@ provenance-aware Record Set construction
 
 Future versions of the package may replace or extend this logic
 with more explicit provenance-aware Record Set construction workflows
-(for example via \code{create_record_set()}).
+(for example via \code{record_set_projection()}).
 }
 \seealso{
 \code{\link[=derive_structural_groups]{derive_structural_groups()}}

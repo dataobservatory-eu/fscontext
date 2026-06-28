@@ -125,7 +125,7 @@ quick_signature <- function(path, n = 1024) {
 #' @param n Integer. Number of characters sampled from selected regions
 #'   (default: 1024).
 #'
-#' @return Character vector of operational signatures that summarises the 
+#' @return Character vector of operational signatures that summarises the
 #' observed textual representation of a resource.
 #'
 #' @details
@@ -164,38 +164,42 @@ quick_signature_text <- function(x, n = 1024) {
   if (length(x) == 0) {
     return(character())
   }
-  
+
   vapply(
     x,
     function(text) {
-      if (is.na(text)) {return(NA_character_)}
-      
+      if (is.na(text)) {
+        return(NA_character_)
+      }
+
       text <- enc2utf8(text)
-      
-      if (!nzchar(text)) {return("empty")}
-      
+
+      if (!nzchar(text)) {
+        return("empty")
+      }
+
       n_chars <- nchar(text, type = "chars")
-      
+
       if (n_chars <= n) {
         return(digest::digest(text, algo = "xxhash32"))
       }
-      
+
       first <- substr(text, 1, n)
-      
+
       if (n_chars <= 3 * n) {
         last <- substr(text, n_chars - n + 1, n_chars)
-        
+
         return(paste0(
           digest::digest(first, algo = "xxhash32"),
           "_",
           digest::digest(last, algo = "xxhash32")
         ))
       }
-      
+
       middle_start <- floor(n_chars / 2)
       middle <- substr(text, middle_start, middle_start + n - 1)
       last <- substr(text, n_chars - n + 1, n_chars)
-      
+
       paste0(
         digest::digest(first, algo = "xxhash32"), "_",
         digest::digest(middle, algo = "xxhash32"), "_",

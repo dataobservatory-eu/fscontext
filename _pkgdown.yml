@@ -29,6 +29,7 @@ articles:
     contents:
       - intro
       - prelabelled
+      - recordset_df
   - title: "Organising Evidence"
     desc: >
       Learn how structural aggregation metadata can support the
@@ -36,7 +37,7 @@ articles:
       Record Sets across folders, ZIP archives, and WACZ packages.
     contents:
       - structural_aggregations
-
+      
 reference:
 
   - title: "Filesystem Snapshots"
@@ -56,11 +57,10 @@ reference:
       by the Records in Contexts model.
     contents:
       - construct_structural_paths
-      - create_record_set
       - snapshot_to_reconstruction_context
       - snapshot_to_recordset_df
+      - wacz_to_recordset_df
       - recordset_df
-      - as_recordset_df
       
   - title: "Contextualisation"
     contents:
@@ -76,6 +76,7 @@ reference:
         contextual reconstruction.
     contents:
     - observe_universe
+    - observe_wacz
     - quick_signature
     - quick_signature_text
     - detect_generated_artifacts

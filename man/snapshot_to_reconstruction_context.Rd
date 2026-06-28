@@ -121,6 +121,5 @@ snapshot_to_reconstruction_context(
 \code{\link[=snapshot_to_recordset_df]{snapshot_to_recordset_df()}},
 \code{\link[=subset_snapshot]{subset_snapshot()}},
 \code{\link[=add_snapshot_context]{add_snapshot_context()}},
-\code{\link[=add_structural_groups]{add_structural_groups()}},
-\code{\link[=create_record_set]{create_record_set()}}
+\code{\link[=add_structural_groups]{add_structural_groups()}}.
 }

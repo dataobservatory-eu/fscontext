@@ -28,7 +28,6 @@
 #'
 #' @importFrom fs dir_exists dir_create
 #' @examples
-#' \dontrun{
 #' root <- tempfile()
 #' dir.create(root)
 #'
@@ -46,7 +45,6 @@
 #' )
 #'
 #' save_scan(scan, "test-storage")
-#' }
 #'
 #' @export
 save_scan <- function(df,

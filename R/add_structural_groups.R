@@ -50,7 +50,7 @@
 #'
 #' Future versions of the package may replace or extend this logic
 #' with more explicit provenance-aware Record Set construction workflows
-#' (for example via `create_record_set()`).
+#' (for example via `record_set_projection()`).
 #'
 #' @seealso [derive_structural_groups()]
 #'

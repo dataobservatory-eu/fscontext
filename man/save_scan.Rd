@@ -41,7 +41,6 @@ This ensures:
 }
 }
 \examples{
-\dontrun{
 root <- tempfile()
 dir.create(root)
 
@@ -59,6 +58,5 @@ scan_storage(
 )
 
 save_scan(scan, "test-storage")
-}
 
 }
