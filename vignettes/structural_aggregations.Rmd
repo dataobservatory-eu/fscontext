@@ -69,7 +69,7 @@ tests
 vignettes
 ```
 
-```{r}
+```{r filtering}
 groups %>%
   filter(structural_group %in% c("R", "man"))
 ```
@@ -119,14 +119,14 @@ Structural aggregation metadata therefore remains stable across storage represen
 
 This demonstrates that candidate aggregations may survive transformations between storage environments.
 
-```{r}
+```{r derivestructuralgroups}
 zip_groups <- derive_structural_groups(
   zip_snapshot$rel_path,
   profile = "folder-depth-1"
 )
 ```
 
-```{r}
+```{r filterstructuralgroups}
 zip_groups %>%
   filter(structural_group %in% c("R", "man"))
 ```
@@ -143,7 +143,7 @@ A WACZ package may therefore contain both archived web content and the metadata 
 
 Observe a WACZ package:
 
-```{r}
+```{r observewacz}
 wacz <- scan_storage(
   system.file(
     "testdata/fscontext_020.wacz",

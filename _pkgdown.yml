@@ -21,75 +21,77 @@ authors:
       
       
 articles:
+
   - title: "Getting Started"
-    desc: >
-     Learn how to create filesystem snapshots, explore structural
-      organisation, construct contextual Record Sets, and analyse
-      digital working environments with fscontext.
     contents:
       - intro
+
+  - title: "Semantic Stabilisation"
+    contents:
       - prelabelled
+
+  - title: "Working with Record Sets"
+    contents:
       - recordset_df
-  - title: "Organising Evidence"
-    desc: >
-      Learn how structural aggregation metadata can support the
-      identification of potentially informative objects and candidate
-      Record Sets across folders, ZIP archives, and WACZ packages.
+
+  - title: "Structural Aggregation"
     contents:
       - structural_aggregations
       
 reference:
 
-  - title: "Filesystem Snapshots"
+  - title: "Observation"
     desc: >
-      Create, store and retrieve filesystem observations.
+      Observe digital resources and create reproducible filesystem
+      snapshots.
     contents:
       - scan_storage
       - snapshot_storage
-      - read_snapshot
       - save_scan
+      - read_snapshot
       - subset_snapshot
-      
-  - title: "Record Sets"
-    desc: >
-      Construct contextual Record Sets from filesystem observations
-      and create semantically enriched recordset_df objects inspired
-      by the Records in Contexts model.
-    contents:
-      - construct_structural_paths
-      - snapshot_to_reconstruction_context
-      - snapshot_to_recordset_df
-      - wacz_to_recordset_df
-      - recordset_df
-      
+      - observe_universe
+      - observe_wacz
+      - quick_signature
+      - quick_signature_text
+
   - title: "Contextualisation"
+    desc: >
+      Construct contextual groupings and enrich observations with
+      structural context.
     contents:
       - context_roots
       - coverage_roots
       - derive_record_set
       - invert_contextual_grouping
+      - add_snapshot_context
+      - add_structural_groups
+      - construct_structural_paths
 
-  - title: "Observational Analysis"
+  - title: "Analysis"
     desc: >
-        Analyse filesystem observations, identify duplicates,
-        generated artefacts and operational noise before
-        contextual reconstruction.
+      Analyse observations before semantic interpretation.
     contents:
-    - observe_universe
-    - observe_wacz
-    - quick_signature
-    - quick_signature_text
-    - detect_generated_artifacts
-    - exclude_operational_noise
-    - classify_operational_file_type
-    - derive_structural_groups
-    
+      - summarise_duplicates
+      - summarise_observed_activity
+      - detect_generated_artifacts
+      - exclude_operational_noise
+      - classify_operational_file_type
+      - derive_structural_groups
+
+  - title: "Record Sets"
+    desc: >
+      Create contextual Record Sets and semantically enriched
+      recordset_df objects.
+    contents:
+      - snapshot_to_reconstruction_context
+      - snapshot_to_recordset_df
+      - wacz_to_recordset_df
+      - recordset_df
 
   - title: "Semantic Stabilisation"
     desc: >
-      Support human-in-the-loop semantic stabilisation through
-      prelabelled values, rulebooks, semantic refinement and
-      controlled vocabulary workflows.
+      Prepare observations for human review and semantic enrichment.
     contents:
       - prelabel
       - is.prelabelled
@@ -101,26 +103,9 @@ reference:
       - compile_rulebook
       - coverage_rules_path
 
-  - title: "Activity & Change Analysis"
+  - title: "Example Data"
     desc: >
-      Reconstruct activity, change and event patterns from filesystem
-      observations.
-    contents:
-      - summarise_duplicates
-      - summarise_observed_activity
-      
-  - title: "Context Enrichment"
-    desc: >
-      Add contextual identifiers and structural grouping
-      variables to filesystem observations.
-    contents:
-    - add_snapshot_context
-    - add_structural_groups
-
-  - title: "Example Snapshots"
-    desc: >
-      Reproducible filesystem snapshots and contextual reconstruction
-      examples used throughout the package.
+      Reproducible snapshots used throughout the documentation.
     contents:
       - fscontextdemo_snapshot_01
       - fscontextdemo_snapshot_02
