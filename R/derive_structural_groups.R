@@ -1,57 +1,85 @@
 #' Derive structural aggregation metadata from relative paths
 #'
+#' @description
 #' Derives lightweight structural aggregation metadata from observed
-#' filesystem locators.
+#' relative filesystem paths.
 #'
-#' The function identifies shallow structural patterns in relative
-#' filesystem paths and creates candidate aggregations that may help
-#' users explore, navigate, and contextualise observed resources.
+#' The function identifies recurring structural patterns in directory
+#' hierarchies and creates candidate aggregations that can support
+#' exploratory analysis, navigation, contextual reconstruction, and
+#' later semantic interpretation.
 #'
-#' The resulting groupings are structural projections derived from
-#' path organisation alone. They do not represent authoritative
-#' documentary structure, provenance relationships, or Record Set
-#' assertions.
-#'
-#' Structural aggregation metadata can increase the potential
-#' informativeness of filesystem observations by exposing recurring
-#' organisational patterns that may support later analytical,
-#' curatorial, or archival interpretation.
+#' The resulting groupings are derived solely from path structure.
+#' They are analytical projections rather than authoritative Record
+#' Sets, provenance assertions, or documentary relationships.
 #'
 #' @param rel_path Character vector of relative filesystem paths.
 #'
-#' @return A `data.frame` with columns:
+#' @param profile Character scalar specifying the structural
+#'   aggregation strategy. Available profiles are:
+#'   \describe{
+#'   \item{"folder-depth-1"}{Group by the first directory level.}
+#'   \item{"folder-depth-2"}{Group by the first two directory levels
+#'   (default).}
+#'   \item{"folder-depth-3"}{Group by the first three directory levels.}
+#'   \item{"folder-depth-4"}{Group by the first four directory levels.}
+#'   \item{"wacz"}{Use the first path component as the structural group
+#'   and the second component as the structural subdivision, matching
+#'   the standard organisation of WACZ archives.}
+#'   }
+#'
+#' @return
+#' A `data.frame` with two columns:
 #' \describe{
 #'   \item{structural_group}{
-#'   Candidate aggregation derived from the leading path components.
+#'   Candidate structural aggregation derived from the selected path
+#'   profile.
 #'   }
 #'   \item{component}{
-#'   Immediate structural subdivision within the aggregation,
-#'   when present.
+#'   Immediate structural subdivision within the aggregation, when
+#'   present.
 #'   }
 #' }
 #'
 #' @details
-#' The function operates on observed locators and derives aggregation
-#' metadata from structural organisation alone.
+#' Structural aggregation metadata provides a lightweight abstraction
+#' of observed directory organisation. It can increase the
+#' informativeness of filesystem observations by exposing recurring
+#' organisational patterns without asserting semantic meaning.
 #'
-#' In the fscontext workflow:
+#' Within the fscontext workflow:
 #'
-#' - filesystem observations provide evidence about observed resources;
-#' - relative paths provide structural information about those resources;
-#' - structural aggregation metadata exposes candidate groupings that
-#'   may later support contextual reconstruction, exploratory analysis,
-#'   semantic stabilisation, or Record Set construction.
+#' * filesystem observations provide evidence about observed resources;
+#' * relative paths provide structural organisation;
+#' * structural aggregations expose candidate groups that may later
+#'   support contextual reconstruction, Record Set construction,
+#'   semantic stabilisation, or other downstream analyses.
 #'
-#' The resulting groupings are analytical projections rather than
-#' semantic assertions. They are intended to help identify potentially
-#' informative objects and candidate aggregations, not to establish
-#' authoritative documentary relationships.
+#' Future versions may introduce additional aggregation profiles based
+#' on repository structure, provenance, temporal patterns, or other
+#' observational evidence.
+#' @examples
+#' rel_path <- c(
+#'   "_packages/demo/R/file.R",
+#'   "_packages/demo/tests/testthat/test-file.R",
+#'   "_packages/demo/data/input.csv"
+#' )
 #'
-#' Future versions may introduce alternative aggregation strategies
-#' based on other observational evidence such as provenance,
-#' authorship, temporal patterns, repository context, or content-based
-#' signals.
+#' derive_structural_groups(rel_path)
 #'
+#' derive_structural_groups(
+#'   rel_path,
+#'   profile = "folder-depth-1"
+#' )
+#'
+#' derive_structural_groups(
+#'   c(
+#'     "archive/data.warc.gz",
+#'     "indexes/index.cdx",
+#'     "pages/pages.jsonl"
+#'   ),
+#'   profile = "wacz"
+#' )
 #' @importFrom dplyr bind_rows
 #' @export
 
