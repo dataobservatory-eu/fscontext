@@ -139,12 +139,12 @@ This creates lightweight contextual structures that support later reconstruction
 
 One of the central goals of the package is to derive contextual Record Sets from filesystem observations.
 
-```{r}
+```{r snapshotrecordsetdf}
 tmp <- tempfile(fileext = ".rds")
 saveRDS(fscontextdemo_snapshot_02, tmp)
 
 record_set <- snapshot_to_recordset_df(
-  person = utils::person("Jane", "Doe"),
+  creator = utils::person("Jane", "Doe"),
   snapshot_files = tmp,
   roots = "D:/_packages/fscontextdemo",
   record_set_id = "fscontextdemo"
@@ -153,7 +153,7 @@ record_set <- snapshot_to_recordset_df(
 
 Record Sets provide contextual documentary groupings derived from filesystem evidence.
 
-```{r}
+```{r subsettingrecordset}
 set.seed(12)
 record_set |>
   dplyr::select(record_set_id, filename, quick_sig, size) |>
@@ -166,7 +166,7 @@ A single snapshot provides a static view.
 
 Multiple snapshots allow longitudinal analysis.
 
-```{r, eval=FALSE}
+```{r observeuniverse, eval=FALSE}
 observe_universe(
   snapshot_dir = snapshot_directory,
   max_aggregation_depth = 2
