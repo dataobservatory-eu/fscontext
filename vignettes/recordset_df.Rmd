@@ -1,0 +1,111 @@
+---
+title: "recordset_df"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{recordset_df}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette demonstrates how to construct a semantically annotated `recordset_df` from ordinary filesystem observations. As a minimal example, we create five files representing two Records. Record `a` consists of a textual description and an image of a museum object. Record `b` consists of a textual description, a digital surrogate, and an OCR transcription of an archival document.
+
+```{r setup}
+library(fscontext)
+tmp_dir <- file.path(tempdir(), "recordset_df")
+if (dir.exists(tmp_dir)) unlink(tmp_dir, recursive = TRUE)
+dir.create(tmp_dir)
+
+writeLines(
+  c("<html>", "<body>", "Description of the A object.", "</body>", "</html>"),
+  file.path(tmp_dir, "a.html")
+)
+Sys.sleep(1)
+
+writeBin(charToRaw("JPEG"), file.path(tmp_dir, "a.jpg"))
+Sys.sleep(1)
+
+writeLines(
+  c("<html>", "<body>", "Description of the B document.", "</body>", "</html>"),
+  file.path(tmp_dir, "b.html")
+)
+Sys.sleep(1)
+
+writeLines(
+  c("%PDF-1.4", "Digital surrogate of B."),
+  file.path(tmp_dir, "b.pdf")
+)
+Sys.sleep(1)
+
+writeLines(
+  "Plain text transcription of B.",
+  file.path(tmp_dir, "b.txt")
+)
+```
+
+We observe the temporary directory using `snapshot_storage()`. The resulting snapshot records file-level observations such as names, timestamps, checksums and other filesystem metadata without making any assumptions about the semantic relationships between the files.
+
+```{r makesnapshot}
+rs001_snapshot_file <- snapshot_storage(
+  path = tmp_dir,
+  root = tmp_dir
+)
+```
+
+Next we add simple curatorial metadata. In this example we assign a human-readable description to each observed file and indicate which files belong to the same Record. You can add any further metadata or data about the records.
+
+```{r subsetsnapshot}
+rs001_snapshot <- readRDS(rs001_snapshot_file)
+rs001_snapshot$description <- c(
+  "Description of Object A", "Image of Object A",
+  "Description of Record B", "Surrogate of Record B", "OCR Text of Record B"
+)
+rs001_df <- rs001_snapshot[
+  ,
+  c("stem", "filename", "description", "quick_sig", "ctime")
+]
+```
+
+## recordset_df
+
+The recordset_df class extends `dataset::dataset_df` with lightweight semantics for describing Record Sets, Records and Record Parts. Rather than implementing the complete RiC ontology, it provides a small number of conventions that support reproducible workflows while remaining compatible with ordinary tidy data.
+
+The`recordset_df` uses `dataset_df` internally for metadata, provenance and serialisation, which is an extended `tibble::tibble()` `tbl_df` data frame. Users who require richer metadata or publication-oriented functionality can use the methods provided by the [dataset package](https://dataset.dataobservatory.eu/articles/dataset_df.html) directly.
+
+```{r createrecordset}
+rs001 <- recordset_df(
+  x = rs001_df,
+  creator = utils::person("Jane", "Doe", role = "aut"),
+  title = "Demonstrator Record Set",
+  record_set_identifier = "http://example.com/archive/sets/rs001",
+  description = "A demonstration of a record set",
+  record_identifier = "stem",
+  record_part_identifier = "filename"
+)
+```
+
+The constructor warns that the Record identifiers are not unique. This is expected because each Record is represented by multiple observed files. In this example, Record `a` has two Record Parts (individual files) and Record `b` has three Record Parts (files), so the Record identifier necessarily occurs more than once.
+
+```{r printrecordset}
+print(rs001)
+```
+
+The `stem` column is declared to contain identifiers of RiC Records. The values are annotated as `rico:Identifier` objects and labelled "Record Identifier", allowing downstream software to distinguish Record identifiers from other identifiers without requiring a complete RiC knowledge graph. (See: [rico:Record](https://www.ica.org/standards/RiC/RiC-O_1-0-2.html#Record))
+
+```{r recordlevel}
+rs001$stem
+```
+
+The `filename` column is declared to contain identifiers of RiC Record Parts. Record `a` consists of two Record Parts—a textual description and an image of the object—while Record `b` consists of three Record Parts: a textual description, a digital surrogate and an OCR transcription. Each file therefore identifies an individual Record Part within its parent Record. (See: [rico:RecordPart](https://www.ica.org/standards/RiC/RiC-O_1-0-2.html#RecordPart))
+
+```{r recorpart}
+rs001$filename
+```
+
+This example illustrates the intended role of `recordset_df`: observational evidence is acquired first, and lightweight semantic assertions are added afterwards. The resulting object remains an ordinary `data.frame` while carrying sufficient metadata to support reproducible archival, curatorial and semantic enrichment workflows.
