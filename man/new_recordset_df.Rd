@@ -2,31 +2,38 @@
 % Please edit documentation in R/recordset_df.R
 \name{new_recordset_df}
 \alias{new_recordset_df}
-\title{Internal constructor for \code{recordset_df}}
+\title{Internal constructor for recordset_df}
 \usage{
-new_recordset_df(x)
+new_recordset_df(x, record_identifier = NULL, record_part_identifier = NULL)
 }
 \arguments{
-\item{x}{A data.frame or tibble containing at minimum:
-\itemize{
-\item \code{record_set_id}
-\item \code{member_id}
-}}
+\item{x}{A dataset_df object.}
+
+\item{record_identifier}{Optional name of the column containing
+Record identifiers.}
+
+\item{record_part_identifier}{Optional name of the column containing
+Record Part identifiers.}
+
+\item{record_set_identifier}{Optional identifier of the Record Set.}
 }
 \value{
-A \code{recordset_df} object.
+A recordset_df object inheriting from dataset_df.
 }
 \description{
-Low-level internal constructor for creating \code{recordset_df} objects.
+Low-level constructor for recordset_df objects.
 
-This function:
+This function extends an existing dataset_df with lightweight
+Record Set semantics by:
 \itemize{
-\item validates required columns
-\item assigns the \code{recordset_df} class
-\item preserves existing classes
+\item assigning the recordset_df class;
+\item optionally assigning a Record Set identifier and provenance;
+\item optionally declaring Record and Record Part identifier columns as
+rico:Identifier using \code{\link[dataset:defined]{dataset::defined()}}.
 }
 
-Unlike \code{\link{recordset_df}}, this constructor does not create
-semantic metadata structures or perform user-facing coercion.
+Unlike \code{\link[=recordset_df]{recordset_df()}}, this constructor assumes that dataset-level
+metadata have already been created and performs no coercion from
+ordinary data.frame objects.
 }
 \keyword{internal}

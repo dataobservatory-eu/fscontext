@@ -1,255 +1,256 @@
-#' @title Create a provenance-aware Record Set data frame
+#' @title Create a semantically annotated Record Set
 #'
 #' @description
-#' Construct a `recordset_df`, a provenance-aware contextual dataset
-#' representing members of a Record Set.
+#' Create a `recordset_df`, a lightweight extension of
+#' `dataset::dataset_df` for representing archival Record Sets.
 #'
-#' `Record Set` is a contextual aggregation concept defined by the
-#' International Council on Archives (ICA) Records in Contexts
-#' standard (RiC). In operational terms, a Record Set may represent:
+#' A `recordset_df` preserves ordinary tabular data while allowing
+#' selected columns to be declared as identifiers of RiC Records and
+#' Record Parts. It is intended for provenance-aware archival,
+#' curatorial and semantic enrichment workflows without requiring a
+#' complete implementation of the Records in Contexts (RiC) ontology.
 #'
-#' - a project workspace;
-#' - a research corpus;
-#' - a synchronized working environment;
-#' - a digital collection;
-#' - a reconstruction context;
-#' - or another contextual grouping of related digital resources.
+#' See the **recordset_df** vignette for a complete workflow starting
+#' from filesystem observations.
 #'
-#' The Records in Contexts (RiC) standard provides a flexible and
-#' provenance-aware approach for describing evolving digital records,
-#' their relationships, and their contextual environments.
+#' @param x A `data.frame` or `dataset_df`.
 #'
-#' Unlike rigid hierarchical archival models, RiC allows records and
-#' digital resources to participate in multiple overlapping contextual
-#' groupings while preserving provenance and contextual relationships.
+#' @param title Character scalar giving the title of the Record Set.
 #'
-#' More information:
+#' @param creator A `utils::person()` object describing the creator of
+#'   the Record Set metadata.
 #'
-#' - ICA Records in Contexts overview:
-#'   \url{https://www.ica.org/ica-network/expert-groups/egad/records-in-contexts-ric/}
+#' @param description Optional description of the Record Set.
 #'
-#' - RiC-O ontology repository:
-#'   \url{https://github.com/ica-egad/ric-o}
+#' @param record_set_identifier Optional identifier of the Record Set.
 #'
-#' A `recordset_df` extends the
-#' \code{\link[dataset:dataset_df]{dataset_df}} class with lightweight
-#' contextual Record Set semantics suitable for:
+#' @param record_identifier Name of the column containing Record
+#'   identifiers. The selected column is annotated as
+#'   `rico:Identifier` and labelled "Record Identifier".
 #'
-#' - filesystem observations;
-#' - synchronized cloud folders;
-#' - web archive members;
-#' - digital surrogate collections;
-#' - curation batches;
-#' - Digital Twin workspaces;
-#' - provenance-aware research collections;
-#' - contextual digital preservation workflows.
+#' @param record_part_identifier Name of the column containing Record
+#'   Part identifiers. The selected column is annotated as
+#'   `rico:Identifier` and labelled "Record Part Identifier".
 #'
-#' The class is designed to work together with:
+#' @param record_subject Subject term describing the Record Set.
+#'   Defaults to `"Record Set"`.
 #'
-#' - [read_snapshot()]
-#' - [snapshot_to_reconstruction_context()]
-#' - [snapshot_to_recordset_df()]
-#'
-#' while preserving the distinction between:
-#'
-#' - observed filesystem evidence;
-#' - contextual grouping of related resources;
-#' - later analytical interpretation;
-#' - and archival or semantic enrichment workflows.
-#'
-#' In operational terms:
-#'
-#' - `record_set_id`
-#'   identifies a contextual grouping of related digital resources
-#'   (similar to a project workspace, collection, or reconstruction
-#'   environment);
-#'
-#' - `member_id`
-#'   identifies one observed or asserted member within that grouping.
-#'
-#' The resulting object inherits from:
-#'
-#' - `recordset_df`
-#' - `dataset_df`
-#' - `tbl_df`
-#' - `tbl`
-#' - `data.frame`
-#'
-#' @param ...
-#' Vectors (columns) to include in the record set.
-#'
-#' @param identifier
-#' A named vector of URI prefixes used to generate row identifiers.
-#'
-#' Defaults to:
-#'
-#' `c(member = "http://example.com/recordset#member")`
-#'
-#' @param var_labels
-#' Optional named list of human-readable variable labels.
-#'
-#' @param units
-#' Optional named list of measurement units.
-#'
-#' @param concepts
-#' Optional named list of semantic concept URIs.
-#'
-#' @param dataset_bibentry
-#' Optional bibliographic metadata created with
-#' \code{dataset::dublincore()} or
-#' \code{dataset::datacite()}.
-#'
-#' @param dataset_subject
-#' Optional dataset subject metadata.
+#' @param ... Reserved for future extensions.
 #'
 #' @return
-#' A `recordset_df` object.
-#'
-#' @details
-#' The constructor requires at minimum the columns:
-#'
-#' - `record_set_id`
-#' - `member_id`
-#'
-#' Validation and class assignment are delegated to
-#' \code{\link{new_recordset_df}}.
-#'
-#' The constructor is intentionally lightweight and does not:
-#'
-#' - infer authoritative archival hierarchy;
-#' - reconcile duplicate identities;
-#' - infer canonical resources;
-#' - construct ontology-complete provenance graphs;
-#' - or replace curatorial or archival interpretation.
-#'
-#' Instead, it provides a stable contextual preservation layer for
-#' provenance-aware reconstruction and human-in-the-loop workflows.
+#' A `recordset_df`, which inherits from `dataset_df`, `tbl_df`,
+#' `tbl` and `data.frame`.
 #'
 #' @examples
-#' toy_recordset <- recordset_df(
-#'   record_set_id = c(
-#'     "heritage_digitisation",
-#'     "heritage_digitisation",
-#'     "heritage_digitisation"
+#' x <- data.frame(
+#'   resource_locator = c(
+#'     "https://example.org/1",
+#'     "https://example.org/2"
 #'   ),
-#'   member_id = c(
-#'     "inst_001",
-#'     "inst_002",
-#'     "inst_003"
+#'   filename = c(
+#'     "a.html",
+#'     "b.html"
 #'   ),
-#'   member_path = c(
-#'     "scans/photo_001.tif",
-#'     "ocr/photo_001.txt",
-#'     "reports/collection_summary.qmd"
-#'   ),
-#'   member_type = c(
-#'     "file",
-#'     "file",
-#'     "file"
-#'   ),
-#'   source_type = c(
-#'     "filesystem",
-#'     "filesystem",
-#'     "filesystem"
-#'   ),
-#'   identifier = c(
-#'     member =
-#'       "https://example.org/recordset/heritage#member"
-#'   ),
-#'   var_labels = list(
-#'     record_set_id = "Record set identifier",
-#'     member_id = "Member identifier",
-#'     member_path = "Member path"
-#'   ),
-#'   concepts = list(
-#'     record_set_id =
-#'       "https://www.ica.org/standards/RiC/ontology#RecordSet",
-#'     member_id =
-#'       "https://www.ica.org/standards/RiC/ontology#Instantiation"
-#'   ),
-#'   dataset_bibentry = dataset::dublincore(
-#'     title = "Toy Heritage Digitisation Record Set",
-#'     creator = person("Jane", "Doe"),
-#'     publisher = "fscontext"
-#'   )
+#'   stringsAsFactors = FALSE
 #' )
 #'
-#' toy_recordset
+#' rs <- recordset_df(
+#'   x,
+#'   title = "Demo Record Set",
+#'   creator = utils::person("Joe", "Doe", role = "aut"),
+#'   record_identifier = "resource_locator",
+#'   record_part_identifier = "filename"
+#' )
 #'
+#' rs
+#'
+#' @references
+#' International Council on Archives Expert Group on Archival
+#' Description (2023). Records in Contexts (RiC).
+#' https://www.ica.org/ica-network/expert-groups/egad/records-in-contexts-ric/
+#'
+#' @seealso
+#' [dataset::dataset_df()], [observe_wacz()],
+#' [wacz_to_recordset_df()]
+#'
+#' @importFrom dataset as_dataset_df defined dublincore subject identifier
+#' @importFrom utils person
 #' @export
 recordset_df <- function(
-  ...,
-  identifier = c(
-    member = "http://example.com/recordset#member"
-  ),
-  var_labels = NULL,
-  units = NULL,
-  concepts = NULL,
-  dataset_bibentry = NULL,
-  dataset_subject = NULL
+  x,
+  title = NULL,
+  creator = utils::person("Jane", "Doe"),
+  description = NULL,
+  record_set_identifier = NULL,
+  record_identifier = NULL,
+  record_part_identifier = NULL,
+  record_subject = "Record Set",
+  ...
 ) {
-  x <- dataset::dataset_df(
-    ...,
-    identifier = identifier,
-    var_labels = var_labels,
-    units = units,
-    concepts = concepts,
-    dataset_bibentry = dataset_bibentry,
-    dataset_subject = dataset_subject
+  if (is.null(creator)) {
+    rs_creator <- "Untitled Record Set"
+  } else if (!inherits(creator, "person")) {
+    rs_creator <- person(creator)
+  } else {
+    rs_creator <- creator
+  }
+
+  if (is.null(description) || is.na(description)) {
+    rs_description <- NULL
+  } else {
+    rs_description <- description
+  }
+
+  ds_bibentry <- dataset::dublincore(
+    title = if (is.null(title)) "Untitled Record Set" else title,
+    identifier = record_set_identifier,
+    creator = creator,
+    description = description
   )
 
-  new_recordset_df(x)
+  ds_bibentry
+
+  y <- dataset::as_dataset_df(x)
+
+  attr(y, "dataset_bibentry") <- ds_bibentry
+
+  dataset::subject(y) <-
+    dataset::subject_create(term = record_subject)
+
+
+  new_recordset_df(
+    y,
+    record_identifier = record_identifier,
+    record_part_identifier = record_part_identifier
+  )
 }
 
-#' Internal constructor for `recordset_df`
+#' Internal constructor for recordset_df
 #'
 #' @description
-#' Low-level internal constructor for creating `recordset_df` objects.
+#' Low-level constructor for recordset_df objects.
 #'
-#' This function:
+#' This function extends an existing dataset_df with lightweight
+#' Record Set semantics by:
 #'
-#' - validates required columns
-#' - assigns the `recordset_df` class
-#' - preserves existing classes
+#' * assigning the recordset_df class;
+#' * optionally assigning a Record Set identifier and provenance;
+#' * optionally declaring Record and Record Part identifier columns as
+#' rico:Identifier using [dataset::defined()].
 #'
-#' Unlike \code{\link{recordset_df}}, this constructor does not create
-#' semantic metadata structures or perform user-facing coercion.
+#' Unlike [recordset_df()], this constructor assumes that dataset-level
+#' metadata have already been created and performs no coercion from
+#' ordinary data.frame objects.
 #'
-#' @param x
-#' A data.frame or tibble containing at minimum:
+#' @param x A dataset_df object.
 #'
-#' - `record_set_id`
-#' - `member_id`
+#' @param record_set_identifier Optional identifier of the Record Set.
+#'
+#' @param record_identifier Optional name of the column containing
+#' Record identifiers.
+#'
+#' @param record_part_identifier Optional name of the column containing
+#' Record Part identifiers.
 #'
 #' @return
-#' A `recordset_df` object.
+#' A recordset_df object inheriting from dataset_df.
 #'
+#' @importFrom dataset identifier
 #' @keywords internal
-new_recordset_df <- function(x) {
-  stopifnot(is.data.frame(x))
+new_recordset_df <- function(
+  x,
+  record_identifier = NULL,
+  record_part_identifier = NULL
+) {
+  if (!inherits(x, "dataset_df")) {
+    stop("`x` must inherit from dataset_df.", call. = FALSE)
+  }
 
-  required_cols <- c(
-    "record_set_id",
-    "member_id"
-  )
+  record_set_identifier <- dataset::identifier(x)
 
-  missing_cols <- setdiff(
-    required_cols,
-    names(x)
-  )
+  dataset::provenance(x) <- recordset_provenance(record_set_identifier)
 
-  if (length(missing_cols) > 0) {
-    stop(
-      "Missing required columns: ",
-      paste(missing_cols, collapse = ", "),
-      call. = FALSE
+  if (!is.null(record_identifier)) {
+    if (!record_identifier %in% names(x)) {
+      stop("Column not found: ", record_identifier, call. = FALSE)
+    }
+
+    if (anyDuplicated(x[[record_identifier]])) {
+      warning("Record identifiers are not unique.", call. = FALSE)
+    }
+
+    x[[record_identifier]] <- dataset::defined(
+      x[[record_identifier]],
+      label = "Record Identifier",
+      concept = "rico:Identifier"
     )
   }
 
-  class(x) <- unique(c(
-    "recordset_df",
-    class(x)
-  ))
+  if (!is.null(record_part_identifier)) {
+    if (!record_part_identifier %in% names(x)) {
+      stop("Column not found: ", record_part_identifier, call. = FALSE)
+    }
+
+    if (anyDuplicated(x[[record_part_identifier]])) {
+      warning("Record part identifiers are not unique.", call. = FALSE)
+    }
+
+    x[[record_part_identifier]] <- dataset::defined(
+      x[[record_part_identifier]],
+      label = "Record Part Identifier",
+      concept = "rico:Identifier"
+    )
+  }
+
+  class(x) <- unique(c("recordset_df", class(x)))
+
+
+  attr(x, "prov") <-
+    recordset_provenance(record_set_identifier = record_set_identifier)
 
   x
+}
+
+#' Default internal provenance constructor
+#' A wrapper around [dataset::n_triples()] and [dataset::n_triple()].
+#' @keywords internal
+#' @importFrom dataset n_triples n_triple
+#' @noRd
+recordset_provenance <- function(
+  record_set_identifier = NULL
+) {
+  if (is.null(record_set_identifier)) {
+    record_set_identifier <- "http://example.com/recordset"
+  }
+
+
+  activity <- paste0(record_set_identifier, "/activity")
+
+  dataset::n_triples(c(
+    dataset::n_triple(
+      record_set_identifier,
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "http://www.w3.org/ns/prov#Entity"
+    ),
+    dataset::n_triple(
+      activity,
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "http://www.w3.org/ns/prov#Activity"
+    ),
+    dataset::n_triple(
+      "https://fscontext.dataobservatory.eu/software/fscontext",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+      "http://www.w3.org/ns/prov#SoftwareAgent"
+    ),
+    dataset::n_triple(
+      activity,
+      "http://www.w3.org/ns/prov#wasAssociatedWith",
+      "https://fscontext.dataobservatory.eu/software/fscontext"
+    ),
+    dataset::n_triple(
+      record_set_identifier,
+      "http://www.w3.org/ns/prov#wasGeneratedBy",
+      activity
+    )
+  ))
 }

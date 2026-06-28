@@ -74,57 +74,56 @@
 #' @export
 
 wacz_to_recordset_df <- function(
-    wacz_observation,
-    record_set_id = NULL,
-    record_set_title = NULL,
-    record_identifier = "resource_locator",
-    record_part_identifier = NULL,
-    person = utils::person("Jane", "Doe")
+  wacz_observation,
+  record_set_id = NULL,
+  record_set_title = NULL,
+  record_identifier = "resource_locator",
+  record_part_identifier = NULL,
+  person = utils::person("Jane", "Doe")
 ) {
-  
   wacz <- attr(wacz_observation, "wacz")
-  
+
   if (
     is.null(wacz) ||
-    !is.character(wacz) ||
-    length(wacz) != 1 ||
-    !grepl("\\.wacz$", wacz, ignore.case = TRUE)
+      !is.character(wacz) ||
+      length(wacz) != 1 ||
+      !grepl("\\.wacz$", wacz, ignore.case = TRUE)
   ) {
     stop(
       "`wacz_observation` must be created with observe_wacz().",
       call. = FALSE
     )
   }
-  
+
   if (is.null(record_set_id)) {
     record_set_id <- tools::file_path_sans_ext(
       basename(wacz)
     )
   }
-  
+
   if (is.null(record_set_title)) {
     record_set_title <- paste(
       "WACZ Record Set:",
       record_set_id
     )
   }
-  
-  if (!is.null(record_identifier) && !record_identifier%in% names(wacz_observation)) {
+
+  if (!is.null(record_identifier) && !record_identifier %in% names(wacz_observation)) {
     stop(
       "`record_identifier` must name a column in `wacz_observation`.",
       call. = FALSE
     )
   }
-  
+
   if (!is.null(record_part_identifier) &&
-      !record_part_identifier %in% names(wacz_observation)) {
+    !record_part_identifier %in% names(wacz_observation)) {
     stop(
       "`record_part_identifier` must name a column in `wacz_observation`.",
       call. = FALSE
     )
   }
- 
-  
+
+
   recordset_df <- dataset::dataset_df(
     wacz_observation,
     dataset_bibentry = dataset::dublincore(
@@ -133,60 +132,58 @@ wacz_to_recordset_df <- function(
       description = paste(
         "Record Set created from the WACZ web archive",
         basename(wacz)
-      )))
+      )
+    )
+  )
 
   dataset::subject(recordset_df) <- dataset::subject_create(
     term = "Record Set",
     valueURI = "https://www.ica.org/standards/RiC/ontology#RecordSet",
     subjectScheme = "RiC-O"
   )
-    
 
-  if(!is.null(record_identifier) && (record_identifier%in% names(recordset_df))) {
-    
+
+  if (!is.null(record_identifier) && (record_identifier %in% names(recordset_df))) {
     tmp <- recordset_df[[record_identifier]]
-    
+
     if (anyDuplicated(tmp)) {
       warning(
         "Record identifiers are not unique.",
         call. = FALSE
       )
     }
-    
-    recordset_df[[record_identifier]] <- dataset::defined(tmp, 
-                     label = "Record Identifier", 
-                     concept = "rico:Identifier")
-  
+
+    recordset_df[[record_identifier]] <- dataset::defined(tmp,
+      label = "Record Identifier",
+      concept = "rico:Identifier"
+    )
   }
-  
-  if(!is.null(record_part_identifier) && 
-     (record_part_identifier %in% names(recordset_df))
-     ) {
-    
+
+  if (!is.null(record_part_identifier) &&
+    (record_part_identifier %in% names(recordset_df))
+  ) {
     tmp <- recordset_df[[record_part_identifier]]
-    
+
     if (anyDuplicated(tmp)) {
       warning(
         "Record part identifiers are not unique.",
         call. = FALSE
       )
     }
-    
+
     recordset_df[[record_part_identifier]] <- dataset::defined(
-      tmp, 
-      label = "Record Part Identifier", 
-      concept = "rico:Identifier")
-    
+      tmp,
+      label = "Record Part Identifier",
+      concept = "rico:Identifier"
+    )
   }
-  
-  if(!is.null(record_set_id) && !is.na(record_set_id)) {
+
+  if (!is.null(record_set_id) && !is.na(record_set_id)) {
     dataset::identifier(recordset_df) <- record_set_id
   }
-  
+
   attr(recordset_df, "datapackage") <- attr(wacz_observation, "datapackage")
   attr(recordset_df, "wacz") <- wacz
-  
+
   recordset_df
 }
-
-
