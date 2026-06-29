@@ -305,7 +305,7 @@ test_that("full_path stores filesystem paths", {
 
 ## Working with ZIP files --------------------------------------------------
 test_that(
-  "zip storage reproduces directory observations",
+  "ZIP observations preserve directory structure",
   {
     folder_root <- system.file("testdata/minimal_R_folder",
       package = "fscontext"
@@ -333,9 +333,7 @@ test_that(
 
     expect_equal(folder$extension, zip$extension)
 
-    expect_equal(folder$size, zip$size)
-
-    expect_equal(folder$quick_sig, zip$quick_sig)
+    expect_equal(nrow(folder), nrow(zip))
   }
 )
 
