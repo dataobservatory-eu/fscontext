@@ -4,14 +4,15 @@
 #' Create a `recordset_df`, a lightweight extension of
 #' `dataset::dataset_df` for representing archival Record Sets.
 #'
-#' A `recordset_df` preserves ordinary tabular data while allowing
-#' selected columns to be declared as identifiers of RiC Records and
-#' Record Parts. It is intended for provenance-aware archival,
-#' curatorial and semantic enrichment workflows without requiring a
-#' complete implementation of the Records in Contexts (RiC) ontology.
+#' A `recordset_df` stores dataset-level metadata together with
+#' optional Record and Record Part identifiers using lightweight
+#' conventions inspired by the Records in Contexts (RiC) model.
+#' It supports provenance-aware archival, curatorial and semantic
+#' enrichment workflows while remaining compatible with ordinary
+#' data frames.
 #'
-#' See the **recordset_df** vignette for a complete workflow starting
-#' from filesystem observations.
+#' See the **"Working with Record Sets"** vignette for a complete
+#' workflow starting from filesystem observations.
 #'
 #' @param x A `data.frame` or `dataset_df`.
 #'
@@ -44,13 +45,9 @@
 #' @examples
 #' x <- data.frame(
 #'   resource_locator = c(
-#'     "https://example.org/1",
-#'     "https://example.org/2"
+#'     "https://example.org/1", "https://example.org/2"
 #'   ),
-#'   filename = c(
-#'     "a.html",
-#'     "b.html"
-#'   ),
+#'   filename = c("a.html", "b.html"),
 #'   stringsAsFactors = FALSE
 #' )
 #'

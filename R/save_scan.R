@@ -38,13 +38,16 @@
 #' file.create(file.path(tmp_dir, "R", "b.R"))
 #' file.create(file.path(tmp_dir, "data", "c.csv"))
 #'
-#' scan_storage(
+#' scan <- scan_storage(
 #'   root = tmp_dir,
 #'   storage_id = "test-storage"
 #' )
 #'
-#' save_scan(scan, "test-storage")
-#'
+#' save_scan(
+#'   df = scan,
+#'   storage_id = "test-storage",
+#'   path = tmp_dir
+#' )
 #' @export
 save_scan <- function(df,
                       storage_id,

@@ -1,8 +1,8 @@
 ---
-title: "recordset_df"
+title: "Working with Record Sets"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{recordset_df}
+  %\VignetteIndexEntry{Working with Record Sets}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

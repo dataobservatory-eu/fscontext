@@ -1,9 +1,9 @@
 test_that("record_set_projection creates contextual record set projection", {
   toy_resources <- tibble::tibble(
     structural_group = c(
-      "_packages/eviota",
-      "_packages/eviota",
-      "_packages/iotables"
+      "_packages/pkg-a",
+      "_packages/pkg-a",
+      "_packages/pkg-b"
     ),
     path_id = c(
       "l480::R/import.R",
@@ -40,25 +40,13 @@ test_that("record_set_projection creates contextual record set projection", {
     )
   )
 
-  expect_equal(
-    rs$record_set_identifier,
-    toy_resources$structural_group
-  )
+  expect_equal(rs$record_set_identifier, toy_resources$structural_group)
 
-  expect_equal(
-    rs$resource_id,
-    toy_resources$path_id
-  )
+  expect_equal(rs$resource_id, toy_resources$path_id)
 
-  expect_equal(
-    rs$locator_path,
-    toy_resources$rel_root_path
-  )
+  expect_equal(rs$locator_path, toy_resources$rel_root_path)
 
-  expect_equal(
-    unique(rs$resource_type),
-    "file"
-  )
+  expect_equal(unique(rs$resource_type), "file")
 
   expect_equal(
     attr(rs, "construction_rule"),
@@ -86,10 +74,7 @@ test_that("record_set_projection errors without required identifiers", {
 
 test_that("record_set_projection accepts scalar values", {
   toy_resources <- tibble::tibble(
-    path_id = c(
-      "id1",
-      "id2"
-    )
+    path_id = c("id1", "id2")
   )
 
   rs <- record_set_projection(
@@ -100,13 +85,7 @@ test_that("record_set_projection accepts scalar values", {
     resource_type = "file"
   )
 
-  expect_equal(
-    unique(rs$record_set_identifier),
-    "toy_record_set"
-  )
+  expect_equal(unique(rs$record_set_identifier), "toy_record_set")
 
-  expect_equal(
-    unique(rs$resource_type),
-    "file"
-  )
+  expect_equal(unique(rs$resource_type), "file")
 })

@@ -38,7 +38,7 @@ test_that("save_scan writes file and returns path", {
   df <- data.frame(x = 1)
   attr(df, "created_at") <- as.POSIXct("2026-04-30 16:00:59", tz = "UTC")
 
-  path <- save_scan(df, "test-storage", tmp)
+  path <- save_scan(df = df, storage_id = "test-storage", path = tmp)
 
   expect_true(file.exists(path))
 

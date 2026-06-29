@@ -53,7 +53,7 @@
 #'
 #' @references
 #' The WACZ format specification:
-#' \url{https://specs.webrecorder.net/wacz/}
+#' \url{https://specs.webrecorder.net/wacz/1.1.1/}
 #'
 #' @seealso
 #' [wacz_to_recordset_df()]

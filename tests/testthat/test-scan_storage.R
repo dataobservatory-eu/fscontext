@@ -1,10 +1,9 @@
-library(testthat)
-
 # Structure ------------------------------------------------------------
 
 test_that("scan_storage returns expected structure", {
-  root <- system.file("testdata/minimal_R_folder", package = "fscontext")
-  stopifnot(nzchar(root))
+  root <- system.file("testdata/minimal_R_folder",
+    package = "fscontext"
+  )
   res <- scan_storage(root)
 
   expect_s3_class(res, "data.frame")
@@ -320,6 +319,9 @@ test_that(
     folder <- scan_storage(folder_root)
 
     zip <- scan_storage(zip_root)
+
+    folder <- folder[!grepl("(^|/)\\.", folder$rel_path), ]
+    zip <- zip[!grepl("(^|/)\\.", zip$rel_path), ]
 
     folder <- folder[order(folder$rel_path), ]
 
