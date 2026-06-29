@@ -6,6 +6,8 @@ This is the second CRAN resubmission of `fscontext`.
 
 - Examples from internal, not exported function documentations were removed.
 
+- Two wrong URLs were changed, `urlchecker::url_check()` shows no problematic URLs.
+
 - The PROV and RiC abbreviations are spelled out, both n the DESCRIPTION and among the function roxygen documentations with a `reference` tag.
 
 - Default parameters that would save into any user environment were removed and those examples\
