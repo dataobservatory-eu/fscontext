@@ -1,6 +1,8 @@
 ## Resubmission
 
-This is the first CRAN resubmission of `fscontext`.
+This is the second CRAN resubmission of `fscontext`.
+
+- The \dontrun{} example was made simpler and runs.
 
 - Examples from internal, not exported function documentations were removed.
 
