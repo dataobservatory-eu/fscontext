@@ -28,26 +28,26 @@
 #'
 #' @importFrom fs dir_exists dir_create
 #' @examples
-#' \dontrun{
-#' root <- tempfile()
-#' dir.create(root)
+#' tmp_dir <- tempfile()
+#' dir.create(tmp_dir)
 #'
-#' dir.create(file.path(root, "R"))
-#' dir.create(file.path(root, "data"))
+#' dir.create(file.path(tmp_dir, "R"))
+#' dir.create(file.path(tmp_dir, "data"))
 #'
-#' file.create(file.path(root, "R", "a.R"))
-#' file.create(file.path(root, "R", "b.R"))
-#' file.create(file.path(root, "data", "c.csv"))
+#' file.create(file.path(tmp_dir, "R", "a.R"))
+#' file.create(file.path(tmp_dir, "R", "b.R"))
+#' file.create(file.path(tmp_dir, "data", "c.csv"))
 #'
-#' scan_storage(
-#'   root = root,
-#'   storage_id = "test-storage",
-#'   path = tmp
+#' scan <- scan_storage(
+#'   root = tmp_dir,
+#'   storage_id = "test-storage"
 #' )
 #'
-#' save_scan(scan, "test-storage")
-#' }
-#'
+#' save_scan(
+#'   df = scan,
+#'   storage_id = "test-storage",
+#'   path = tmp_dir
+#' )
 #' @export
 save_scan <- function(df,
                       storage_id,

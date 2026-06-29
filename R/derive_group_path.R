@@ -15,7 +15,7 @@
 #'
 #' Future versions of the package are expected to replace or absorb
 #' this functionality into higher-level Record Set construction logic
-#' (for example via `create_record_set()`), where grouping rules will
+#' (for example via `record_set_projection()`), where grouping rules will
 #' be explicitly contextualised and provenance-aware.
 #' @param rel_path Character vector of relative file paths.
 #' @param repo_root Optional. Currently unused.

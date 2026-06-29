@@ -1,53 +1,47 @@
-#' Compute a fast content signature for a file
+#' Compute a fast operational signature for a file
 #'
-#' Generates a lightweight content signature based on hashing selected
-#' byte regions of a file. This provides a fast approximation for detecting
-#' identical or differing file instances without computing a full file hash.
+#' Generates a lightweight content signature by hashing sampled byte
+#' regions from a file. The signature provides a fast operational
+#' approximation for detecting identical or differing file instances
+#' without computing a full cryptographic hash.
 #'
-#' The function is designed for performance and is suitable for use in
-#' large-scale filesystem observations, where full hashing would be
-#' computationally expensive.
+#' The function is designed for large-scale observational workflows
+#' where complete file hashing would be unnecessarily expensive.
 #'
 #' @param path Character. Path to the file.
-#' @param n Integer. Number of bytes to read from selected regions
+#' @param n Integer. Number of bytes sampled from selected regions
 #'   (default: 1024).
 #'
-#' @return Character. A signature string representing sampled file content.
+#' @return Character. A lightweight operational signature.
 #'
 #' @details
-#' The signature is constructed from hashed byte segments:
+#' The signature is constructed by hashing sampled byte regions:
 #'
-#' - small files: hash of full content
-#' - medium files: hash of first and last segments
-#' - large files: hash of first, middle, and last segments
+#' * small files: full file content
+#' * medium files: beginning and end
+#' * large files: beginning, middle and end
 #'
-#' The function provides a fast operational signal for probable
-#' content equivalence:
+#' The resulting signature is intended as a fast observational aid:
 #'
-#' - identical signatures strongly suggest identical content
-#' - different signatures indicate content differences
-#' - collisions are possible but unlikely in practice
+#' * identical signatures suggest identical file content;
+#' * differing signatures indicate differing file content;
+#' * collisions are possible but unlikely in operational use.
 #'
 #' Missing or inaccessible files return `NA_character_`.
 #'
-#' In RiC-aligned operational terms, the signature supports later
-#' interpretation of observed filesystem Instantiations:
+#' The signature does not establish authoritative identity or provenance.
+#' It provides lightweight observational evidence that may support later
+#' contextual reconstruction, duplicate detection, version analysis,
+#' or Record Set construction.
 #'
-#' - identifying likely identical Instantiations
-#' - distinguishing likely versions or derivations
-#' - detecting distributed or duplicated work
-#' - supporting later Record Set construction and reconciliation
+#' Unlike [quick_signature_text()], this function operates on the
+#' binary representation of a file rather than its textual content.
 #'
-#' The function does not establish authoritative identity or provenance.
-#' It provides observational evidence that may later support analytical
-#' or curatorial interpretation.
+#' @seealso
+#' [quick_signature_text()],
+#' [scan_storage()],
+#' [summarise_duplicates()]
 #'
-#' This function is typically used in conjunction with:
-#'
-#' - [scan_storage()] for generating observational snapshots
-#' - [summarise_duplicates()] for detecting duplicate and versioned files
-#'
-#' @seealso [summarise_duplicates()]
 #' @importFrom fs file_info
 #' @importFrom digest digest
 #' @export
@@ -112,5 +106,106 @@ quick_signature <- function(path, n = 1024) {
     digest::digest(first, algo = "xxhash32"), "_",
     digest::digest(middle, algo = "xxhash32"), "_",
     digest::digest(last, algo = "xxhash32")
+  )
+}
+
+
+#' Compute a fast operational signature for text
+#'
+#' Generates a lightweight content signature by hashing sampled character
+#' regions from one or more text strings. The signature provides a fast
+#' approximation for detecting identical or differing textual content
+#' without comparing complete strings.
+#'
+#' The function is intended for observational workflows where textual
+#' representations have already been extracted from digital resources,
+#' such as HTML pages, OCR output, PDFs, or office documents.
+#'
+#' @param x Character vector.
+#' @param n Integer. Number of characters sampled from selected regions
+#'   (default: 1024).
+#'
+#' @return Character vector of operational signatures that summarises the
+#' observed textual representation of a resource.
+#'
+#' @details
+#' The signature is constructed by hashing sampled character regions:
+#'
+#' * short texts: complete text;
+#' * medium texts: beginning and end;
+#' * long texts: beginning, middle and end.
+#'
+#' The resulting signature is intended as a fast observational aid:
+#'
+#' * identical signatures suggest identical textual content;
+#' * differing signatures indicate differing textual content;
+#' * collisions are possible but unlikely in operational use.
+#'
+#' Missing values return `NA_character_`.
+#' Empty strings return `"empty"`.
+#'
+#' Unlike [quick_signature()], this function operates on extracted text
+#' rather than binary file content. Consequently, different file formats
+#' (for example DOCX, PDF and HTML) containing the same textual content
+#' may produce identical text signatures while retaining different file
+#' signatures.
+#'
+#' The function provides lightweight observational evidence that may
+#' support duplicate detection, content reconciliation, semantic
+#' stabilisation, or later contextual reconstruction.
+#'
+#' @seealso
+#' [quick_signature()],
+#' [observe_wacz()]
+#'
+#' @importFrom digest digest
+#' @export
+quick_signature_text <- function(x, n = 1024) {
+  if (length(x) == 0) {
+    return(character())
+  }
+
+  vapply(
+    x,
+    function(text) {
+      if (is.na(text)) {
+        return(NA_character_)
+      }
+
+      text <- enc2utf8(text)
+
+      if (!nzchar(text)) {
+        return("empty")
+      }
+
+      n_chars <- nchar(text, type = "chars")
+
+      if (n_chars <= n) {
+        return(digest::digest(text, algo = "xxhash32"))
+      }
+
+      first <- substr(text, 1, n)
+
+      if (n_chars <= 3 * n) {
+        last <- substr(text, n_chars - n + 1, n_chars)
+
+        return(paste0(
+          digest::digest(first, algo = "xxhash32"),
+          "_",
+          digest::digest(last, algo = "xxhash32")
+        ))
+      }
+
+      middle_start <- floor(n_chars / 2)
+      middle <- substr(text, middle_start, middle_start + n - 1)
+      last <- substr(text, n_chars - n + 1, n_chars)
+
+      paste0(
+        digest::digest(first, algo = "xxhash32"), "_",
+        digest::digest(middle, algo = "xxhash32"), "_",
+        digest::digest(last, algo = "xxhash32")
+      )
+    },
+    character(1)
   )
 }

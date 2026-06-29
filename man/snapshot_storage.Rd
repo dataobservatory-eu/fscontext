@@ -10,7 +10,7 @@ snapshot_storage(
   person_id = "user",
   scan_time = Sys.time(),
   label = NULL,
-  path = here::here("data-raw", "snapshots"),
+  path = tempdir(),
   compute_signature = TRUE,
   max_signature_size = 200 * 1024 * 1024
 )

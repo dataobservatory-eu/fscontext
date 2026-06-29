@@ -2,193 +2,92 @@
 % Please edit documentation in R/recordset_df.R
 \name{recordset_df}
 \alias{recordset_df}
-\title{Create a provenance-aware Record Set data frame}
+\title{Create a semantically annotated Record Set}
 \usage{
 recordset_df(
-  ...,
-  identifier = c(member = "http://example.com/recordset#member"),
-  var_labels = NULL,
-  units = NULL,
-  concepts = NULL,
-  dataset_bibentry = NULL,
-  dataset_subject = NULL
+  x,
+  title = NULL,
+  creator = utils::person("Jane", "Doe"),
+  description = NULL,
+  record_set_identifier = NULL,
+  record_identifier = NULL,
+  record_part_identifier = NULL,
+  record_subject = "Record Set",
+  ...
 )
 }
 \arguments{
-\item{...}{Vectors (columns) to include in the record set.}
+\item{x}{A \code{data.frame} or \code{dataset_df}.}
 
-\item{identifier}{A named vector of URI prefixes used to generate row identifiers.
+\item{title}{Character scalar giving the title of the Record Set.}
 
-Defaults to:
+\item{creator}{A \code{utils::person()} object describing the creator of
+the Record Set metadata.}
 
-\code{c(member = "http://example.com/recordset#member")}}
+\item{description}{Optional description of the Record Set.}
 
-\item{var_labels}{Optional named list of human-readable variable labels.}
+\item{record_set_identifier}{Optional identifier of the Record Set.}
 
-\item{units}{Optional named list of measurement units.}
+\item{record_identifier}{Name of the column containing Record
+identifiers. The selected column is annotated as
+\code{rico:Identifier} and labelled "Record Identifier".}
 
-\item{concepts}{Optional named list of semantic concept URIs.}
+\item{record_part_identifier}{Name of the column containing Record
+Part identifiers. The selected column is annotated as
+\code{rico:Identifier} and labelled "Record Part Identifier".}
 
-\item{dataset_bibentry}{Optional bibliographic metadata created with
-\code{dataset::dublincore()} or
-\code{dataset::datacite()}.}
+\item{record_subject}{Subject term describing the Record Set.
+Defaults to \code{"Record Set"}.}
 
-\item{dataset_subject}{Optional dataset subject metadata.}
+\item{...}{Reserved for future extensions.}
 }
 \value{
-A \code{recordset_df} object.
+A \code{recordset_df}, which inherits from \code{dataset_df}, \code{tbl_df},
+\code{tbl} and \code{data.frame}.
 }
 \description{
-Construct a \code{recordset_df}, a provenance-aware contextual dataset
-representing members of a Record Set.
+Create a \code{recordset_df}, a lightweight extension of
+\code{dataset::dataset_df} for representing archival Record Sets.
 
-\verb{Record Set} is a contextual aggregation concept defined by the
-International Council on Archives (ICA) Records in Contexts
-standard (RiC). In operational terms, a Record Set may represent:
-\itemize{
-\item a project workspace;
-\item a research corpus;
-\item a synchronized working environment;
-\item a digital collection;
-\item a reconstruction context;
-\item or another contextual grouping of related digital resources.
-}
+A \code{recordset_df} preserves ordinary tabular data while allowing
+selected columns to be declared as identifiers of RiC Records and
+Record Parts. It is intended for provenance-aware archival,
+curatorial and semantic enrichment workflows without requiring a
+complete implementation of the Records in Contexts (RiC) ontology.
 
-The Records in Contexts (RiC) standard provides a flexible and
-provenance-aware approach for describing evolving digital records,
-their relationships, and their contextual environments.
-
-Unlike rigid hierarchical archival models, RiC allows records and
-digital resources to participate in multiple overlapping contextual
-groupings while preserving provenance and contextual relationships.
-
-More information:
-\itemize{
-\item ICA Records in Contexts overview:
-\url{https://www.ica.org/ica-network/expert-groups/egad/records-in-contexts-ric/}
-\item RiC-O ontology repository:
-\url{https://github.com/ica-egad/ric-o}
-}
-
-A \code{recordset_df} extends the
-\code{\link[dataset:dataset_df]{dataset_df}} class with lightweight
-contextual Record Set semantics suitable for:
-\itemize{
-\item filesystem observations;
-\item synchronized cloud folders;
-\item web archive members;
-\item digital surrogate collections;
-\item curation batches;
-\item Digital Twin workspaces;
-\item provenance-aware research collections;
-\item contextual digital preservation workflows.
-}
-
-The class is designed to work together with:
-\itemize{
-\item \code{\link[=read_snapshot]{read_snapshot()}}
-\item \code{\link[=snapshot_to_reconstruction_context]{snapshot_to_reconstruction_context()}}
-\item \code{\link[=snapshot_to_recordset_df]{snapshot_to_recordset_df()}}
-}
-
-while preserving the distinction between:
-\itemize{
-\item observed filesystem evidence;
-\item contextual grouping of related resources;
-\item later analytical interpretation;
-\item and archival or semantic enrichment workflows.
-}
-
-In operational terms:
-\itemize{
-\item \code{record_set_id}
-identifies a contextual grouping of related digital resources
-(similar to a project workspace, collection, or reconstruction
-environment);
-\item \code{member_id}
-identifies one observed or asserted member within that grouping.
-}
-
-The resulting object inherits from:
-\itemize{
-\item \code{recordset_df}
-\item \code{dataset_df}
-\item \code{tbl_df}
-\item \code{tbl}
-\item \code{data.frame}
-}
-}
-\details{
-The constructor requires at minimum the columns:
-\itemize{
-\item \code{record_set_id}
-\item \code{member_id}
-}
-
-Validation and class assignment are delegated to
-\code{\link{new_recordset_df}}.
-
-The constructor is intentionally lightweight and does not:
-\itemize{
-\item infer authoritative archival hierarchy;
-\item reconcile duplicate identities;
-\item infer canonical resources;
-\item construct ontology-complete provenance graphs;
-\item or replace curatorial or archival interpretation.
-}
-
-Instead, it provides a stable contextual preservation layer for
-provenance-aware reconstruction and human-in-the-loop workflows.
+See the \strong{recordset_df} vignette for a complete workflow starting
+from filesystem observations.
 }
 \examples{
-toy_recordset <- recordset_df(
-  record_set_id = c(
-    "heritage_digitisation",
-    "heritage_digitisation",
-    "heritage_digitisation"
+x <- data.frame(
+  resource_locator = c(
+    "https://example.org/1",
+    "https://example.org/2"
   ),
-  member_id = c(
-    "inst_001",
-    "inst_002",
-    "inst_003"
+  filename = c(
+    "a.html",
+    "b.html"
   ),
-  member_path = c(
-    "scans/photo_001.tif",
-    "ocr/photo_001.txt",
-    "reports/collection_summary.qmd"
-  ),
-  member_type = c(
-    "file",
-    "file",
-    "file"
-  ),
-  source_type = c(
-    "filesystem",
-    "filesystem",
-    "filesystem"
-  ),
-  identifier = c(
-    member =
-      "https://example.org/recordset/heritage#member"
-  ),
-  var_labels = list(
-    record_set_id = "Record set identifier",
-    member_id = "Member identifier",
-    member_path = "Member path"
-  ),
-  concepts = list(
-    record_set_id =
-      "https://www.ica.org/standards/RiC/ontology#RecordSet",
-    member_id =
-      "https://www.ica.org/standards/RiC/ontology#Instantiation"
-  ),
-  dataset_bibentry = dataset::dublincore(
-    title = "Toy Heritage Digitisation Record Set",
-    creator = person("Jane", "Doe"),
-    publisher = "fscontext"
-  )
+  stringsAsFactors = FALSE
 )
 
-toy_recordset
+rs <- recordset_df(
+  x,
+  title = "Demo Record Set",
+  creator = utils::person("Joe", "Doe", role = "aut"),
+  record_identifier = "resource_locator",
+  record_part_identifier = "filename"
+)
 
+rs
+
+}
+\references{
+International Council on Archives Expert Group on Archival
+Description (2023). Records in Contexts (RiC).
+https://www.ica.org/ica-network/expert-groups/egad/records-in-contexts-ric/
+}
+\seealso{
+\code{\link[dataset:dataset_df]{dataset::dataset_df()}}, \code{\link[=observe_wacz]{observe_wacz()}},
+\code{\link[=wacz_to_recordset_df]{wacz_to_recordset_df()}}
 }

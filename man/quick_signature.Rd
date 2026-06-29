@@ -2,65 +2,55 @@
 % Please edit documentation in R/quick_signature.R
 \name{quick_signature}
 \alias{quick_signature}
-\title{Compute a fast content signature for a file}
+\title{Compute a fast operational signature for a file}
 \usage{
 quick_signature(path, n = 1024)
 }
 \arguments{
 \item{path}{Character. Path to the file.}
 
-\item{n}{Integer. Number of bytes to read from selected regions
+\item{n}{Integer. Number of bytes sampled from selected regions
 (default: 1024).}
 }
 \value{
-Character. A signature string representing sampled file content.
+Character. A lightweight operational signature.
 }
 \description{
-Generates a lightweight content signature based on hashing selected
-byte regions of a file. This provides a fast approximation for detecting
-identical or differing file instances without computing a full file hash.
+Generates a lightweight content signature by hashing sampled byte
+regions from a file. The signature provides a fast operational
+approximation for detecting identical or differing file instances
+without computing a full cryptographic hash.
 }
 \details{
-The function is designed for performance and is suitable for use in
-large-scale filesystem observations, where full hashing would be
-computationally expensive.
+The function is designed for large-scale observational workflows
+where complete file hashing would be unnecessarily expensive.
 
-The signature is constructed from hashed byte segments:
+The signature is constructed by hashing sampled byte regions:
 \itemize{
-\item small files: hash of full content
-\item medium files: hash of first and last segments
-\item large files: hash of first, middle, and last segments
+\item small files: full file content
+\item medium files: beginning and end
+\item large files: beginning, middle and end
 }
 
-The function provides a fast operational signal for probable
-content equivalence:
+The resulting signature is intended as a fast observational aid:
 \itemize{
-\item identical signatures strongly suggest identical content
-\item different signatures indicate content differences
-\item collisions are possible but unlikely in practice
+\item identical signatures suggest identical file content;
+\item differing signatures indicate differing file content;
+\item collisions are possible but unlikely in operational use.
 }
 
 Missing or inaccessible files return \code{NA_character_}.
 
-In RiC-aligned operational terms, the signature supports later
-interpretation of observed filesystem Instantiations:
-\itemize{
-\item identifying likely identical Instantiations
-\item distinguishing likely versions or derivations
-\item detecting distributed or duplicated work
-\item supporting later Record Set construction and reconciliation
-}
+The signature does not establish authoritative identity or provenance.
+It provides lightweight observational evidence that may support later
+contextual reconstruction, duplicate detection, version analysis,
+or Record Set construction.
 
-The function does not establish authoritative identity or provenance.
-It provides observational evidence that may later support analytical
-or curatorial interpretation.
-
-This function is typically used in conjunction with:
-\itemize{
-\item \code{\link[=scan_storage]{scan_storage()}} for generating observational snapshots
-\item \code{\link[=summarise_duplicates]{summarise_duplicates()}} for detecting duplicate and versioned files
-}
+Unlike \code{\link[=quick_signature_text]{quick_signature_text()}}, this function operates on the
+binary representation of a file rather than its textual content.
 }
 \seealso{
+\code{\link[=quick_signature_text]{quick_signature_text()}},
+\code{\link[=scan_storage]{scan_storage()}},
 \code{\link[=summarise_duplicates]{summarise_duplicates()}}
 }

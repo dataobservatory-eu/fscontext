@@ -2,6 +2,8 @@
 utils::globalVariables(
   c(
     ".",
+    "id",
+    "ts",
     "storage_id",
     "root",
     "dir_path",
@@ -26,6 +28,11 @@ utils::globalVariables(
     "avg_size_unit",
     "matched_rule",
     "refine_id",
+    "resource_locator",
+    "hasText",
+    "text",
+    "mime",
+    "favIconUrl",
     "tmp_observed_unit",
     "fsdemo_country_data"
   )

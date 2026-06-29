@@ -5,12 +5,12 @@ library(testthat)
 make_test_df <- function() {
   df <- data.frame(
     rel_path = c(
-      "_eviota/reporting/R/a.R",
-      "_eviota/reporting/R/b.R",
-      "_eviota/reporting/tests/test-a.R",
-      "_packages/iotables/R/c.R",
-      "_packages/iotables/data-raw/d.bak",
-      "_packages/iotables/R/e.R"
+      "_devel/reporting/R/a.R",
+      "_devel/reporting/R/b.R",
+      "_devel/reporting/tests/test-a.R",
+      "_packages/mypackage/R/c.R",
+      "_packages/mypackage/data-raw/d.bak",
+      "_packages/mypackage/R/e.R"
     ),
     extension = c("r", "r", "r", "r", "bak", "r"),
     mtime = as.POSIXct(c(

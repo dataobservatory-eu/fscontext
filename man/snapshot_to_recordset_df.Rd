@@ -7,9 +7,9 @@
 snapshot_to_recordset_df(
   snapshot_files,
   roots,
-  record_set_id,
+  record_set_identifier,
   record_set_title = NULL,
-  person = utils::person("Jane", "Doe"),
+  creator = utils::person("Jane", "Doe", role = "aut"),
   exclude_patterns = c("\\\\\\\\.Rcheck")
 )
 }
@@ -19,12 +19,12 @@ snapshot_to_recordset_df(
 \item{roots}{Character vector of contextual root paths used
 for observational selection.}
 
-\item{record_set_id}{Character scalar giving the asserted
+\item{record_set_identifier}{Character scalar giving the asserted
 identifier of the resulting Record Set.}
 
 \item{record_set_title}{Optional human-readable title.}
 
-\item{person}{A \code{\link[utils:person]{utils::person()}} object describing the creator
+\item{creator}{A \code{\link[utils:person]{utils::person()}} object describing the creator
 of the semantic Record Set assertion.}
 
 \item{exclude_patterns}{Character vector of exclusion patterns
@@ -35,7 +35,7 @@ A semantically enriched \code{recordset_df} object inheriting from
 \code{dataset_df}.
 }
 \description{
-Creates a provenance-aware \code{recordset_df} from observational
+Creates a provenance-aware \code{\link[=recordset_df]{recordset_df()}} object from observational
 filesystem snapshots and contextual reconstruction workflows.
 
 The function preserves observed filesystem resources while adding:

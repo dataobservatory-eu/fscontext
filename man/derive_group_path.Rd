@@ -30,7 +30,7 @@ layouts rather than authoritative documentary structure.
 
 Future versions of the package are expected to replace or absorb
 this functionality into higher-level Record Set construction logic
-(for example via \code{create_record_set()}), where grouping rules will
+(for example via \code{record_set_projection()}), where grouping rules will
 be explicitly contextualised and provenance-aware.
 }
 \keyword{internal}

@@ -1,0 +1,325 @@
+---
+title: "From Structural Aggregations to Record Sets"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{From Structural Aggregations to Record Sets}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Motivation
+
+A filesystem snapshot may contain hundreds, thousands, or millions of observed resources.
+
+Before creating Record Sets, users often need lightweight aggregation metadata that reveals potentially informative structures within the observations.
+
+`derive_structural_groups()` creates such aggregation metadata from observed locators.
+
+The resulting groupings are not Record Sets. They are candidate aggregations that may later support contextual reconstruction, semantic stabilisation, or human curation.
+
+## Example 1: An R package
+
+```{r setup, echo=FALSE, message=FALSE}
+library(fscontext)
+library(dplyr)
+```
+
+Observe the demo package included with the `fscontext` pacakage for documentation purposes:
+
+```{r show-folder}
+root <- system.file(
+  "testdata/minimal_R_folder",
+  package = "fscontext"
+)
+
+fs::dir_tree(root)
+```
+
+The package contains source code, documentation, data preparation scripts, and vignettes organised into a conventional project structure.
+
+We can observe the package and derive structural aggregations:
+
+```{r observedemo}
+snapshot <- scan_storage(
+  system.file(
+    "testdata/minimal_R_folder",
+    package = "fscontext"
+  )
+)
+
+groups <- derive_structural_groups(
+  snapshot$rel_path,
+  profile = "folder-depth-1"
+)
+```
+
+This yields candidate aggregations:
+
+```         
+R
+man
+tests
+vignettes
+```
+
+```{r filtering}
+groups %>%
+  filter(structural_group %in% c("R", "man"))
+```
+
+The `R` structural group contains source code files, while the `man` structural group contains documentation files generated from the package source.
+
+These aggregations are not necessarily Record Sets. They are structural aggregations derived from observed filesystem organisation. In the terminology used throughout this vignette, they are examples of aggregation metadata that may help identify potentially informative objects.
+
+The usefulness of these aggregations comes from the fact that software projects often organise related resources into stable folders. The folder structure therefore provides evidence about how resources are grouped and used together.
+
+A curator, archivist, or researcher might later create Record Sets such as:
+
+- Source code
+
+- Documentation
+
+- Tests
+
+- Vignettes
+
+However, these Record Sets are not determined by the filesystem structure alone.
+
+For example, a curator may decide to create a Record Set containing all source code files from a single package such as **dplyr**. Alternatively, they may create a larger Record Set containing source files from multiple packages that form part of the **tidyverse** ecosystem. Such a Record Set could include functions from dplyr, tidyr, purrr, and related packages because these resources are frequently used together and share a common analytical context.
+
+The structural aggregations derived by `derive_structural_groups()` therefore provide evidence that may support Record Set construction, but they do not define Record Sets themselves. The final Record Set remains a curatorial, analytical, or archival assertion that depends on purpose, context, and intended use.
+
+## Example 2: A ZIP archive
+
+The ZIP archive contains the same observed resources as the original folder, but packaged into a different storage container.
+
+The structural aggregations remain stable because they are derived from the observed relative paths rather than from the physical storage mechanism.
+
+This illustrates an important principle in fscontext: aggregation metadata can often survive storage transformations.
+
+```{r zip}
+zip_snapshot <- scan_storage(
+  system.file(
+    "testdata/minimal_R_folder.zip",
+    package = "fscontext"
+  )
+)
+```
+
+The observations differ in storage form but preserve the same structural relationships.
+
+Structural aggregation metadata therefore remains stable across storage representations.
+
+This demonstrates that candidate aggregations may survive transformations between storage environments.
+
+```{r derivestructuralgroups}
+zip_groups <- derive_structural_groups(
+  zip_snapshot$rel_path,
+  profile = "folder-depth-1"
+)
+```
+
+```{r filterstructuralgroups}
+zip_groups %>%
+  filter(structural_group %in% c("R", "man"))
+```
+
+## Example 3: A WACZ package
+
+WACZ (Web Archive Collection Zipped) is an open archival packaging format designed for the preservation, exchange, and analysis of web archives. A WACZ package combines archived web content, indexes, metadata, and access information into a single portable file.
+
+The format builds upon established web archiving standards, including the WARC (Web ARChive) format standard published by the World Wide Web Consortium (W3C): <https://www.w3.org/TR/warc/>
+
+The WACZ specification: <https://specs.webrecorder.net/wacz/>
+
+A WACZ package may therefore contain both archived web content and the metadata required to discover, index, and replay that content.
+
+Observe a WACZ package:
+
+```{r observewacz}
+wacz <- scan_storage(
+  system.file(
+    "testdata/fscontext_020.wacz",
+    package = "fscontext"
+  )
+)
+
+derive_structural_groups(
+  wacz$rel_path,
+  profile = "wacz"
+)
+```
+
+These groupings correspond to the structural organisation of a WACZ package.
+
+Again, they are not Record Sets.
+
+They are aggregation metadata that help users identify potentially informative objects within the archive.
+
+## Structural Aggregations and Informative Objects
+
+Following Pomerantz (2015), observed resources are not necessarily informative in isolation. Whether an object becomes informative depends on the context in which it is used and interpreted. Pomerantz defines metadata as statements about an object, and such statements may increase the capacity of an object to become informative.
+
+Structural aggregation metadata can increase the potential informativeness of observations by exposing recurring organisational patterns. One common pattern is the use of folder structures to organise related resources. In projects that follow relatively disciplined document or record organisation practices, folders often reflect recurring workflows or functional groupings.
+
+For example, a standard CRAN package organises source code into an `R` folder, documentation into `man`, and long-form tutorials into `vignettes`. These folder structures provide useful contextual information about the resources they contain. As a result, the contents of `vignettes` may be more informative when considered together than when viewed as isolated files.
+
+In fscontext:
+
+```         
+Filesystem observation
+        ↓
+Aggregation metadata
+        ↓
+Potentially informative object
+        ↓
+Record Set candidate
+```
+
+Structural aggregations are therefore a lightweight analytical layer between observation and interpretation.
+
+## Structural Aggregations and RiC
+
+In Records in Contexts (RiC), Record Sets are curated aggregations of Records.
+
+`derive_structural_groups()` does not create Record Sets. Instead, it creates aggregation metadata derived from observed locators. These aggregations may provide evidence that supports Record Set construction.
+
+For example, in an R software development context, the presence of an `R` folder strongly suggests a grouping of source code files, while a `man` folder suggests a grouping of documentation resources.
+
+In this example,
+
+```         
+R/
+```
+
+may support the creation of a source-code Record Set.
+
+In a web archiving context,
+
+```         
+pages/
+```
+
+may support the creation of a Record Set describing archived web pages, while
+
+```         
+archive/
+```
+
+may support the creation of a Record Set containing archived web resources stored in WARC files.
+
+To give a less engineering context, a wedding photographer may organise photographs on a NAS drive as\
+
+```         
+Photos/
+   Personal/
+      family/
+      vacation/
+   Clients/
+     2026/
+      Smith_wedding/
+         raw/
+         processed/
+      Doe_wedding/
+         raw/
+         processed/
+     2025/
+      Miller_wedding
+         raw/
+         processed/
+```
+
+This organisation illustrates how structural aggregations emerge from folder hierarchies. The photographer may wish to maintain a clear separation between personal and professional photographs, suggesting different aggregation boundaries for different purposes.
+
+Using a profile such as `folder-depth-3`, the structural aggregation metadata might identify groupings such as:
+
+```   
+
+Clients/2026/Smith_wedding 
+Clients/2026/Doe_wedding  
+Clients/2025/Miller_wedding  
+
+```
+
+These aggregations are not yet Record Sets. They are candidate groupings derived from observed organisational structure.
+
+Depending on the intended purpose, a curator or archivist could create Record Sets at several different levels. For example:
+
+- all photographs relating to a particular wedding;
+
+- all weddings photographed during a given year;
+
+- all professional client work;
+
+- all processed photographs;
+
+- all photographs, both personal and professional, relating to a particular family.
+
+The folder structure therefore provides evidence about how resources were organised and used, but it does not determine the final Record Sets. The resulting Record Sets remain contextual assertions that depend on the needs of creators, users, curators, or archivists.
+
+## From Folder Hierarchies to Record Sets
+
+Historically, archives were organised around physical storage constraints. Documents were placed into folders, folders into boxes, and boxes onto shelves. Archival description standards such as ISAD(G) emerged in a world where the physical arrangement of records was often inseparable from their intellectual organisation.
+
+Many contemporary backup and archiving solutions for personal computers continue this tradition. File synchronisation systems, backup software, and operating-system tools such as Time Machine on macOS or File History on Windows preserve folder hierarchies because these structures allow users to restore files, projects, and working environments quickly and efficiently.
+
+These approaches remain extremely useful. They are fast, practical, and well suited to recovering a lost laptop, restoring a working directory, or retrieving an accidentally deleted document.
+
+However, physical and filesystem structures also impose limitations. The organisation of a laptop, network drive, or backup archive reflects the needs of a particular moment in time, a particular user, and a particular technical environment. As projects evolve, resources become distributed across multiple devices, repositories, cloud services, and institutions.
+
+Records in Contexts (RiC) offers a different perspective. Rather than treating a folder hierarchy as the primary organising principle, RiC allows Record Sets to be created according to contextual relationships that may transcend physical storage locations.
+
+For example, a researcher might wish to create a Record Set containing all materials relating to a project, regardless of whether those materials originated on an old laptop, a current workstation, a cloud storage service, or a web archive. Similarly, an organisation might wish to create annual project summaries that combine reports, correspondence, datasets, presentations, and archived web resources stored across many different systems.
+
+Other examples include:
+
+- all documents associated with a particular grant application;
+
+- all correspondence relating to a specific research collaboration;
+
+- all versions of a manuscript created across multiple devices;
+
+- all photographs associated with a particular client;
+
+- all source code and documentation contributing to a software release;
+
+- all web resources archived during a specific investigation or event.
+
+In these situations, folder structures remain valuable because they provide evidence about how resources were originally organised and used. Structural aggregations derived from observed locators can therefore serve as useful aggregation metadata and provide candidate groupings for further analysis.
+
+The purpose of `derive_structural_groups()` is not to replace archival description or to automatically create Record Sets. Instead, it provides a lightweight analytical layer that helps users move from observed storage structures toward more meaningful contextual aggregations. In this sense, structural aggregations act as a bridge between filesystem observations and the richer contextual relationships supported by RiC.
+
+Structural aggregation is only one possible way to derive aggregation metadata from observations. Future versions of fscontext may introduce additional analytical grouping strategies based on other observable characteristics of digital resources.
+
+For example, files may be grouped according to temporal characteristics, such as creation time (`birth_time`) or modification time (`mtime`), allowing users to identify activity periods, project phases, or clusters of work. Similarly, resources may be grouped according to authorship, ownership, repository affiliation, storage context, or other observable provenance indicators.
+
+Conceptually, these approaches follow the same pattern:
+
+```         
+Filesystem observation         
+        ↓ 
+Aggregation metadata
+        ↓ 
+Potentially informative object
+        ↓ 
+Record Set candidate 
+        ↓
+  Human curation
+        ↓
+   Record Set
+```
+
+The difference lies in the evidence used to derive the aggregation. `derive_structural_groups()` uses filesystem organisation as evidence. Other analytical grouping methods may use temporal, authorship, provenance, repository, or content-related observations.
+
+Together, these analytical layers can help users identify potentially informative objects and candidate Record Sets before undertaking more formal contextual reconstruction, semantic stabilisation, or archival description.
+
+## References
+
+Pomerantz, J. (2015). *Metadata*. MIT Press.

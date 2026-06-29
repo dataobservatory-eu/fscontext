@@ -2,93 +2,91 @@
 % Please edit documentation in R/derive_structural_groups.R
 \name{derive_structural_groups}
 \alias{derive_structural_groups}
-\title{Derive structural grouping heuristics from relative paths}
+\title{Derive structural aggregation metadata from relative paths}
 \usage{
-derive_structural_groups(rel_path)
+derive_structural_groups(rel_path, profile = "folder-depth-2")
 }
 \arguments{
 \item{rel_path}{Character vector of relative filesystem paths.}
+
+\item{profile}{Character scalar specifying the structural
+aggregation strategy. Available profiles are:
+\describe{
+\item{"folder-depth-1"}{Group by the first directory level.}
+\item{"folder-depth-2"}{Group by the first two directory levels
+(default).}
+\item{"folder-depth-3"}{Group by the first three directory levels.}
+\item{"folder-depth-4"}{Group by the first four directory levels.}
+\item{"wacz"}{Use the first path component as the structural group
+and the second component as the structural subdivision, matching
+the standard organisation of WACZ archives.}
+}}
 }
 \value{
-A \code{data.frame} with columns:
+A \code{data.frame} with two columns:
 \describe{
 \item{structural_group}{
-Filesystem-based structural grouping heuristic derived from
-the first path component.
+Candidate structural aggregation derived from the selected path
+profile.
 }
 \item{component}{
-Immediate structural subdivision within the grouping,
-if present.
+Immediate structural subdivision within the aggregation, when
+present.
 }
 }
 }
 \description{
-Derives lightweight structural grouping heuristics from relative
-filesystem paths.
+Derives lightweight structural aggregation metadata from observed
+relative filesystem paths.
+
+The function identifies recurring structural patterns in directory
+hierarchies and creates candidate aggregations that can support
+exploratory analysis, navigation, contextual reconstruction, and
+later semantic interpretation.
+
+The resulting groupings are derived solely from path structure.
+They are analytical projections rather than authoritative Record
+Sets, provenance assertions, or documentary relationships.
 }
 \details{
-The function extracts shallow structural patterns commonly found in
-software projects, research workflows, and digital working environments.
+Structural aggregation metadata provides a lightweight abstraction
+of observed directory organisation. It can increase the
+informativeness of filesystem observations by exposing recurring
+organisational patterns without asserting semantic meaning.
 
-It assigns:
+Within the fscontext workflow:
 \itemize{
-\item \code{structural_group}:
-grouping heuristic derived from the first path component
-(e.g. \code{innolab25}, \verb{_packages}, \verb{_markdown})
-\item \code{component}:
-immediate structural subdivision within the grouping,
-if present
-(e.g. \code{eviota}, \code{filmledgerimport}, \code{iotables})
+\item filesystem observations provide evidence about observed resources;
+\item relative paths provide structural organisation;
+\item structural aggregations expose candidate groups that may later
+support contextual reconstruction, Record Set construction,
+semantic stabilisation, or other downstream analyses.
 }
 
-These derived structures support:
-\itemize{
-\item exploratory grouping of filesystem observations
-\item navigation of large observational snapshots
-\item reconstruction of operational project environments
-\item identification of candidate documentary aggregations
-}
-
-The function performs deterministic structural projection only.
-It does not validate repository semantics, documentary structure,
-or authoritative Record Set boundaries.
-
-This function provides a lightweight structural interpretation layer
-on top of observational filesystem data.
-
-In RiC-aligned operational terms:
-\itemize{
-\item rows in observational snapshots represent filesystem
-Instantiations
-\item \code{rel_path} acts as an operational locator associated with
-observed filesystem occurrences
-\item the derived structural groupings provide analytical heuristics
-that may later support Record Set construction
-}
-
-The derived groupings are operational analytical projections,
-not authoritative RiC Record Sets.
-
-The function is intended for analytical, navigational,
-and exploratory reconstruction workflows.
-
-Future versions of the package may replace or extend this logic with
-more explicit provenance-aware Record Set construction workflows
-(for example via \code{create_record_set()}).
+Future versions may introduce additional aggregation profiles based
+on repository structure, provenance, temporal patterns, or other
+observational evidence.
 }
 \examples{
-data("fscontextdemo_snapshot_02")
-
-example_paths <- c(
-  "_packages/fscontextdemo/R/derive_fsdemo_country_data.R",
-  "_packages/fscontextdemo/tests/testthat/test-country-data.R",
-  "_packages/fscontextdemo/data-raw/create_fsdemo_country_data.R",
-  "_packages/fscontextdemo/docs/index.html"
+rel_path <- c(
+  "_packages/demo/R/file.R",
+  "_packages/demo/tests/testthat/test-file.R",
+  "_packages/demo/data/input.csv"
 )
 
-data.frame(
-  rel_path = example_paths,
-  derive_structural_groups(example_paths)
+derive_structural_groups(rel_path)
+
+derive_structural_groups(
+  rel_path,
+  profile = "folder-depth-1"
 )
 
+derive_structural_groups(
+  c(
+    "archive/data.warc.gz",
+    "indexes/index.cdx",
+    "pages/pages.jsonl"
+  ),
+  profile = "wacz"
+)
 }

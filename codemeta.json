@@ -2,12 +2,12 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "fscontext",
-  "description": " Provides a provenance-aware framework for contextual reconstruction from file systems and related digital resource collections. The package creates reproducible snapshots of file-level metadata, paths, repository context, and optional content signatures. It supports contextual grouping, structural abstraction, temporal analysis, semantic stabilization, duplicate and reuse detection, and lightweight workflow reconstruction from filesystem observations. The framework deliberately separates observational evidence, contextual abstraction, semantic interpretation, and analytical reconstruction, enabling reproducible and inspectable workflows. It is designed to support future alignment with archival and contextual knowledge representation models, including RiC-CM, RiC-O, and PROV-O.",
-  "name": "fscontext: Filesystem Contextualisation and Record Set Reconstruction",
+  "description": " Provides a provenance-aware framework for contextual reconstruction from file systems and related digital resource collections. The package creates reproducible snapshots of file-level metadata, paths, repository context, and optional content signatures. It supports contextual grouping, structural abstraction, temporal analysis, semantic stabilization, duplicate and reuse detection, and lightweight workflow reconstruction from file system observations. The framework deliberately separates observational evidence, contextual abstraction, semantic interpretation, and analytical reconstruction, enabling reproducible workflows that can be inspected by reviewers. It is designed to support future alignment with archival and contextual knowledge representation models, including the World Wide Web Consortium Provenance Ontology (PROV-O): Lebo et al. (2013) <https://www.w3.org/TR/prov-o/> and Records in Contexts developed by the International Council on Archives Expert Group on Archival Description (EGAD) <https://www.ica.org/ica-network/expert-groups/egad/records-in-contexts-ric/>.",
+  "name": "fscontext: File System Contextualisation and Record Set Reconstruction",
   "codeRepository": "https://fscontext.dataobservatory.eu/",
   "issueTracker": "https://github.com/dataobservatory-eu/fscontext/issues",
-  "license": "file LICENSE",
-  "version": "0.2.0",
+  "license": "https://spdx.org/licenses/GPL-3.0",
+  "version": "0.2.1",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -122,18 +122,6 @@
     },
     "4": {
       "@type": "SoftwareApplication",
-      "identifier": "here",
-      "name": "here",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=here"
-    },
-    "5": {
-      "@type": "SoftwareApplication",
       "identifier": "dplyr",
       "name": "dplyr",
       "provider": {
@@ -144,12 +132,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dplyr"
     },
-    "6": {
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "utils",
       "name": "utils"
     },
-    "7": {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -161,7 +149,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "8": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "purrr",
       "name": "purrr",
@@ -173,7 +161,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=purrr"
     },
-    "9": {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "dataset",
       "name": "dataset",
@@ -185,17 +173,17 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=dataset"
     },
-    "10": {
+    "9": {
       "@type": "SoftwareApplication",
       "identifier": "stats",
       "name": "stats"
     },
-    "11": {
+    "10": {
       "@type": "SoftwareApplication",
       "identifier": "tools",
       "name": "tools"
     },
-    "12": {
+    "11": {
       "@type": "SoftwareApplication",
       "identifier": "glue",
       "name": "glue",
@@ -207,7 +195,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=glue"
     },
-    "13": {
+    "12": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -219,7 +207,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tibble"
     },
-    "14": {
+    "13": {
       "@type": "SoftwareApplication",
       "identifier": "tidyr",
       "name": "tidyr",
@@ -231,7 +219,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=tidyr"
     },
-    "15": {
+    "14": {
       "@type": "SoftwareApplication",
       "identifier": "magrittr",
       "name": "magrittr",
@@ -243,7 +231,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=magrittr"
     },
-    "16": {
+    "15": {
       "@type": "SoftwareApplication",
       "identifier": "stringr",
       "name": "stringr",
@@ -255,7 +243,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=stringr"
     },
-    "17": {
+    "16": {
       "@type": "SoftwareApplication",
       "identifier": "labelled",
       "name": "labelled",
@@ -267,6 +255,18 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=labelled"
     },
+    "17": {
+      "@type": "SoftwareApplication",
+      "identifier": "jsonlite",
+      "name": "jsonlite",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=jsonlite"
+    },
     "18": {
       "@type": "SoftwareApplication",
       "identifier": "R",
@@ -275,7 +275,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "578.488KB",
+  "fileSize": "3450.424KB",
   "citation": [
     {
       "@type": "CreativeWork",

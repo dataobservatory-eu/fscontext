@@ -1,7 +1,7 @@
 #' Create a contextual Record Set dataset
 #'
 #' @description
-#' Creates a provenance-aware `recordset_df` from observational
+#' Creates a provenance-aware [recordset_df()] object from observational
 #' filesystem snapshots and contextual reconstruction workflows.
 #'
 #' The function preserves observed filesystem resources while adding:
@@ -32,12 +32,12 @@
 #' @param roots Character vector of contextual root paths used
 #'   for observational selection.
 #'
-#' @param record_set_id Character scalar giving the asserted
+#' @param record_set_identifier Character scalar giving the asserted
 #'   identifier of the resulting Record Set.
 #'
 #' @param record_set_title Optional human-readable title.
 #'
-#' @param person A [utils::person()] object describing the creator
+#' @param creator A [utils::person()] object describing the creator
 #'   of the semantic Record Set assertion.
 #'
 #' @param exclude_patterns Character vector of exclusion patterns
@@ -77,70 +77,57 @@
 snapshot_to_recordset_df <- function(
   snapshot_files,
   roots,
-  record_set_id,
+  record_set_identifier,
   record_set_title = NULL,
-  person = utils::person("Jane", "Doe"),
+  creator = utils::person("Jane", "Doe", role = "aut"),
   exclude_patterns = c("\\\\.Rcheck")
 ) {
-  stopifnot(is.character(snapshot_files))
-  stopifnot(is.character(roots))
-  stopifnot(length(record_set_id) == 1)
+  if (!is.character(snapshot_files)) {
+    stop("`snapshot_files` must be a character vector.", call. = FALSE)
+  }
+
+  if (!all(file.exists(snapshot_files))) {
+    stop("All `snapshot_files` must exist.", call. = FALSE)
+  }
+
+  if (!is.character(roots)) {
+    stop("`roots` must be a character vector.", call. = FALSE)
+  }
+
+  if (
+    !is.character(record_set_identifier) ||
+      length(record_set_identifier) != 1L ||
+      is.na(record_set_identifier)
+  ) {
+    stop("`record_set_identifier` must be a character scalar.", call. = FALSE)
+  }
 
   if (is.null(record_set_title)) {
     record_set_title <- paste0(
-      "The ",
-      record_set_id,
-      " filesystem record set"
+      "The ", record_set_identifier, " filesystem record set"
     )
   }
+
 
   # ------------------------------------------------------------
   # Contextual observational reconstruction
   # ------------------------------------------------------------
 
-  recordset_df <- snapshot_to_reconstruction_context(
+  rs_tbl_df <- snapshot_to_reconstruction_context(
     snapshot_files = snapshot_files,
     roots = roots,
     exclude_patterns = exclude_patterns
   )
 
   # ------------------------------------------------------------
-  # Human-defined Record Set assertion
+  # Create recorddataset_df
   # ------------------------------------------------------------
 
-  recordset_df$record_set_id <- record_set_id
-
-  # ------------------------------------------------------------
-  # Create dataset_df
-  # ------------------------------------------------------------
-
-  recordset_df <- dataset::dataset_df(
-    recordset_df,
-    identifier = c(
-      obs = paste0(
-        "https://fscontext.example.org/recordset/",
-        record_set_id,
-        "#"
-      )
-    ),
-    dataset_bibentry = dataset::dublincore(
-      title = record_set_title,
-      creator = person,
-      description = paste(
-        "Filesystem-derived contextual record set",
-        "created from observational filesystem snapshots."
-      )
-    ),
-    dataset_subject = dataset::subject_create(
-      term = "Record Set",
-      valueURI = "https://www.ica.org/standards/RiC/ontology#RecordSet",
-      subjectScheme = "RiC-O"
-    )
-  )
-
-  class(recordset_df) <- c(
-    "recordset_df",
-    class(recordset_df)
+  rs_df <- recordset_df(
+    x = rs_tbl_df,
+    title = record_set_title,
+    record_set_identifier = record_set_identifier,
+    creator = creator
   )
 
   # ------------------------------------------------------------
@@ -149,7 +136,7 @@ snapshot_to_recordset_df <- function(
 
   recordset_uri <- paste0(
     "https://fscontext.example.org/recordset/",
-    record_set_id
+    record_set_identifier
   )
 
   activity_uri <- paste0(
@@ -161,8 +148,8 @@ snapshot_to_recordset_df <- function(
     "https://fscontext.example.org/software/snapshot_to_recordset_df"
   )
 
-  given_name <- paste(person$given, collapse = "_")
-  family_name <- paste(person$family, collapse = "_")
+  given_name <- paste(creator$given, collapse = "_")
+  family_name <- paste(creator$family, collapse = "_")
 
   person_uri <- paste0(
     "https://fscontext.example.org/agent/",
@@ -184,7 +171,7 @@ snapshot_to_recordset_df <- function(
     dataset::n_triple(
       person_uri,
       "http://www.w3.org/2000/01/rdf-schema#label",
-      paste(person$given, person$family)
+      paste(creator$given, creator$family)
     ),
     dataset::n_triple(
       software_agent_uri,
@@ -296,7 +283,7 @@ snapshot_to_recordset_df <- function(
   # Attach provenance graph
   # ------------------------------------------------------------
 
-  dataset::provenance(recordset_df) <- dataset::n_triples(c(
+  dataset::provenance(rs_df) <- dataset::n_triples(c(
     agent_triples,
     typing_triples,
     time_triples,
@@ -306,5 +293,5 @@ snapshot_to_recordset_df <- function(
     derivation_triples
   ))
 
-  recordset_df
+  rs_df
 }

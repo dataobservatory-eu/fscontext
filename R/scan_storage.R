@@ -96,11 +96,213 @@
 #'
 #' @export
 scan_storage <- function(root,
-                         storage_id = "l480-1-ssd",
-                         person_id = "antaldaniel",
+                         storage_id = "local-storage",
+                         person_id = "local-user",
                          scan_time = Sys.time(),
                          compute_signature = TRUE,
-                         max_signature_size = 200 * 1024 * 1024) {
+                         max_signature_size =
+                           200 * 1024 * 1024) {
+  root <- fs::path_abs(root)
+
+  if (fs::dir_exists(root)) {
+    return(
+      scan_directory_storage(
+        root = root,
+        storage_id = storage_id,
+        person_id = person_id,
+        scan_time = scan_time,
+        compute_signature = compute_signature,
+        max_signature_size = max_signature_size
+      )
+    )
+  }
+
+  ext <- tolower(fs::path_ext(root))
+
+  if (ext %in% c("zip", "wacz")) {
+    return(
+      scan_zip_storage(
+        root = root,
+        storage_id = storage_id,
+        person_id = person_id,
+        scan_time = scan_time,
+        compute_signature = compute_signature,
+        max_signature_size = max_signature_size
+      )
+    )
+  }
+
+  stop(
+    "scan_storage(): unsupported storage type: ",
+    root,
+    call. = FALSE
+  )
+}
+
+
+#' Extract a ZIP-based storage container
+#'
+#' Internal helper that extracts a ZIP-compatible archive
+#' into a temporary directory and returns the extraction path.
+#'
+#' The function currently supports ZIP-based containers,
+#' including `.zip` and `.wacz` files.
+#'
+#' The extracted directory is intended for immediate use by
+#' `scan_directory_storage()` and should be considered temporary.
+#'
+#' @param archive Character. Path to a ZIP-compatible archive.
+#'
+#' @param exdir Character. Extraction directory.
+#'
+#' @details
+#' The function returns a character scalar of the extraction directory.
+#'
+#' @keywords internal
+#' @noRd
+#' @importFrom utils unzip
+
+extract_storage <- function(
+  archive,
+  exdir
+) {
+  archive <- fs::path_abs(archive)
+
+  if (!fs::file_exists(archive)) {
+    stop(
+      "extract_storage(): archive does not exist: ",
+      archive,
+      call. = FALSE
+    )
+  }
+
+  fs::dir_create(exdir)
+
+  utils::unzip(zipfile = archive, exdir = exdir)
+
+  exdir
+}
+
+
+#' Observe a ZIP-based storage container
+#'
+#' Internal helper used by [scan_storage()] for ZIP-compatible
+#' archive containers.
+#'
+#' The archive is extracted into a temporary directory and then
+#' observed using `scan_directory_storage()`. This preserves the
+#' existing filesystem observation workflow while allowing
+#' archive-backed storage roots to be analysed.
+#'
+#' Supported formats currently include:
+#'
+#' - `.zip`
+#' - `.wacz`
+#'
+#' Archive-specific interpretation is deliberately excluded.
+#' The function observes the extracted file hierarchy and records
+#' the archive container as contextual provenance.
+#'
+#' @inheritParams scan_storage
+#'
+#' @details
+#' Returns a filesystem observation data frame equivalent to that returned
+#' by `scan_directory_storage()`, with additional archive
+#' provenance columns.
+#'
+#' @keywords internal
+#' @noRd
+#' @importFrom fs path_abs path_ext path dir_create
+#' @importFrom utils unzip
+#' @importFrom tools file_path_sans_ext
+
+scan_zip_storage <- function(
+  root,
+  storage_id,
+  person_id,
+  scan_time = Sys.time(),
+  compute_signature = TRUE,
+  max_signature_size = 200 * 1024 * 1024
+) {
+  archive_path <- fs::path_abs(root)
+  archive_id <- tools::file_path_sans_ext(basename(archive_path))
+  extract_root <- fs::path(tempdir(), archive_id)
+
+  if (fs::dir_exists(extract_root)) {
+    fs::dir_delete(extract_root)
+  }
+
+  # ---------------------------------------------------------
+  # Determine observational root.
+  #
+  # Many ZIP tools (including Windows Explorer) create:
+  #
+  #   archive.zip
+  #     └─ folder/
+  #         ├─ DESCRIPTION
+  #         ├─ NAMESPACE
+  #         └─ ...
+  #
+  # while direct filesystem scans start at:
+  #
+  #   folder/
+  #       ├─ DESCRIPTION
+  #       ├─ NAMESPACE
+  #       └─ ...
+  #
+  # To preserve observational equivalence, descend into the
+  # single extracted top-level directory when present.
+  # ---------------------------------------------------------
+
+
+  zip_manifest <- utils::unzip(archive_path, list = TRUE)
+  zip_paths <- gsub("\\\\", "/", zip_manifest$Name)
+  zip_paths <- zip_paths[nzchar(zip_paths)]
+
+  top_parts <- sub("/.*$", "", zip_paths)
+  top_parts <- unique(top_parts[nzchar(top_parts)])
+
+  extract_storage(archive = archive_path, exdir = extract_root)
+
+  archive_scan_root <- extract_root
+
+  if (length(top_parts) == 1) {
+    candidate_root <- fs::path(extract_root, top_parts[1])
+    if (fs::dir_exists(candidate_root)) {
+      archive_scan_root <- candidate_root
+    }
+  }
+
+  out <- scan_directory_storage(
+    root = archive_scan_root,
+    storage_id = storage_id,
+    person_id = person_id,
+    scan_time = scan_time,
+    compute_signature = compute_signature,
+    max_signature_size = max_signature_size
+  )
+
+  out$container_file <- basename(archive_path)
+  out$container_type <- tolower(fs::path_ext(archive_path))
+
+  attr(out, "archive_root") <- archive_path
+  attr(out, "extracted_root") <- extract_root
+  attr(out, "archive_scan_root") <- archive_scan_root
+
+  out
+}
+
+#' @keywords internal
+#' @noRd
+#' @importFrom fs path_abs dir_exists file_info path_file path_rel path_ext
+scan_directory_storage <- function(
+  root,
+  storage_id,
+  person_id,
+  scan_time = Sys.time(),
+  compute_signature = TRUE,
+  max_signature_size = 200 * 1024 * 1024
+) {
   start_time <- Sys.time()
   message("Starting scan_storage() on: ", root)
 

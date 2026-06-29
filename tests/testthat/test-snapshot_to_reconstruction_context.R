@@ -29,7 +29,7 @@ test_that("snapshot_to_reconstruction_context reconstructs expected columns", {
     "observation_id",
     "structural_group",
     "component",
-    "record_set_id",
+    "record_set_identifier",
     "resource_id",
     "locator_path"
   ) %in% names(out)))
@@ -37,7 +37,7 @@ test_that("snapshot_to_reconstruction_context reconstructs expected columns", {
   expect_gt(nrow(out), 0)
 })
 
-test_that("record_set_id is never missing", {
+test_that("record_set_identifier is never missing", {
   data("fscontextdemo_snapshot_02")
 
   f <- tempfile(fileext = ".rds")
@@ -50,8 +50,8 @@ test_that("record_set_id is never missing", {
     roots = roots
   )
 
-  expect_false(any(is.na(out$record_set_id)))
-  expect_false(any(out$record_set_id == ""))
+  expect_false(any(is.na(out$record_set_identifier)))
+  expect_false(any(out$record_set_identifier == ""))
 })
 
 

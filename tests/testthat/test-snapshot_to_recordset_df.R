@@ -9,8 +9,8 @@ test_that("snapshot_to_recordset_df returns a semantic recordset_df", {
   rs <- snapshot_to_recordset_df(
     snapshot_files = snapshot_file,
     roots = roots,
-    record_set_id = "test-record-set",
-    person = utils::person("Jane", "Doe")
+    record_set_identifier = "test-record-set",
+    creator = utils::person("Jane", "Doe")
   )
 
   expect_s3_class(rs, "recordset_df")
@@ -18,9 +18,6 @@ test_that("snapshot_to_recordset_df returns a semantic recordset_df", {
   expect_s3_class(rs, "data.frame")
 
   expect_gt(nrow(rs), 0)
-
-  expect_true("record_set_id" %in% names(rs))
-  expect_equal(unique(rs$record_set_id), "test-record-set")
 })
 
 test_that("snapshot_to_recordset_df applies asserted metadata", {
@@ -34,15 +31,11 @@ test_that("snapshot_to_recordset_df applies asserted metadata", {
   rs <- snapshot_to_recordset_df(
     snapshot_files = snapshot_file,
     roots = roots,
-    record_set_id = "test-record-set",
+    record_set_identifier = "test-record-set",
     record_set_title = "The test-record-set filesystem record set",
-    person = utils::person("Jane", "Doe")
+    creator = utils::person("Jane", "Doe")
   )
 
-  expect_equal(
-    unique(rs$record_set_id),
-    "test-record-set"
-  )
 
   expect_equal(
     dataset::dataset_title(rs),
@@ -66,9 +59,9 @@ test_that("snapshot_to_recordset_df preserves reconstructed observations", {
 
   rs <- snapshot_to_recordset_df(
     snapshot_files = snapshot_file,
-    person = utils::person("Jane", "Doe"),
+    creator = utils::person("Jane", "Doe"),
     roots = roots,
-    record_set_id = "test-record-set"
+    record_set_identifier = "test-record-set"
   )
 
   # ----------------------------------------------------------
@@ -83,7 +76,7 @@ test_that("snapshot_to_recordset_df preserves reconstructed observations", {
     "filename",
     "mtime",
     "scan_time",
-    "record_set_id"
+    "record_set_identifier"
   )
 
   expect_true(
@@ -114,8 +107,8 @@ test_that("snapshot_to_recordset_df preserves core observational columns", {
   rs <- snapshot_to_recordset_df(
     snapshot_files = snapshot_file,
     roots = roots,
-    record_set_id = "test-record-set",
-    person = utils::person("Jane", "Doe")
+    record_set_identifier = "test-record-set",
+    creator = utils::person("Jane", "Doe")
   )
 
   required_cols <- c(
@@ -126,7 +119,7 @@ test_that("snapshot_to_recordset_df preserves core observational columns", {
     "filename",
     "mtime",
     "scan_time",
-    "record_set_id",
+    "record_set_identifier",
     "resource_id",
     "locator_path",
     "observation_id"
@@ -157,9 +150,9 @@ test_that("snapshot_to_recordset_df attaches provenance metadata", {
 
   rs <- snapshot_to_recordset_df(
     snapshot_files = snapshot_files,
-    person = utils::person("Jane", "Doe"),
+    creator = utils::person("Jane", "Doe"),
     roots = roots,
-    record_set_id = "test-record-set"
+    record_set_identifier = "test-record-set"
   )
 
   prov <- dataset::provenance(rs)

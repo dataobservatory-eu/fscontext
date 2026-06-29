@@ -1,37 +1,37 @@
-# Group path derivation  -----------------------------------------------
+# Group path derivation -----------------------------------------------
 
 test_that("derive_group_path extracts project and module", {
-  x <- "_packages/iotables/R/file.R"
+  x <- "_packages/mypackage/R/file.R"
 
   res <- derive_group_path(x)
 
-  expect_equal(res, "_packages/iotables/R")
+  expect_equal(res, "_packages/mypackage/R")
 })
 
 test_that("derive_group_path falls back to project if no module", {
-  x <- "_packages/iotables/utils.R"
+  x <- "_packages/mypackage/utils.R"
 
   res <- derive_group_path(x)
 
-  expect_equal(res, "_packages/iotables")
+  expect_equal(res, "_packages/mypackage")
 })
 
 test_that("derive_group_path is vectorised", {
   x <- c(
-    "_packages/iotables/R/a.R",
-    "_packages/iotables/tests/test-a.R"
+    "_packages/mypackage/R/a.R",
+    "_packages/mypackage/tests/test-a.R"
   )
 
   res <- derive_group_path(x)
 
   expect_equal(
     res,
-    c("_packages/iotables/R", "_packages/iotables/tests")
+    c("_packages/mypackage/R", "_packages/mypackage/tests")
   )
 })
 
 test_that("derive_group_path does not leak filenames into group_path", {
-  x <- "_packages/iotables/utils.R"
+  x <- "_packages/mypackage/utils.R"
 
   res <- derive_group_path(x)
 
@@ -40,23 +40,20 @@ test_that("derive_group_path does not leak filenames into group_path", {
 
 test_that("derive_group_path keeps _packages and packages distinct", {
   x <- c(
-    "_packages/iotables/a.R",
-    "packages/iotables/a.R"
+    "_packages/mypackage/a.R",
+    "packages/mypackage/a.R"
   )
 
   res <- derive_group_path(x)
 
-  expect_equal(
-    res,
-    c("_packages/iotables", "packages/iotables")
-  )
+  expect_equal(res, c("_packages/mypackage", "packages/mypackage"))
 })
 
 test_that("derive_group_path does not leak root-level filenames", {
   x <- c(
-    "_packages/iotables/a.R",
-    "packages/iotables/a.R",
-    "_eviota/iotables/DESCRIPTION"
+    "_packages/mypackage/a.R",
+    "packages/mypackage/a.R",
+    "_eviota/mypackage/DESCRIPTION"
   )
 
   res <- derive_group_path(x)
@@ -64,17 +61,17 @@ test_that("derive_group_path does not leak root-level filenames", {
   expect_equal(
     res,
     c(
-      "_packages/iotables",
-      "packages/iotables",
-      "_eviota/iotables"
+      "_packages/mypackage",
+      "packages/mypackage",
+      "_eviota/mypackage"
     )
   )
 })
 
 test_that("derive_group_path keeps module folders", {
   x <- c(
-    "_packages/iotables/R/a.R",
-    "_packages/iotables/tests/testthat/test-a.R",
+    "_packages/mypackage/R/a.R",
+    "_packages/mypackage/tests/testthat/test-a.R",
     "packages/filmledgerimport/data-raw/input.csv"
   )
 
@@ -83,8 +80,8 @@ test_that("derive_group_path keeps module folders", {
   expect_equal(
     res,
     c(
-      "_packages/iotables/R",
-      "_packages/iotables/tests",
+      "_packages/mypackage/R",
+      "_packages/mypackage/tests",
       "packages/filmledgerimport/data-raw"
     )
   )
@@ -92,16 +89,13 @@ test_that("derive_group_path keeps module folders", {
 
 test_that("derive_group_path normalises Windows separators", {
   x <- c(
-    "_packages\\iotables\\R\\a.R",
-    "packages\\iotables\\a.R"
+    "_packages\\mypackage\\R\\a.R",
+    "packages\\mypackage\\a.R"
   )
 
   res <- derive_group_path(x)
 
-  expect_equal(
-    res,
-    c("_packages/iotables/R", "packages/iotables")
-  )
+  expect_equal(res, c("_packages/mypackage/R", "packages/mypackage"))
 })
 
 test_that("derive_group_path handles short and empty paths", {
@@ -115,9 +109,5 @@ test_that("derive_group_path handles short and empty paths", {
 })
 
 test_that("derive_group_path handles short paths", {
-  expect_true(
-    is.na(
-      derive_group_path("file.R")
-    )
-  )
+  expect_true(is.na(derive_group_path("file.R")))
 })

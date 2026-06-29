@@ -1,10 +1,9 @@
-library(testthat)
-
 # Structure ------------------------------------------------------------
 
 test_that("scan_storage returns expected structure", {
-  root <- system.file("testdata/minimal_R_folder", package = "fscontext")
-  stopifnot(nzchar(root))
+  root <- system.file("testdata/minimal_R_folder",
+    package = "fscontext"
+  )
   res <- scan_storage(root)
 
   expect_s3_class(res, "data.frame")
@@ -303,3 +302,90 @@ test_that("full_path stores filesystem paths", {
 
   expect_true(all(fs::file_exists(res$full_path)))
 })
+
+## Working with ZIP files --------------------------------------------------
+test_that(
+  "zip storage reproduces directory observations",
+  {
+    folder_root <- system.file("testdata/minimal_R_folder",
+      package = "fscontext"
+    )
+
+    zip_root <- system.file(
+      "testdata/minimal_R_folder.zip",
+      package = "fscontext"
+    )
+
+    folder <- scan_storage(folder_root)
+
+    zip <- scan_storage(zip_root)
+
+    folder <- folder[!grepl("(^|/)\\.", folder$rel_path), ]
+    zip <- zip[!grepl("(^|/)\\.", zip$rel_path), ]
+
+    folder <- folder[order(folder$rel_path), ]
+
+    zip <- zip[order(zip$rel_path), ]
+
+    expect_equal(folder$rel_path, zip$rel_path)
+
+    expect_equal(folder$filename, zip$filename)
+
+    expect_equal(folder$extension, zip$extension)
+
+    expect_equal(folder$size, zip$size)
+
+    expect_equal(folder$quick_sig, zip$quick_sig)
+  }
+)
+
+test_that("zip files can be observed", {
+  zip_root <- system.file(
+    "testdata/minimal_R_folder.zip",
+    package = "fscontext"
+  )
+
+  res <- scan_storage(zip_root)
+
+  expect_s3_class(res, "data.frame")
+  expect_gt(nrow(res), 10)
+})
+
+
+test_that("zip observations can be contextualised", {
+  zip_root <- system.file(
+    "testdata/minimal_R_folder.zip",
+    package = "fscontext"
+  )
+
+  res <- scan_storage(zip_root)
+
+  ctx <- add_snapshot_context(res)
+
+  expect_true(
+    "observation_id" %in% names(ctx)
+  )
+})
+
+
+test_that(
+  "zip snapshots can be contextualised",
+  {
+    zip_root <- system.file(
+      "testdata/minimal_R_folder.zip",
+      package = "fscontext"
+    )
+
+    zip <- scan_storage(zip_root)
+
+    zip <- add_snapshot_context(zip)
+
+    expect_true(
+      "observation_id" %in% names(zip)
+    )
+
+    expect_true(
+      "storage_full_path" %in% names(zip)
+    )
+  }
+)
