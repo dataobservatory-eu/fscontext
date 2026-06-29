@@ -135,9 +135,9 @@ zip_groups %>%
 
 WACZ (Web Archive Collection Zipped) is an open archival packaging format designed for the preservation, exchange, and analysis of web archives. A WACZ package combines archived web content, indexes, metadata, and access information into a single portable file.
 
-The format builds upon established web archiving standards, including the WARC (Web ARChive) format standard published by the World Wide Web Consortium (W3C): <https://www.w3.org/TR/warc/>
+The format builds upon established web archiving standards, including the WARC (Web ARChive) format standard published by the World Wide Web Consortium (W3C): <https://iipc.github.io/warc-specifications/specifications/warc-format/warc-1.0/>
 
-The WACZ specification: <https://specs.webrecorder.net/wacz/>
+WACZ is a media type that allows web archive collections to be packaged and shared on the web as a discrete file. A WACZ file includes all the data that is needed for the rendering archived content as well as contextual information required for users to interpret it. The WACZ specification: <https://specs.webrecorder.net/wacz/1.1.1/>
 
 A WACZ package may therefore contain both archived web content and the metadata required to discover, index, and replay that content.
 

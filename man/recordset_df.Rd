@@ -49,25 +49,22 @@ A \code{recordset_df}, which inherits from \code{dataset_df}, \code{tbl_df},
 Create a \code{recordset_df}, a lightweight extension of
 \code{dataset::dataset_df} for representing archival Record Sets.
 
-A \code{recordset_df} preserves ordinary tabular data while allowing
-selected columns to be declared as identifiers of RiC Records and
-Record Parts. It is intended for provenance-aware archival,
-curatorial and semantic enrichment workflows without requiring a
-complete implementation of the Records in Contexts (RiC) ontology.
+A \code{recordset_df} stores dataset-level metadata together with
+optional Record and Record Part identifiers using lightweight
+conventions inspired by the Records in Contexts (RiC) model.
+It supports provenance-aware archival, curatorial and semantic
+enrichment workflows while remaining compatible with ordinary
+data frames.
 
-See the \strong{recordset_df} vignette for a complete workflow starting
-from filesystem observations.
+See the \strong{"Working with Record Sets"} vignette for a complete
+workflow starting from filesystem observations.
 }
 \examples{
 x <- data.frame(
   resource_locator = c(
-    "https://example.org/1",
-    "https://example.org/2"
+    "https://example.org/1", "https://example.org/2"
   ),
-  filename = c(
-    "a.html",
-    "b.html"
-  ),
+  filename = c("a.html", "b.html"),
   stringsAsFactors = FALSE
 )
 
