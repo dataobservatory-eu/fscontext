@@ -33,20 +33,35 @@ reconstruction-oriented analysis.
 
 ## Getting started
 
-The package includes two introductory vignettes:
+The package includes four introductory vignettes that follow the typical
+`fscontext` workflow.
 
 - [Introduction to
   fscontext](https://fscontext.dataobservatory.eu/articles/intro.html)
-  introduces file system observations, contextualisation, and Record Set
-  construction.
+  introduces filesystem observations, reproducible snapshots, and
+  contextual reconstruction.
+
+- [Working with Record
+  Sets](https://fscontext.dataobservatory.eu/articles/recordset_df.html)
+  demonstrates how observational data can be transformed into
+  provenance-aware `recordset_df` objects inspired by the Records in
+  Contexts (RiC) conceptual model.
+
 - [Prelabelled values and semantic
   stabilisation](https://fscontext.dataobservatory.eu/articles/prelabelled.html)
-  demonstrates progressive semantic enrichment and refinement workflows.
+  introduces lightweight semantic enrichment, rulebooks, and
+  human-in-the-loop refinement workflows.
 
-These vignettes provide a guided introduction to the observational,
-contextual, and semantic layers of the package.
+- [Organising Evidence with Structural
+  Aggregations](https://fscontext.dataobservatory.eu/articles/structural_aggregations.html)
+  demonstrates how structural aggregation metadata can identify
+  potentially informative objects and candidate Record Sets across
+  folders, ZIP archives, and WACZ packages.
 
-## Contextualisation
+Together these vignettes introduce the observational, contextual,
+documentary, and semantic layers of the package.
+
+## Context before semantics
 
 Many digital collections contain valuable contextual information but
 little documentation explaining how files, datasets, reports, source
@@ -68,14 +83,16 @@ treated as evidence from which contextual structures can be
 reconstructed.
 
     Filesystem observations  
-          ↓ 
-    Contextualisation  
-          ↓ 
-    Record Sets  
-          ↓ 
-    Semantic stabilisation           
-          ↓
-    Knowledge systems  
+             ↓ 
+         Snapshots
+             ↓   
+    Contextual reconstruction
+             ↓ 
+       Record Sets  
+             ↓ 
+     Semantic stabilisation           
+             ↓
+       Knowledge systems  
 
 Rather than replacing archival description or provenance models,
 `fscontext` focuses on the earlier task of contextual reconstruction.
@@ -188,23 +205,32 @@ The package separates three complementary analytical layers:
 
 | Layer | Purpose |
 |----|----|
-| observational | reproducible observations of digital resources and their filesystem context |
-| contextual | grouping observations into Record Sets, projects, collections, and reconstruction workspaces |
-| analytical | reconstruction, temporal comparison, activity analysis, and semantic stabilisation |
+| Observation | Observe filesystems and related digital environments as reproducible snapshots. |
+| Context | Derive contextual identifiers, structural aggregations, and candidate Record Sets from observations. |
+| Record Sets | Create lightweight documentary objects using recordset_df, inspired by RiC. |
+| Semantic stabilisation | Support progressive semantic enrichment through prelabelled values, rulebooks, and human review. |
+| Analysis | Compare snapshots, detect duplicates, reconstruct activity, and analyse evolving digital work environments. |
 
-The framework intentionally separates observational evidence, contextual
-abstraction, semantic interpretation, and analytical reconstruction. In
-RiC-inspired terms, filesystem observations represent observed digital
-resources and their associated instantiations at a particular point in
-time. These observations may later be aggregated into contextual
-`Record Sets`, while preserving the distinction between the observed
-resource itself and the contextual structures derived from it.
+In RiC-inspired terms, filesystem observations represent observed
+digital resources and their associated instantiations at a particular
+point in time. These observations may later be aggregated into
+contextual `Record Sets` while preserving the distinction between the
+observed resources themselves and the contextual structures derived from
+them. The framework intentionally separates observation, contextual
+organisation, semantic stabilisation, and domain-specific
+interpretation. This allows the same observational evidence to support
+different analytical perspectives—including archival description,
+business process reconstruction, software development, digital
+forensics, historical research, and other forms of contextual
+analysis—without conflating the evidence with its interpretation.
 
 ## What this package does not do
 
-The package does not modify files. It is not intended to replace version
-control systems, reconstruct file contents, infer authoritative archival
-hierarchy, or perform ontology-complete provenance modelling.
+`fscontext` does not attempt to replace archival description, provenance
+ontologies, or knowledge graph platforms. Instead, it provides a
+reproducible observational and contextual layer that can support those
+systems by making digital working environments easier to understand,
+review, and reconstruct.
 
 ## Notes
 
