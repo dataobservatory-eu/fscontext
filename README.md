@@ -9,7 +9,7 @@
 [![lifecycle](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status:
 WIP](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-[![devel-version](https://img.shields.io/badge/devel%20version-0.2.0001-blue.svg)](https://github.com/dataobservatory-eu/fscontext/tree/devel)
+[![devel-version](https://img.shields.io/badge/devel%20version-0.2.002-blue.svg)](https://github.com/dataobservatory-eu/fscontext/tree/devel)
 [![dataobservatory](https://img.shields.io/badge/ecosystem-dataobservatory.eu-3EA135.svg)](https://dataobservatory.eu/)
 [![codecov](https://codecov.io/gh/dataobservatory-eu/fscontext/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dataobservatory-eu/fscontext)
 
@@ -33,13 +33,20 @@ reconstruction-oriented analysis.
 
 ## Getting started
 
-The package includes four introductory vignettes that follow the typical
-`fscontext` workflow.
+The package includes five introductory vignettes that follow the typical
+`fscontext` workflow from filesystem observation to semantic
+stabilisation.
 
 - [Introduction to
   fscontext](https://fscontext.dataobservatory.eu/articles/intro.html)
   introduces filesystem observations, reproducible snapshots, and
   contextual reconstruction.
+
+- [Observing File
+  Organisation](https://fscontext.dataobservatory.eu/articles/file_organisation.html)
+  demonstrates how repeated filesystem observations can reconstruct
+  ordinary human curation activities such as organising imported
+  photographs into contextual collections.
 
 - [Working with Record
   Sets](https://fscontext.dataobservatory.eu/articles/recordset_df.html)
@@ -59,7 +66,7 @@ The package includes four introductory vignettes that follow the typical
   folders, ZIP archives, and WACZ packages.
 
 Together these vignettes introduce the observational, contextual,
-documentary, and semantic layers of the package.
+semantic, and analytical layers of the package.
 
 ## Context before semantics
 
@@ -77,15 +84,27 @@ or knowledge graph construction can begin, it is often necessary to
 reconstruct the context in which digital resources were created and
 used.
 
-`fscontext` approaches filesystems as observational environments. Files,
-folders, timestamps, repository structures, and other digital traces are
-treated as evidence from which contextual structures can be
+`fscontext` approaches filesystems as observational environments. A
+common example is importing photographs from a camera or smartphone.
+Initially the files arrive as an unordered collection. As people
+organise them into folders such as `house`, `garden`, or `delete`, they
+create contextual information through ordinary filesystem operations. By
+comparing reproducible snapshots taken before and after this
+organisation, `fscontext` can reconstruct these contextual changes as
+observable evidence without interpreting their meaning.
+
+Files, folders, timestamps, repository structures, and other digital
+traces are treated as evidence from which contextual structures can be
 reconstructed.
 
     Filesystem observations  
              ↓ 
          Snapshots
              ↓   
+    Contextual changes
+             ↓ 
+         Snapshots
+             ↓  
     Contextual reconstruction
              ↓ 
        Record Sets  
@@ -177,12 +196,12 @@ snapshot |>
 #> 5 fscontextdemo::data/fscontextdemo_snapshot_01.rda
 #> 6       fscontextdemo::data/fsdemo_country_data.rda
 #>                                                       observation_id
-#> 1                 fscontextdemo::.github/.gitignore::20260525-174640
-#> 2     fscontextdemo::.github/workflows/pkgdown.yaml::20260525-174640
-#> 3                         fscontextdemo::.gitignore::20260525-174640
-#> 4                      fscontextdemo::.Rbuildignore::20260525-174640
-#> 5 fscontextdemo::data/fscontextdemo_snapshot_01.rda::20260525-174640
-#> 6       fscontextdemo::data/fsdemo_country_data.rda::20260525-174640
+#> 1                 fscontextdemo::.github/.gitignore::20260525-184640
+#> 2     fscontextdemo::.github/workflows/pkgdown.yaml::20260525-184640
+#> 3                         fscontextdemo::.gitignore::20260525-184640
+#> 4                      fscontextdemo::.Rbuildignore::20260525-184640
+#> 5 fscontextdemo::data/fscontextdemo_snapshot_01.rda::20260525-184640
+#> 6       fscontextdemo::data/fsdemo_country_data.rda::20260525-184640
 #>                             rel_path
 #> 1                 .github/.gitignore
 #> 2     .github/workflows/pkgdown.yaml

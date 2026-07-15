@@ -25,18 +25,16 @@ articles:
   - title: "Getting Started"
     contents:
       - intro
+      - file_organisation
+
+  - title: "Contextual Reconstruction"
+    contents:
+      - recordset_df
+      - structural_aggregations
 
   - title: "Semantic Stabilisation"
     contents:
       - prelabelled
-
-  - title: "Working with Record Sets"
-    contents:
-      - recordset_df
-
-  - title: "Structural Aggregation"
-    contents:
-      - structural_aggregations
       
 reference:
 
