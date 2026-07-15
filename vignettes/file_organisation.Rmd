@@ -1,0 +1,204 @@
+---
+title: "Observing File Organisation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Observing File Organisation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+Imagine importing a set of photographs from a camera, smartphone, or scanner.
+Initially the files arrive as a flat collection with sequential filenames. During
+review, a person organises them into meaningful folders representing subjects,
+projects, or collections.
+
+In this vignette we use nine tiny text files as stand-ins for photographs. The
+example demonstrates how `fscontext` records observations before and after this
+organisation, allowing the contextual changes to be reconstructed
+
+```{r setup, message=FALSE, warning=FALSE}
+library(fscontext, quietly = TRUE)
+library(dplyr, quietly = TRUE)
+
+vignette_folder <- file.path(tempdir(), "vignette")
+camera <- file.path(vignette_folder, "camera")
+photos <- file.path(vignette_folder, "photos")
+
+unlink(c(vignette_folder, camera, photos), recursive = TRUE)
+
+dir.create(vignette_folder)
+dir.create(camera)
+dir.create(photos)
+
+for (i in 1:9) {
+  writeLines(as.character(i),file.path(camera, paste0("P", i, ".txt")))
+}
+
+```
+
+
+```{r showcamera}
+dir(camera)
+```
+Let's take a snapshot as the files arrive from a camera or stored on a memory card.
+
+```{r snapshotbefore}
+before <- snapshot_storage(path = camera, 
+                           root = vignette_folder, 
+                           person_id = "photographer")
+```
+
+Summarise the files:
+
+```{r summarybefore}
+summary_before <- readRDS(before) |> 
+  dplyr::select(person_id, rel_path, stem, size)
+
+print(summary_before)
+```
+
+Now let's organise the photos into three groups: photos that are made inside of the house, in the garden, and photos that are not worth keeping and designated for deleting.
+
+```{r organisephotos}
+dir.create(file.path(photos, "house"), recursive = TRUE)
+dir.create(file.path(photos, "garden"))
+dir.create(file.path(photos, "delete"))
+
+file.rename(
+  file.path(camera, c("P1.txt","P2.txt","P5.txt")),
+  file.path(photos, "house",
+            c("P1.txt","P2.txt","P5.txt"))
+)
+
+file.rename(
+  file.path(camera,
+            c("P3.txt","P4.txt","P6.txt","P7.txt")),
+  file.path(photos, "garden",
+            c("P3.txt","P4.txt","P6.txt","P7.txt"))
+)
+
+file.rename(
+  file.path(camera,
+            c("P8.txt","P9.txt")),
+  file.path(photos, "delete",
+            c("P8.txt","P9.txt"))
+)
+```
+The resulting file structure:
+
+```text
+photos/
+
+    house/
+        P1.txt
+        P2.txt
+        P5.txt
+
+    garden/
+        P3.txt
+        P4.txt
+        P6.txt
+        P7.txt
+
+    delete/
+        P8.txt
+        P9.txt
+```
+
+The second snapshot records the reorganised collection. Although the files
+themselves have not changed, their contextual location within the filesystem has.
+
+```{r after}
+after <- snapshot_storage(path = photos, 
+                          root = vignette_folder, 
+                          person_id = "archivist")
+```
+
+We can see the new summary:
+
+```{r summaryafter}
+summary_after <- readRDS(after) |> 
+  dplyr::select(person_id, rel_path, stem, size)
+
+print(summary_after)
+```
+
+Now compare the two observations.
+
+The files are matched using their filename (stem) and file size. The
+comparison reveals how each file moved from the original camera import into its
+new contextual location.
+
+```{r joinsummaries}
+
+summary_path_change <- summary_before |>
+  rename(
+    rel_path_before = rel_path,
+    person_before = person_id
+  ) |>
+  left_join(
+    summary_after |>
+      rename(
+        rel_path_after = rel_path,
+        person_after = person_id
+      ),
+    by = c("stem", "size")
+  ) |>
+  select(
+    stem, size,
+    person_before, rel_path_before,
+    rel_path_after, person_after
+  ) |>
+  filter(grepl("txt$", rel_path_before))
+
+
+print(summary_path_change)
+```
+
+For example, photograph P1 was originally observed in the camera import and
+later observed in the house folder.
+```{r}
+summary_path_change |>
+  filter(stem == "P1") |>
+  select(
+    person_before,
+    rel_path_before,
+    rel_path_after,
+    person_after
+  ) |>
+  tidyr::unite(
+    col = "transition",
+    rel_path_before,
+    rel_path_after,
+    sep = " → "
+  )
+```
+The transition
+
+`camera/P1.txt → photos/house/P1.txt` 
+
+records an observable change in filesystem context.
+
+From the perspective of `fscontext`, this is evidence that the file became part
+of the contextual group house. The package deliberately does _not_ infer why
+this happened. The folder may represent the subject of the photograph, a
+temporary workspace, or another organisational decision known only to the user.
+
+The important point is that the filesystem itself records a human curation
+activity. By comparing two observational snapshots, `fscontext` reconstructs
+this activity as reproducible evidence.
+
+The resulting comparison can serve as the starting point for later semantic
+review. A subsequent workflow may interpret the movement into `house`,
+`garden`, or `delete` as candidate semantic assertions, record the provenance of
+those assertions, and subject them to human review before they become part of a
+knowledge graph or archival description.
