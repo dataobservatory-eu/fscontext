@@ -14,6 +14,12 @@
     "url": "https://r-project.org"
   },
   "runtimePlatform": "R version 4.5.0 (2025-04-11 ucrt)",
+  "provider": {
+    "@id": "https://cran.r-project.org",
+    "@type": "Organization",
+    "name": "Comprehensive R Archive Network (CRAN)",
+    "url": "https://cran.r-project.org"
+  },
   "author": [
     {
       "@type": "Person",
@@ -275,7 +281,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "3450.424KB",
+  "fileSize": "3460.676KB",
   "citation": [
     {
       "@type": "CreativeWork",
