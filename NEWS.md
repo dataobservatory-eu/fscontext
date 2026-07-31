@@ -1,9 +1,9 @@
-# development version
+# fscontext 0.2.1
 
 - Bug fix: when repo_root is empty, empty scans are returned.
 - New vignette on file organisation.
 
-# fscontext 0.2.0
+# 0.2.0
 
 - Initial CRAN submission.
 - Added support for observing ZIP archives using `scan_storage()`. 

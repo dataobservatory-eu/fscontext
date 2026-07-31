@@ -1,25 +1,7 @@
-## Resubmission
+## 0.2.1
 
-This is the second CRAN resubmission of `fscontext`.
+The new version fixes a small bug and adds a new tutorial vignette.
 
-- The \dontrun{} example was made simpler and runs.
-
-- Examples from internal, not exported function documentations were removed.
-
-- Two wrong URLs were changed, `urlchecker::url_check()` shows no problematic URLs.
-
-- The PROV and RiC abbreviations are spelled out, both n the DESCRIPTION and among the function roxygen documentations with a `reference` tag.
-
-- Default parameters that would save into any user environment were removed and those examples\
-  in the roxygen documentation now save to `tempdir()`
-
-## Package purpose
-
-`fscontext` provides a provenance-aware framework for contextual reconstruction from filesystem observations. It creates reproducible snapshots of file-level metadata, paths, repository context, and optional content signatures, and supports contextual grouping, structural abstraction, semantic stabilisation, duplicate detection, and reconstruction-oriented analysis.
-
-The package is intended for analytical workflows involving research infrastructures, software repositories, digital collections, preservation environments, and other contexts where filesystem observations provide evidence about activities, resources, and their relationships.
-
-The package is inspired by archival contextualisation approaches, particularly the Records in Contexts (RiC) family of conceptual models, but it is not an implementation of RiC-CM or RiC-O.
 
 ## Test environments
 
