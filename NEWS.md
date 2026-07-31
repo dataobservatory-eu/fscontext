@@ -1,3 +1,8 @@
+# development version
+
+- Bug fix: when repo_root is empty, empty scans are returned.
+- New vignette on file organisation.
+
 # fscontext 0.2.0
 
 - Initial CRAN submission.

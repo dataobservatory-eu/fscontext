@@ -224,6 +224,7 @@ scan_zip_storage <- function(
   compute_signature = TRUE,
   max_signature_size = 200 * 1024 * 1024
 ) {
+  
   archive_path <- fs::path_abs(root)
   archive_id <- tools::file_path_sans_ext(basename(archive_path))
   extract_root <- fs::path(tempdir(), archive_id)
@@ -282,8 +283,8 @@ scan_zip_storage <- function(
     max_signature_size = max_signature_size
   )
 
-  out$container_file <- basename(archive_path)
-  out$container_type <- tolower(fs::path_ext(archive_path))
+  out$container_file <- rep(basename(archive_path), nrow(out))
+  out$container_type <- rep(tolower(fs::path_ext(archive_path)), nrow(out))
 
   attr(out, "archive_root") <- archive_path
   attr(out, "extracted_root") <- extract_root
@@ -312,6 +313,10 @@ scan_directory_storage <- function(
     stop("scan_storage(): root path does not exist: ", root, call. = FALSE)
   }
 
+  # --- initialise the return value ---
+  
+  snapshot <- empty_snapshot()
+  
   # --- list files safely ---
   files <- fs::dir_ls(
     path = root,
@@ -351,52 +356,74 @@ scan_directory_storage <- function(
     fs::file_info(files),
     error = function(e) {
       message("file_info() failed, retrying per-file...")
-      do.call(rbind, lapply(files, function(f) {
-        tryCatch(fs::file_info(f), error = function(e) NULL)
-      }))
+      
+      results <- lapply(files, function(f) {
+        tryCatch(
+          fs::file_info(f),
+          error = function(e) NULL
+        )
+      })
+      
+      results <- Filter(Negate(is.null), results)
+      
+      if (length(results) == 0) {
+        return(NULL)
+      }
+      
+      do.call(rbind, results)
     }
   )
+  
+  if (is.null(info) || nrow(info) == 0) {
+    files <- files[0]
+  } else {
+    valid <- !is.na(info$size)
+    files <- files[valid]
+    info <- info[valid, , drop = FALSE]
+  }
 
-  # ensure alignment
-  valid <- !is.na(info$size)
-  files <- files[valid]
-  info <- info[valid, ]
-
-  rel_path <- fs::path_rel(files, start = root)
-
-  filename <- fs::path_file(files)
-  ext <- fs::path_ext(files)
-
-  df <- data.frame(
-    storage_id = storage_id,
-    person_id = person_id,
-    full_path = as.character(files),
-    rel_path = as.character(rel_path),
-    filename = filename,
-    stem = tools::file_path_sans_ext(filename),
-    extension = ifelse(ext == "", NA_character_, tolower(ext)),
-    type = info$type,
-    size = as.double(info$size),
-    mtime = info$modification_time,
-    ctime = info$change_time,
-    atime = info$access_time,
-    birth_time = info$birth_time,
-    depth = lengths(strsplit(rel_path, "[/\\\\]+")),
-    links = info$hard_links,
-    permissions = info$permissions,
-    quick_sig = NA_character_,
-    scan_time = scan_time,
-    stringsAsFactors = FALSE
-  )
-
-  # --- ALWAYS define columns (test contract) ---
-  df$repo_root <- NA_character_
-  df$repo_rel_path <- NA_character_
-  df$git_tracked <- NA
+  if (length(files) > 0) {
+    # If there are no files at the relative path, return and empty data.frame
+    
+    rel_path <- fs::path_rel(files, start = root)
+    filename <- fs::path_file(files)
+    ext <- fs::path_ext(files)
+    
+    snapshot <- data.frame(
+      storage_id = storage_id,
+      person_id = person_id,
+      full_path = as.character(files),
+      rel_path = as.character(rel_path),
+      filename = filename,
+      stem = tools::file_path_sans_ext(filename),
+      extension = ifelse(ext == "", NA_character_, tolower(ext)),
+      type = info$type,
+      size = as.double(info$size),
+      mtime = info$modification_time,
+      ctime = info$change_time,
+      atime = info$access_time,
+      birth_time = info$birth_time,
+      depth = lengths(strsplit(rel_path, "[/\\\\]+")),
+      links = info$hard_links,
+      permissions = info$permissions,
+      quick_sig = NA_character_,
+      scan_time = scan_time,
+      repo_root = rep(NA_character_, length(files)),
+      repo_rel_path = rep(NA_character_, length(files)),
+      git_tracked = rep(NA, length(files)),
+      stringsAsFactors = FALSE
+    )
+    
+    snapshot$storage_path_id <- paste(
+      snapshot$storage_id,
+      snapshot$rel_path,
+      sep = "::"
+    )
+  }
 
   # --- signatures ---
-  if (compute_signature && nrow(df) > 0) {
-    eligible_idx <- which(df$size <= max_signature_size)
+  if (compute_signature && nrow(snapshot) > 0) {
+    eligible_idx <- which(snapshot$size <= max_signature_size)
 
     if (length(eligible_idx) > 0) {
       pb <- progress::progress_bar$new(
@@ -413,8 +440,8 @@ scan_directory_storage <- function(
         tryCatch(quick_signature(p), error = function(e) NA_character_)
       }
 
-      df$quick_sig[eligible_idx] <- vapply(
-        df$full_path[eligible_idx],
+      snapshot$quick_sig[eligible_idx] <- vapply(
+        snapshot$full_path[eligible_idx],
         safe_quick_signature,
         character(1)
       )
@@ -429,7 +456,7 @@ scan_directory_storage <- function(
   # one storage context. Observation-specific identity is added later
   # via add_snapshot_context().
 
-  df$storage_path_id <- paste(df$storage_id, df$rel_path, sep = "::")
+  snapshot$storage_path_id <- paste(snapshot$storage_id, snapshot$rel_path, sep = "::")
 
   # --- detect repo roots safely ---
   git_dirs <- tryCatch(
@@ -456,20 +483,20 @@ scan_directory_storage <- function(
   }
 
   if (length(repo_roots_norm) > 0) {
-    df$repo_root <- vapply(
-      df$full_path,
+    snapshot$repo_root <- vapply(
+      snapshot$full_path,
       find_repo_root_safe,
       character(1)
     )
 
     # --- repo_rel_path ---
-    df$repo_rel_path <- vapply(
-      seq_len(nrow(df)),
+    snapshot$repo_rel_path <- vapply(
+      seq_len(nrow(snapshot)),
       function(i) {
-        if (is.na(df$repo_root[i])) {
+        if (is.na(snapshot$repo_root[i])) {
           return(NA_character_)
         }
-        fs::path_rel(df$full_path[i], start = df$repo_root[i])
+        fs::path_rel(snapshot$full_path[i], start = snapshot$repo_root[i])
       },
       character(1)
     )
@@ -478,7 +505,7 @@ scan_directory_storage <- function(
     message("Checking Git tracked files...")
 
     for (repo in repo_roots_norm) {
-      idx <- which(!is.na(df$repo_root) & df$repo_root == repo)
+      idx <- which(!is.na(snapshot$repo_root) & snapshot$repo_root == repo)
       if (length(idx) == 0) next
 
       tracked <- tryCatch(
@@ -493,7 +520,7 @@ scan_directory_storage <- function(
 
       if (length(tracked) == 0) next
 
-      df$git_tracked[idx] <- df$repo_rel_path[idx] %in% tracked
+      snapshot$git_tracked[idx] <- snapshot$repo_rel_path[idx] %in% tracked
     }
   }
 
@@ -520,31 +547,62 @@ scan_directory_storage <- function(
     error = function(e) NA_character_
   )
 
-  attr(df, "created_at") <- scan_time
-  attr(df, "created_by") <- "scan_storage"
-  attr(df, "package") <- "fscontext"
-  attr(df, "package_version") <- pkg_version
-  attr(df, "repos") <- repos_df
-  attr(df, "schema_version") <- "0.1.3"
-  attr(df, "scan_root") <- root
+  attr(snapshot, "created_at") <- scan_time
+  attr(snapshot, "created_by") <- "scan_storage"
+  attr(snapshot, "package") <- "fscontext"
+  attr(snapshot, "package_version") <- pkg_version
+  attr(snapshot, "repos") <- repos_df
+  attr(snapshot, "schema_version") <- "0.1.3"
+  attr(snapshot, "scan_root") <- root
 
-  attr(df, "scan_call") <- paste(
+  attr(snapshot, "scan_call") <- paste(
     deparse(match.call()),
     collapse = " "
   )
 
-  attr(df, "signature_enabled") <- compute_signature
-  attr(df, "max_signature_size") <- max_signature_size
+  attr(snapshot, "signature_enabled") <- compute_signature
+  attr(snapshot, "max_signature_size") <- max_signature_size
 
   end_time <- Sys.time()
   elapsed <- round(as.numeric(difftime(end_time, start_time, units = "secs")), 2)
-  skipped_estimate <- n_files - nrow(df)
+  skipped_estimate <- n_files - nrow(snapshot)
 
-  message("Files scanned: ", nrow(df))
-  message("Files in Git repos: ", sum(!is.na(df$repo_root)))
-  message("Files tracked by Git: ", sum(df$git_tracked, na.rm = TRUE))
+  message("Files scanned: ", nrow(snapshot))
+  message("Files in Git repos: ", sum(!is.na(snapshot$repo_root)))
+  message("Files tracked by Git: ", sum(snapshot$git_tracked, na.rm = TRUE))
   message("Skipped approximately ", skipped_estimate, " inaccessible files")
   message("scan_storage completed in ", elapsed, " seconds")
 
-  df
+  snapshot
+}
+
+
+#' @keywords internal
+#' @noRd
+empty_snapshot <- function() {
+  data.frame(
+    storage_id = character(),
+    person_id = character(),
+    full_path = character(),
+    rel_path = character(),
+    filename = character(),
+    stem = character(),
+    extension = character(),
+    type = character(),
+    size = double(),
+    mtime = as.POSIXct(character()),
+    ctime = as.POSIXct(character()),
+    atime = as.POSIXct(character()),
+    birth_time = as.POSIXct(character()),
+    depth = integer(),
+    links = integer(),
+    permissions = character(),
+    quick_sig = character(),
+    scan_time = as.POSIXct(character()),
+    repo_root = character(),
+    repo_rel_path = character(),
+    git_tracked = logical(),
+    storage_path_id = character(),
+    stringsAsFactors = FALSE
+  )
 }

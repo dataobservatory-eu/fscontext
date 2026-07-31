@@ -9,7 +9,7 @@
 [![lifecycle](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status:
 WIP](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-[![devel-version](https://img.shields.io/badge/devel%20version-0.2.002-blue.svg)](https://github.com/dataobservatory-eu/fscontext/tree/devel)
+[![devel-version](https://img.shields.io/badge/devel%20version-0.2.003-blue.svg)](https://github.com/dataobservatory-eu/fscontext/tree/devel)
 [![dataobservatory](https://img.shields.io/badge/ecosystem-dataobservatory.eu-3EA135.svg)](https://dataobservatory.eu/)
 [![codecov](https://codecov.io/gh/dataobservatory-eu/fscontext/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dataobservatory-eu/fscontext)
 
@@ -196,12 +196,12 @@ snapshot |>
 #> 5 fscontextdemo::data/fscontextdemo_snapshot_01.rda
 #> 6       fscontextdemo::data/fsdemo_country_data.rda
 #>                                                       observation_id
-#> 1                 fscontextdemo::.github/.gitignore::20260525-184640
-#> 2     fscontextdemo::.github/workflows/pkgdown.yaml::20260525-184640
-#> 3                         fscontextdemo::.gitignore::20260525-184640
-#> 4                      fscontextdemo::.Rbuildignore::20260525-184640
-#> 5 fscontextdemo::data/fscontextdemo_snapshot_01.rda::20260525-184640
-#> 6       fscontextdemo::data/fsdemo_country_data.rda::20260525-184640
+#> 1                 fscontextdemo::.github/.gitignore::20260525-174640
+#> 2     fscontextdemo::.github/workflows/pkgdown.yaml::20260525-174640
+#> 3                         fscontextdemo::.gitignore::20260525-174640
+#> 4                      fscontextdemo::.Rbuildignore::20260525-174640
+#> 5 fscontextdemo::data/fscontextdemo_snapshot_01.rda::20260525-174640
+#> 6       fscontextdemo::data/fsdemo_country_data.rda::20260525-174640
 #>                             rel_path
 #> 1                 .github/.gitignore
 #> 2     .github/workflows/pkgdown.yaml
