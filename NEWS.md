@@ -2,6 +2,10 @@
 
 - Bug fix: when repo_root is empty, empty scans are returned.
 - New vignette on file organisation.
+- Released on CRAN
+
+DOI v0.2.1: [10.5281/zenodo.21756596](https://doi.org/10.5281/zenodo.21756596)
+DOI of the project [10.32614/CRAN.package.fscontext](https://doi.org/10.32614/CRAN.package.fscontext)
 
 # 0.2.0
 
