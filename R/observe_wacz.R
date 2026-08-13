@@ -3,9 +3,20 @@
 #' @description
 #' Creates an observational data frame from a WACZ web archive.
 #'
-#' The function extracts structural metadata from the archive,
-#' combines page-level information with WARC index metadata, and returns
-#' one observational row for each archived web page.
+#' A WACZ (Web Archive Collection Zipped) file is an open package format
+#' for storing and exchanging web archive collections. A WACZ archive is
+#' a ZIP container that combines one or more WARC files containing captured
+#' web resources with indexes, page metadata, and package metadata needed
+#' to locate, describe, validate, and replay the archived content.
+#'
+#' Unlike a standalone WARC file, which primarily stores captured HTTP
+#' requests and responses and their payloads, a WACZ archive provides
+#' additional structure around those captures. Typical components include
+#' WARC files, a CDX index, a page list, and a `datapackage.json` manifest.
+#'
+#' `observe_wacz()` extracts this structural information, combines
+#' page-level information with WARC index metadata, and returns one
+#' observational row for each archived web page.
 #'
 #' The resulting object represents observations only. It intentionally
 #' avoids making semantic assertions about Records, Record Parts,
@@ -39,27 +50,39 @@
 #' * version counts.
 #'
 #' @details
-#' The function performs the following steps:
+#' A WACZ archive commonly contains several complementary sources of
+#' observational information. `pages/pages.jsonl` describes archived
+#' pages, while `indexes/index.cdx` indexes captured resources stored in
+#' the WARC files. The `datapackage.json` manifest describes the package
+#' itself and its constituent resources.
+#'
+#' The function currently performs the following steps:
 #'
 #' * extracts the WACZ archive into a temporary directory;
 #' * reads the archive `datapackage.json`;
 #' * parses page metadata from `pages/pages.jsonl`;
 #' * parses WARC index metadata from `indexes/index.cdx`;
-#' * collapses multiple archived versions of the same resource;
+#' * collapses multiple archived entries for the same resource;
 #' * joins page observations with archive metadata.
 #'
-#' The resulting observations preserve the evidence contained in the
-#' archive without interpreting its archival semantics.
+#' The resulting observations preserve evidence supplied by the archive
+#' without interpreting its archival semantics. The underlying WARC,
+#' index, page, and package structures may therefore support richer
+#' observational analysis than is exposed by the current page-level
+#' representation.
 #'
 #' @references
-#' The WACZ format specification:
+#' Webrecorder WACZ format specification:
 #' \url{https://specs.webrecorder.net/wacz/1.1.1/}
 #'
 #' @seealso
 #' [wacz_to_recordset_df()]
 #'
 #' @examples
-#' wacz <- system.file("testdata", "fscontext_020.wacz", package = "fscontext")
+#' wacz <- system.file(
+#'   "testdata", "fscontext_020.wacz",
+#'   package = "fscontext"
+#' )
 #'
 #' observe_wacz(wacz)
 #'

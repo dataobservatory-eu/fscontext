@@ -1,6 +1,6 @@
 Package: fscontext
 Title: File System Contextualisation and Record Set Reconstruction
-Version: 0.2.1
+Version: 0.2.11
 Language: en-GB
 Authors@R: 
     person(given = "Daniel", 
@@ -58,4 +58,4 @@ Config/testthat/edition: 3
 Depends: 
     R (>= 4.1.0)
 LazyData: true
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
