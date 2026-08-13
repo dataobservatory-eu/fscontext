@@ -224,7 +224,6 @@ scan_zip_storage <- function(
   compute_signature = TRUE,
   max_signature_size = 200 * 1024 * 1024
 ) {
-  
   archive_path <- fs::path_abs(root)
   archive_id <- tools::file_path_sans_ext(basename(archive_path))
   extract_root <- fs::path(tempdir(), archive_id)
@@ -314,9 +313,9 @@ scan_directory_storage <- function(
   }
 
   # --- initialise the return value ---
-  
+
   snapshot <- empty_snapshot()
-  
+
   # --- list files safely ---
   files <- fs::dir_ls(
     path = root,
@@ -356,24 +355,24 @@ scan_directory_storage <- function(
     fs::file_info(files),
     error = function(e) {
       message("file_info() failed, retrying per-file...")
-      
+
       results <- lapply(files, function(f) {
         tryCatch(
           fs::file_info(f),
           error = function(e) NULL
         )
       })
-      
+
       results <- Filter(Negate(is.null), results)
-      
+
       if (length(results) == 0) {
         return(NULL)
       }
-      
+
       do.call(rbind, results)
     }
   )
-  
+
   if (is.null(info) || nrow(info) == 0) {
     files <- files[0]
   } else {
@@ -384,11 +383,11 @@ scan_directory_storage <- function(
 
   if (length(files) > 0) {
     # If there are no files at the relative path, return and empty data.frame
-    
+
     rel_path <- fs::path_rel(files, start = root)
     filename <- fs::path_file(files)
     ext <- fs::path_ext(files)
-    
+
     snapshot <- data.frame(
       storage_id = storage_id,
       person_id = person_id,
@@ -413,7 +412,7 @@ scan_directory_storage <- function(
       git_tracked = rep(NA, length(files)),
       stringsAsFactors = FALSE
     )
-    
+
     snapshot$storage_path_id <- paste(
       snapshot$storage_id,
       snapshot$rel_path,

@@ -488,3 +488,331 @@ warc_lines[
   max(1, i - 10):
     min(length(warc_lines), i + 30)
 ]
+
+
+# -------------------------------------------------------------------------
+# Explore the internal structure of a WACZ archive
+# -------------------------------------------------------------------------
+
+# PURPOSE
+#
+# This file is an exploratory investigation of WACZ as an observational
+# source for fscontext. It is deliberately more verbose than production
+# code: the objective is to understand which observations are present in
+# a WACZ package, how they relate to one another, and which assumptions
+# fscontext may safely make when ingesting WACZ archives.
+#
+#
+# WHAT WE HAVE LEARNED
+#
+# 1. A WACZ is a ZIP-based package containing several distinct layers of
+#    evidence. In the archives examined so far these include:
+#
+#      datapackage.json
+#      datapackage-digest.json
+#      pages/pages.jsonl
+#      indexes/index.cdx
+#      archive/data.warc.gz
+#
+#    These files should not be collapsed conceptually into a single
+#    observation source. They describe different aspects of the capture.
+#
+#
+# 2. datapackage.json describes the WACZ package and its constituent
+#    resources. It provides package-level metadata such as the WACZ
+#    version, creating software, timestamps, paths, sizes, and hashes.
+#
+#
+# 3. pages/pages.jsonl is page-oriented.
+#
+#    It identifies resources that Webrecorder treats as pages and can
+#    provide, among other things:
+#
+#      page identifier
+#      resource locator
+#      capture timestamp
+#      page title
+#      extracted text
+#
+#    It is therefore not simply another representation of the CDX index.
+#
+#
+# 4. indexes/index.cdx is capture/resource-oriented.
+#
+#    It records individual captured resources and provides information
+#    needed to locate their corresponding WARC records, including:
+#
+#      resource locator
+#      capture timestamp
+#      payload digest
+#      MIME type
+#      HTTP status
+#      WARC filename
+#      compressed byte offset
+#      compressed byte length
+#
+#
+# 5. A page and a CDX capture can be matched exactly using the resource
+#    locator together with the capture timestamp.
+#
+#    For example:
+#
+#      pages.jsonl: 2026-06-24T17:53:27.878Z
+#      index.cdx:   20260624175327878
+#
+#    These are different serialisations of the same capture time.
+#
+#
+# 6. A resource locator is not a unique identifier for a WARC record.
+#
+#    The same resource may occur repeatedly in the CDX because it was
+#    encountered during multiple captures. URL alone is therefore not a
+#    sufficient key for identifying a particular capture.
+#
+#
+# 7. Repeated CDX observations do not necessarily represent different
+#    payload versions.
+#
+#    WACZ uses WARC revisit records when previously captured content is
+#    encountered again. Revisit records can share a payload digest with
+#    an earlier payload-bearing record.
+#
+#    Consequently:
+#
+#      repeated URL != necessarily changed content
+#
+#    and:
+#
+#      repeated capture != necessarily repeated stored payload
+#
+#
+# 8. The payload digest provides an important relationship between
+#    captures.
+#
+#    In the archives examined so far, a revisit capture can be associated
+#    with the earlier payload-bearing record through the shared digest.
+#    This allows the captured page observation to be distinguished from
+#    the physical storage of its payload.
+#
+#
+# 9. CDX offset and length refer to compressed byte ranges inside the
+#    WARC gzip file.
+#
+#    The experiment below demonstrates that seeking directly to a CDX
+#    offset and reading the specified number of bytes can yield an
+#    independently decompressible WARC record.
+#
+#    This means that fscontext does not need to decompress or parse the
+#    complete WARC merely to retrieve one indexed capture.
+#
+#
+# 10. A WARC response record contains several observable layers:
+#
+#       WARC metadata
+#       HTTP response metadata
+#       captured payload
+#
+#     These should remain distinguishable in the observational model.
+#
+#
+# 11. The curatorial ingestion experiments with Finna, MUIS, and
+#     Garamantas show that representative images can be discovered from
+#     the captured HTML, but the rule is source-specific:
+#
+#       Finna:
+#         <meta property="og:image" ...>
+#
+#       MUIS:
+#         <img name="thumbnail" ...>
+#
+#       Garamantas:
+#         <img class="image-zoom" ...>
+#
+#     The generic WACZ layer therefore gives us the captured evidence,
+#     while interpretation of a page's "representative image" belongs to
+#     a source-specific extraction layer.
+#
+#
+# 12. This distinction is important for fscontext.
+#
+#     WACZ ingestion should first preserve observations supplied by the
+#     package and its WARC records. Statements such as "this image is the
+#     representative image of this cultural object" are interpretations
+#     derived from page structure and should not silently become generic
+#     WACZ observations.
+#
+#
+# CURRENT PRACTICAL RESULT
+#
+# For the immediate curatorial experiments we have a lightweight
+# ingestion workflow producing:
+#
+#      page_id
+#      title
+#      page_url
+#      thumbnail_url
+#
+# for curatorial pages captured from:
+#
+#      finna.fi
+#      muis.ee
+#      garamantas.lv
+#
+# This intentionally pragmatic ingestion can be used to gather curator
+# experience while the more general fscontext WACZ observational model
+# is developed separately.
+
+
+# -------------------------------------------------------------------------
+# NEXT INVESTIGATIONS
+# -------------------------------------------------------------------------
+
+# A. WACZ package integrity
+#
+# Inspect datapackage-digest.json and establish precisely how package
+# integrity is represented and how it relates to the hashes recorded in
+# datapackage.json.
+#
+# TODO:
+#   - parse datapackage-digest.json;
+#   - verify the digest of datapackage.json;
+#   - verify hashes of constituent WACZ resources;
+#   - determine which verification results should become observations.
+
+
+# B. WARC record structure
+#
+# Replace the current exploratory raw-byte/text inspection with explicit
+# parsing of:
+#
+#   WARC headers
+#   HTTP headers
+#   payload
+#
+# Investigate which fields should be retained by fscontext without
+# imposing archival semantics on them.
+
+
+# C. Revisit records
+#
+# Formalise the relationship currently observed experimentally:
+#
+#   page capture
+#       -> revisit WARC record
+#       -> shared payload digest
+#       -> payload-bearing WARC record
+#
+# Test this against additional WACZ archives before treating the observed
+# behaviour as an ingestion invariant.
+
+
+# D. Capture identity
+#
+# Determine the appropriate observational key for a captured resource.
+#
+# Candidates include combinations of:
+#
+#   WARC record ID
+#   WARC page ID
+#   resource locator
+#   capture timestamp
+#   payload digest
+#
+# Do not assume that URL or digest alone identifies a capture.
+
+
+# E. Time observations
+#
+# Inventory the different timestamps available across:
+#
+#   datapackage.json
+#   pages.jsonl
+#   index.cdx
+#   WARC headers
+#   HTTP headers
+#
+# Determine what event or observation each timestamp actually describes
+# before mapping any of them to higher-level temporal concepts.
+
+
+# F. Payload and record digests
+#
+# Investigate the distinction between:
+#
+#   payload digest
+#   block/record digest
+#   datapackage resource hash
+#
+# These identify integrity at different layers and should not be treated
+# as interchangeable signatures.
+
+
+# G. Multiple WARC files
+#
+# Current examples use archive/data.warc.gz.
+#
+# Test ingestion against a WACZ containing multiple WARC files and make
+# sure all retrieval logic uses warc_filename from the CDX rather than
+# assuming data.warc.gz.
+
+
+# H. Non-HTML resources
+#
+# Investigate observational treatment of:
+#
+#   images
+#   PDFs
+#   audio/video
+#   CSS/JavaScript
+#   fonts
+#   redirects
+#   failed HTTP responses
+#
+# The current curatorial experiment is intentionally page-centred and
+# should not determine the general fscontext WACZ model.
+
+
+# I. Source-specific curatorial extraction
+#
+# Keep Finna, MUIS, and Garamantas extraction rules separate from generic
+# WACZ ingestion.
+#
+# TODO:
+#   - test the three extractors on additional curator-created WACZ files;
+#   - record extraction failures rather than silently dropping them;
+#   - decide how source-specific handlers should eventually be registered;
+#   - add further sources only when curator use cases require them.
+
+
+# J. Curatorial review experiment
+#
+# Use the current minimal ingestion immediately with real reviewers.
+#
+# Gather evidence about whether reviewers actually need:
+#
+#   page title
+#   source page URL
+#   representative image
+#
+# and what additional context they request during review.
+#
+# Do not design the final review interface solely from assumptions made
+# during WACZ engineering.
+
+
+# K. General fscontext observational model
+#
+# Once the WACZ evidence layers are understood, determine how they fit
+# the wider fscontext observational model.
+#
+# Preserve the separation between:
+#
+#   source evidence
+#   observations
+#   structural/contextual relationships
+#   semantic interpretation
+#   curatorial review
+#
+# Mapping to Records, Record Parts, Instantiations, RiC-O, PROV-O, or
+# other semantic models should remain downstream of raw WACZ observation
+# unless the WACZ itself explicitly supplies such semantics.

@@ -1,12 +1,11 @@
 # Structure ------------------------------------------------------------
 
 test_that("empty_snapshot returns the expected schema", {
-  
   x <- empty_snapshot()
-  
+
   expect_s3_class(x, "data.frame")
   expect_equal(nrow(x), 0)
-  
+
   expect_setequal(
     names(x),
     c(
@@ -22,9 +21,8 @@ test_that("empty_snapshot returns the expected schema", {
 })
 
 test_that("empty_snapshot columns have correct types", {
-  
   x <- empty_snapshot()
-  
+
   expect_type(x$storage_id, "character")
   expect_type(x$size, "double")
   expect_true(inherits(x$mtime, "POSIXct"))
@@ -55,29 +53,28 @@ test_that("scan_storage returns expected structure", {
 # Content --------------------------------------------------------------
 
 test_that("scan_storage returns an empty snapshot for an empty directory", {
-  
   tmp <- fs::dir_create(fs::file_temp())
-  
+
   res <- scan_storage(tmp)
-  
+
   expect_s3_class(res, "data.frame")
-  
+
   expect_equal(nrow(res), 0)
-  
+
   expect_identical(
     names(res),
     names(empty_snapshot())
   )
-  
+
   expect_true(
     inherits(attr(res, "created_at"), "POSIXct")
   )
-  
+
   expect_equal(
     attr(res, "created_by"),
     "scan_storage"
   )
-  
+
   expect_equal(
     attr(res, "scan_root"),
     tmp

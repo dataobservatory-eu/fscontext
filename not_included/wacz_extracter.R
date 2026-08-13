@@ -309,4 +309,4 @@ wacz <- "D:/_assets/wacz/women-in-latgale-1950s.wacz"
 
 curatorial_pages <- prepare_wacz_review_pages(wacz)
 
-curatorial_pages
+curatorial_pages$thumbnail_url[1]
