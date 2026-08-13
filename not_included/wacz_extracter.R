@@ -300,9 +300,13 @@ prepare_wacz_review_pages <- function(wacz) {
 
 wacz <- "D:/_assets/wacz/muis-udmurt-photographs.wacz"
 
-curatorial_pages <- prepare_wacz_review_pages(wacz)
+curatorial_pages_udmurts <- prepare_wacz_review_pages(wacz)
 
-curatorial_pages
+curatorial_pages_udmurts
+
+saveRDS(curatorial_pages_udmurts, 
+        "D:/_assets/wacz/muis-udmurt-photographs.rds")
+
 
 
 wacz <- "D:/_assets/wacz/women-in-latgale-1950s.wacz"
@@ -310,3 +314,8 @@ wacz <- "D:/_assets/wacz/women-in-latgale-1950s.wacz"
 curatorial_pages <- prepare_wacz_review_pages(wacz)
 
 curatorial_pages$thumbnail_url[1]
+
+
+curatorial_pages
+saveRDS(curatorial_pages, 
+        "D:/_assets/wacz/women-in-latgale-1950s_curatorial_pages.rds")
