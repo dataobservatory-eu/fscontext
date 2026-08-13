@@ -34,7 +34,6 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 .Rproj.user
-not_included
 docs
 inst/doc
 wbso*.*
