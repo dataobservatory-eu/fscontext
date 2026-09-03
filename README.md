@@ -42,6 +42,13 @@ stabilisation.
   introduces filesystem observations, reproducible snapshots, and
   contextual reconstruction.
 
+- [From Filesystem Observation to Human
+  Review](https://fscontext.dataobservatory.eu/articles/betwixt.html)
+  demonstrates how Betwixt provides intermediate relational
+  representations for reproducibly reviewing and revising candidate
+  semantic and provenance assertions generated from `fscontext`
+  observations.
+
 - [Observing File
   Organisation](https://fscontext.dataobservatory.eu/articles/file_organisation.html)
   demonstrates how repeated filesystem observations can reconstruct

@@ -1,3 +1,10 @@
+# fscontext 0.2.2
+
+- Added a vignette demonstrating the transition from filesystem observation to human review with Betwixt.
+- Added examples for reviewing candidate identity, source, and semantic relationships derived from `fscontext` observations.
+- Added a workflow for preserving mappings between remote resource URIs and locally observed digital resources.
+- Documented the use of intermediate relational projections for reproducible human revision of PROV- and RiC-O-oriented heuristics.
+
 # fscontext 0.2.1
 
 - Bug fix: when repo_root is empty, empty scans are returned.
