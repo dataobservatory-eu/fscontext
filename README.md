@@ -9,7 +9,7 @@
 [![lifecycle](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status:
 WIP](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-[![devel-version](https://img.shields.io/badge/devel%20version-0.2.1-blue.svg)](https://github.com/dataobservatory-eu/fscontext/tree/devel)
+[![devel-version](https://img.shields.io/badge/devel%20version-0.2.2-blue.svg)](https://github.com/dataobservatory-eu/fscontext/tree/devel)
 [![dataobservatory](https://img.shields.io/badge/ecosystem-dataobservatory.eu-3EA135.svg)](https://dataobservatory.eu/)
 [![codecov](https://codecov.io/gh/dataobservatory-eu/fscontext/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dataobservatory-eu/fscontext)
 
@@ -41,6 +41,13 @@ stabilisation.
   fscontext](https://fscontext.dataobservatory.eu/articles/intro.html)
   introduces filesystem observations, reproducible snapshots, and
   contextual reconstruction.
+
+- [From Filesystem Observation to Human
+  Review](https://fscontext.dataobservatory.eu/articles/betwixt.html)
+  demonstrates how Betwixt provides intermediate relational
+  representations for reproducibly reviewing and revising candidate
+  semantic and provenance assertions generated from `fscontext`
+  observations.
 
 - [Observing File
   Organisation](https://fscontext.dataobservatory.eu/articles/file_organisation.html)
