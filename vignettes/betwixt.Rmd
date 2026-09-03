@@ -38,7 +38,7 @@ A common cultural-heritage workflow begins not with an existing knowledge graph 
 The review examples use the development version of [Betwixt](https://betwixt.dataobservatory.eu/). The Betwixt-dependent code is not evaluated when the `fscontext` vignette is built.
 
 ```{r}
-#| label: muis-input
+#| label: install-betwixt
 #| eval: false
 # install.packages("pak")
 pak::pak("dataobservatory-eu/betwixt")
@@ -46,7 +46,7 @@ pak::pak("dataobservatory-eu/betwixt")
 
 ```{r}
 #| label: muis-input
-#| eval:true
+#| eval: false
 review_input <- tibble::tribble(
   ~page_id, ~title, ~page_url, ~thumbnail_url, ~value,
   "635780", "sweater, women's",
@@ -98,7 +98,7 @@ download_map
 
 ```{r}
 #| label: muis-fscontext
-#| eval: true
+#| eval: false
 
 images <- fscontext::scan_storage(
   root = image_dir,
@@ -119,7 +119,7 @@ The filesystem observations can be connected back to the MuIS records from which
 
 ```{r}
 #| label: muis-connect-source
-#| eval: true
+#| eval: false
 
 image_evidence <- images |>
   left_join(
@@ -220,7 +220,7 @@ A second projection uses the same evidence to review candidate knowledge about t
 
 ```{r}
 #| label: muis-object-candidates
-#| eval: true
+#| eval: false
 
 object_review <- betwixt::candidate_dataset(
   evidence_url = review_input$thumbnail_url,
