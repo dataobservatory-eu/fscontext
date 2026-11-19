@@ -1,8 +1,5 @@
 #' Read and combine observational filesystem snapshots
 #'
-#' Read one or more serialized observational filesystem snapshots and
-#' combine them into a unified observational table.
-#'
 #' @description
 #' `read_snapshot()` reconstructs an observational layer from one or
 #' more snapshots previously created with [scan_storage()].
@@ -51,6 +48,11 @@
 #' - reconstruction workflows
 #' - cross-storage comparison
 #' - longitudinal temporal analysis
+#'
+#' Snapshot schema versions are validated before reconstruction.
+#' Snapshots without schema metadata are treated as legacy version
+#' `0.1.0`. Supported versions are `0.1.0`, `0.1.2`, and `0.1.3`.
+#' Unsupported schema versions are rejected explicitly.
 #'
 #' Repository metadata are normally stored as snapshot attributes in
 #' order to avoid repeating identical repository information across all
@@ -112,9 +114,7 @@ read_snapshot <- function(snapshot_files,
     )
   }
 
-  missing_snapshot_files <- snapshot_files[
-    !file.exists(snapshot_files)
-  ]
+  missing_snapshot_files <- snapshot_files[!file.exists(snapshot_files)]
 
   if (length(missing_snapshot_files) > 0) {
     stop(
@@ -128,63 +128,47 @@ read_snapshot <- function(snapshot_files,
     x <- readRDS(f)
 
     if (!is.data.frame(x)) {
+      stop("Snapshot is not a data.frame: ", f, call. = FALSE)
+    }
+
+    # Validate schema compatibility before reconstructing observations.
+    schema_version <- attr(x, "schema_version")
+
+    if (is.null(schema_version)) {
+      schema_version <- "0.1.0"
+    }
+
+    supported_versions <- c("0.1.0", "0.1.2", "0.1.3")
+
+    if (!is.character(schema_version) ||
+      length(schema_version) != 1L ||
+      is.na(schema_version) ||
+      !schema_version %in% supported_versions) {
       stop(
-        "Snapshot is not a data.frame: ",
-        f,
+        "Unsupported snapshot schema version in: ", f,
         call. = FALSE
       )
     }
 
-    # --- snapshot artefact provenance ---
-
-    x$snapshot_file <- normalizePath(
-      f,
-      winslash = "/"
-    )
-
-    x$snapshot_created_at <- attr(
-      x,
-      "created_at"
-    )
-
-    x$snapshot_schema_version <- attr(
-      x,
-      "schema_version"
-    )
+    # Snapshot artefact provenance.
+    x$snapshot_file <- normalizePath(f, winslash = "/")
+    x$snapshot_created_at <- attr(x, "created_at")
+    x$snapshot_schema_version <- schema_version
 
     repos_df <- attr(x, "repos")
 
-    if (
-      include_repo_metadata &&
-        !is.null(repos_df)
-    ) {
+    if (include_repo_metadata && !is.null(repos_df)) {
       repos_df <- repos_df %>%
-        mutate(
-          git_repo_id = normalize_git_remote(git_remote)
-        )
+        mutate(git_repo_id = normalize_git_remote(git_remote))
 
       x <- x %>%
-        left_join(
-          repos_df,
-          by = "repo_root"
-        )
-    }
-
-    # --- legacy compatibility ---
-    # schema metadata was not consistently present
-    # in earlier observational snapshots
-
-    if (is.null(x$snapshot_schema_version)) {
-      x$snapshot_schema_version <- "0.1.0"
+        left_join(repos_df, by = "repo_root")
     }
 
     x
   })
 
-  # --- contextual observational identifiers ---
-  # enriches observations for cross-storage and
-  # longitudinal reconstruction workflows
-
+  # Contextual identifiers for longitudinal reconstruction.
   snapshots <- add_snapshot_context(snapshots)
 
   snapshots

@@ -225,12 +225,17 @@ scan_zip_storage <- function(
   max_signature_size = 200 * 1024 * 1024
 ) {
   archive_path <- fs::path_abs(root)
-  archive_id <- tools::file_path_sans_ext(basename(archive_path))
-  extract_root <- fs::path(tempdir(), archive_id)
 
-  if (fs::dir_exists(extract_root)) {
-    fs::dir_delete(extract_root)
-  }
+  # Allocate a distinct extraction directory for each scan.
+  # Archives may share a basename, and earlier observations must
+  # remain accessible after subsequent scans.
+  archive_id <- tools::file_path_sans_ext(basename(archive_path))
+  extract_root <- tempfile(
+    pattern = paste0(archive_id, "_"),
+    tmpdir = tempdir()
+  )
+
+  fs::dir_create(extract_root)
 
   # ---------------------------------------------------------
   # Determine observational root.
@@ -304,6 +309,7 @@ scan_directory_storage <- function(
   max_signature_size = 200 * 1024 * 1024
 ) {
   start_time <- Sys.time()
+
   message("Starting scan_storage() on: ", root)
 
   root <- fs::path_abs(root)
@@ -473,13 +479,23 @@ scan_directory_storage <- function(
   repo_roots <- unique(dirname(git_dirs))
   repo_roots_norm <- fs::path_abs(repo_roots)
 
+
+  # Find the nearest enclosing Git repository.
+  # Match complete directory components, not string prefixes:
+  # "project-backup" must not be attributed to "project".
   find_repo_root_safe <- function(path) {
-    matches <- repo_roots_norm[startsWith(path, repo_roots_norm)]
+    matches <- repo_roots_norm[
+      path == repo_roots_norm |
+        startsWith(path, paste0(repo_roots_norm, "/"))
+    ]
+
     if (length(matches) == 0) {
       return(NA_character_)
     }
+
     matches[which.max(nchar(matches))]
   }
+
 
   if (length(repo_roots_norm) > 0) {
     snapshot$repo_root <- vapply(

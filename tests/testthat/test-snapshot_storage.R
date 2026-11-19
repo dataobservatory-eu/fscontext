@@ -144,19 +144,24 @@ test_that("snapshot_storage saves a valid scan object", {
 })
 
 
+
 test_that("snapshot_storage produces consistent structure", {
   tmp <- fs::dir_create(fs::file_temp())
   root <- make_minimal_fs()
 
+  at <- as.POSIXct("2026-11-19 09:00:00", tz = "UTC")
+
   out1 <- snapshot_storage(
     root = root,
     storage_id = "test-storage",
+    scan_time = at,
     path = tmp
   )
 
   out2 <- snapshot_storage(
     root = root,
     storage_id = "test-storage",
+    scan_time = at + 1,
     path = tmp
   )
 
@@ -166,6 +171,7 @@ test_that("snapshot_storage produces consistent structure", {
   expect_setequal(names(obj1), names(obj2))
   expect_equal(nrow(obj1), nrow(obj2))
 })
+
 
 
 test_that("snapshot_storage can disable signatures", {

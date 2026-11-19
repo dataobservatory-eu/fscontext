@@ -71,11 +71,51 @@ save_scan <- function(df,
 
   scan_time <- attr(df, "created_at")
 
-  fname <- make_scan_filename(storage_id, scan_time, label = label)
+  # Preserve the existing filename-generation algorithm.
+  fname <- make_scan_filename(
+    storage_id,
+    scan_time,
+    label = label
+  )
 
   full_path <- file.path(path, fname)
 
-  saveRDS(df, full_path)
+  # Issue #5: never silently overwrite an existing snapshot.
+  if (file.exists(full_path)) {
+    stop(
+      "save_scan(): snapshot already exists: ",
+      full_path,
+      call. = FALSE
+    )
+  }
+
+  # Issue #6: stage serialization in the destination directory.
+  tmp_path <- tempfile(
+    pattern = ".fscontext-",
+    tmpdir = path,
+    fileext = ".rds"
+  )
+
+  # Remove the temporary file on both success and failure.
+  on.exit(unlink(tmp_path), add = TRUE)
+
+  saveRDS(df, tmp_path)
+
+  # Verify that serialization produced a readable RDS.
+  readRDS(tmp_path)
+
+  # Publish without overwriting an existing destination.
+  # file.link() fails if the destination already exists.
+  # Both paths reside on the same filesystem.
+  published <- file.link(tmp_path, full_path)
+
+  if (!isTRUE(published)) {
+    stop(
+      "save_scan(): could not publish snapshot without overwriting: ",
+      full_path,
+      call. = FALSE
+    )
+  }
 
   message("Saved: ", full_path)
 

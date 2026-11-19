@@ -166,7 +166,7 @@ resource_review <- betwixt::candidate_dataset(
     )
   )
 
-resource_review 
+resource_review
 ```
 
 ```{r}
@@ -190,7 +190,6 @@ betwixt::betwixt_render(
 betwixt_review_1 <- readLines(
   con = file.path(tempdir(), "muis-resource-review.html")
 )
-  
 ```
 
 ```{r}
@@ -198,9 +197,11 @@ betwixt_review_1 <- readLines(
 #| eval: false
 writeLines(
   text = betwixt_review_1,
-  con = file.path(here::here(), 
-                  "vignettes", "artefacts",  
-                  "muis-resource-review.html")
+  con = file.path(
+    here::here(),
+    "vignettes", "artefacts",
+    "muis-resource-review.html"
+  )
 )
 ```
 
@@ -277,8 +278,10 @@ The two reviews deliberately separate two questions. The first asks which digita
 #| eval: false
 writeLines(
   text = betwixt_review_2,
-  con = file.path(here::here(), 
-                  "vignettes", "artefacts",  "muis-object-review.html")
+  con = file.path(
+    here::here(),
+    "vignettes", "artefacts", "muis-object-review.html"
+  )
 )
 ```
 

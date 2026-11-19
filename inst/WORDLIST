@@ -1,6 +1,8 @@
 ARChive
+CDX
 ISAD
 Lebo
+MuIS
 POSIXct
 PROV
 Pomerantz
@@ -10,11 +12,14 @@ RStudio
 RecordPart
 RiC
 Sahoo
+URIs
 WACZ
 WARC
 WIP
+Webrecorder
 artifact
 artifacts
+bowtie
 codecov
 contentReference
 dataobservatory
@@ -40,9 +45,12 @@ rhub
 ric
 rico
 roundtrip
+standalone
 testthat
+texttt
 tibble
 tibbles
 tidyr
 tidyverse
 www
+zenodo
