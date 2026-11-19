@@ -1,7 +1,19 @@
-## 0.2.1
 
-The new version fixes a small bug and adds a new tutorial vignette.
+## 0.2.3
 
+This is a minor maintenance release with no new functionality or changes to the public API.
+
+The release addresses edge-case bugs identified through testing and experience with very large filesystem deployments on Windows.
+
+The fixes improve:
+
+- Git repository attribution when directory names share common prefixes.
+- Isolation of temporary extraction directories when scanning ZIP archives.
+- Protection against accidental overwriting of existing filesystem snapshots.
+- Reliability of snapshot persistence when writes are interrupted.
+- Validation of snapshot schema versions when reading persisted observations.
+
+Existing snapshot schemas and deterministic observation identifiers remain unchanged to preserve backward compatibility.
 
 ## Test environments
 
@@ -12,9 +24,7 @@ Local:
 Continuous integration:
 
 - Ubuntu Linux (GitHub Actions)
-
 - macOS (GitHub Actions)
-
 - Windows (GitHub Actions)
 
 Additional checks:
