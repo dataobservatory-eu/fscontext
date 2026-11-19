@@ -91,15 +91,37 @@ test_that("save_scan filename depends on label", {
 
 
 test_that("save_scan treats NULL and empty label equally", {
-  tmp <- fs::dir_create(fs::file_temp("scan_test_"))
+  tmp1 <- tempfile("scan_null_")
+  tmp2 <- tempfile("scan_empty_")
 
-  df <- data.frame(x = 1)
-  attr(df, "created_at") <- as.POSIXct("2026-04-30 16:00:59", tz = "UTC")
+  dir.create(tmp1)
+  dir.create(tmp2)
 
-  f1 <- save_scan(df, "test-storage", tmp, label = NULL)
-  f2 <- save_scan(df, "test-storage", tmp, label = "")
+  on.exit(unlink(c(tmp1, tmp2), recursive = TRUE), add = TRUE)
 
-  expect_equal(basename(f1), basename(f2))
+  df <- data.frame(
+    rel_path = "example.txt",
+    size = 100
+  )
+
+  attr(df, "created_at") <- as.POSIXct(
+    "2026-04-30 16:00:59",
+    tz = "UTC"
+  )
+
+  p1 <- save_scan(df, "test-storage", tmp1, label = NULL)
+  p2 <- save_scan(df, "test-storage", tmp2, label = "")
+
+  # Same filename, despite different output directories.
+  expect_identical(basename(p1), basename(p2))
+
+  # Both snapshots were saved successfully.
+  expect_true(file.exists(p1))
+  expect_true(file.exists(p2))
+
+  # Both preserve their contents.
+  expect_identical(readRDS(p1), df)
+  expect_identical(readRDS(p2), df)
 })
 
 

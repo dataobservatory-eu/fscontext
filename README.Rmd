@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 [![lifecycle](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status:
 WIP](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-[![devel-version](https://img.shields.io/badge/devel%20version-0.2.2-blue.svg)](https://github.com/dataobservatory-eu/fscontext/tree/devel)
+[![devel-version](https://img.shields.io/badge/devel%20version-0.2.3-blue.svg)](https://github.com/dataobservatory-eu/fscontext/tree/devel)
 [![dataobservatory](https://img.shields.io/badge/ecosystem-dataobservatory.eu-3EA135.svg)](https://dataobservatory.eu/)
 [![codecov](https://codecov.io/gh/dataobservatory-eu/fscontext/branch/main/graph/badge.svg)](https://app.codecov.io/gh/dataobservatory-eu/fscontext)
 
@@ -176,14 +176,8 @@ In RiC-inspired terms, filesystem observations represent observed digital resour
 
 ## Notes
 
-- Large scans may require substantial time on slower or networked storage
-  systems.
+- Large scans may require substantial time on slower or networked storage systems.
 - Some files may be inaccessible due to permissions or synchronization state.
-- Observational snapshots are intended for reproducible local or institutional
-  analysis workflows.
-- Contextual and analytical layers may evolve independently from the original
-  observational corpus.
+- Observational snapshots are intended for reproducible local or institutional analysis workflows.
+- Contextual and analytical layers may evolve independently from the original observational corpus.
 
-<!-- -->
-
-<!-- -->

@@ -446,3 +446,94 @@ test_that(
     )
   }
 )
+
+
+# Unicode filenames and directories ----------------------------------------
+test_that("scan_storage preserves Unicode filesystem locators", {
+  root <- fs::file_temp("fscontext_unicode_")
+  fs::dir_create(root)
+  withr::defer(fs::dir_delete(root))
+
+  folder <- "Árvíztűrő tükörfúrógép"
+  filename <- "próba_őűáé.txt"
+  fs::dir_create(fs::path(root, folder))
+  target <- fs::path(root, folder, filename)
+  writeLines("Unicode path fixture", target, useBytes = TRUE)
+
+  # Establish that the local test environment supports this fixture.
+  expect_true(fs::file_exists(target))
+
+  result <- scan_storage(root, compute_signature = FALSE)
+  expected_rel <- paste(folder, filename, sep = "/")
+  row <- result[result$filename == filename, , drop = FALSE]
+
+  expect_equal(nrow(row), 1L)
+  expect_identical(row$rel_path, expected_rel)
+  expect_identical(row$filename, filename)
+  expect_identical(
+    row$storage_path_id,
+    paste("local-storage", expected_rel, sep = "::")
+  )
+  expect_true(fs::file_exists(row$full_path))
+})
+
+# Extensionless files -------------------------------------------------------
+test_that("scan_storage retains extensionless files", {
+  root <- fs::file_temp("fscontext_extensionless_")
+  fs::dir_create(root)
+  withr::defer(fs::dir_delete(root))
+
+  writeLines("hello", fs::path(root, "README"))
+  result <- scan_storage(root, compute_signature = FALSE)
+  row <- result[result$rel_path == "README", , drop = FALSE]
+
+  expect_equal(nrow(row), 1L)
+  expect_identical(row$filename, "README")
+  expect_true(is.na(row$extension))
+})
+
+# Git repository prefix collision ------------------------------------------
+test_that("repository attribution does not include sibling prefix matches", {
+  skip_if(Sys.which("git") == "", "Git is not installed")
+  root <- fs::file_temp("fscontext_repo_prefix_")
+  fs::dir_create(root)
+  withr::defer(fs::dir_delete(root))
+
+  repo <- fs::path(root, "project")
+  sibling <- fs::path(root, "project-backup")
+  fs::dir_create(fs::path(repo, ".git"))
+  fs::dir_create(sibling)
+  writeLines("a", fs::path(repo, "tracked.txt"))
+  writeLines("b", fs::path(sibling, "other.txt"))
+
+  result <- scan_storage(root, compute_signature = FALSE)
+  inside <- result[result$rel_path == "project/tracked.txt", , drop = FALSE]
+  outside <- result[result$rel_path == "project-backup/other.txt", , drop = FALSE]
+
+  expect_equal(nrow(inside), 1L)
+  expect_equal(nrow(outside), 1L)
+  expect_false(is.na(inside$repo_root))
+  expect_true(is.na(outside$repo_root))
+})
+
+# Signature threshold behavior ---------------------------------------------
+test_that("scan_storage computes signatures only up to configured size", {
+  root <- fs::file_temp("fscontext_signature_limit_")
+  fs::dir_create(root)
+  withr::defer(fs::dir_delete(root))
+
+  writeBin(as.raw(1:4), fs::path(root, "small.bin"))
+  writeBin(as.raw(rep(1L, 32)), fs::path(root, "large.bin"))
+
+  result <- scan_storage(root,
+    compute_signature = TRUE,
+    max_signature_size = 8
+  )
+  small <- result[result$rel_path == "small.bin", , drop = FALSE]
+  large <- result[result$rel_path == "large.bin", , drop = FALSE]
+
+  expect_equal(nrow(small), 1L)
+  expect_equal(nrow(large), 1L)
+  expect_false(is.na(small$quick_sig))
+  expect_true(is.na(large$quick_sig))
+})
