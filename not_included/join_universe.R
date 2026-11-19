@@ -1,0 +1,243 @@
+devtools::load_all()
+
+library(fscontext)
+library(dplyr)
+library(fs)
+
+# ------------------------------------------------------------------
+# 1. Create a tiny source universe
+# ------------------------------------------------------------------
+
+operation_start_time <- Sys.time()
+
+tmp <- tempdir()
+
+root_1 <- path("D:/_packages/")
+root_2 <- path("G:/_packages/")
+snapshot_root_1 <- path("D:/.snapshots/")
+snapshot_root_2 <- path("G:/.snapshots/")
+
+stopifnot(fs::dir_exists(snapshot_root_1))
+stopifnot(fs::dir_exists(snapshot_root_2))
+
+
+storage_id_1 <- "antaldaniel-L480"
+storage_id_2 <- "antaldaniel-OneTouch-1TB"
+
+if(!dir_exists(root_1)) stop("Wrong source root.")
+if(!dir_exists(root_2)) {
+  fs::dir_create(root_2) 
+  message("Created: ", root_2)
+} else {
+    message(root_2, " exists.")
+  }
+
+if (path_real(root_1) == path_real(root_2)) {
+  stop("Source and destination roots must differ.")
+}
+
+person_id <- "antaldaniel"
+
+simulated_data <- function() {
+  dir_create(root_1)
+  dir_create(path(root_1, "documents"))
+  dir_create(path(root_1, "data"))
+  
+  writeLines(
+    "This is the first document.",
+    path(root_1, "documents", "first.txt")
+  )
+  
+  writeLines(
+    "This is the second document.",
+    path(root_1, "documents", "second.txt")
+  )
+  
+  write.csv(
+    data.frame(id = 1:3, value = c("a", "b", "c")),
+    path(root_1, "data", "example.csv"),
+    row.names = FALSE
+  )
+}
+
+
+
+# ------------------------------------------------------------------
+# 2. Observe source universe
+# ------------------------------------------------------------------
+
+snapshot_1 <- snapshot_storage(
+  root = root_1,
+  storage_id = storage_id_1,
+  person_id = person_id,
+  path = snapshot_root_1
+)
+
+snapshot_1
+
+
+# ------------------------------------------------------------------
+# 3. Copy the universe
+# ------------------------------------------------------------------
+
+message(
+  "Controlled copy:\n",
+  "  source:      ", root_1, "\n",
+  "  destination: ", root_2
+)
+
+
+copy_result <- system2(
+  "robocopy",
+  args = c(
+    shQuote(root_1),
+    shQuote(root_2),
+    "/E",          # recursively copy subdirectories, including empty ones
+    "/COPY:DAT",   # data, attributes, timestamps
+    "/DCOPY:DAT",  # directory data, attributes, timestamps
+    "/R:1",        # one retry
+    "/W:1"         # one second between retries
+  )
+)
+
+if (copy_result >= 8) {
+  stop(
+    "Controlled copy failed. Robocopy exit code: ",
+    copy_result
+  )
+}
+
+# ------------------------------------------------------------------
+# 4. Observe copied universe
+# ------------------------------------------------------------------
+
+snapshot_2 <- snapshot_storage(
+  root = root_2,
+  storage_id = storage_id_2,
+  person_id = person_id, 
+  path = snapshot_root_2
+)
+
+snapshot_2
+
+
+snapshot_1_data <- readRDS(snapshot_1)
+snapshot_2_data <- readRDS(snapshot_2)
+
+concordance_time <- Sys.time()
+
+keys <- c("filename", "quick_sig", "size")
+
+# ------------------------------------------------------------------
+# 5. Concordance
+# ------------------------------------------------------------------
+
+concordance <- snapshot_1_data |>
+  select(all_of(keys)) |>
+  inner_join(
+    snapshot_2_data |>
+      select(all_of(keys)),
+    by = keys
+  )
+
+# ------------------------------------------------------------------
+# 6. Discrepancies
+# ------------------------------------------------------------------
+
+missing_from_destination <- snapshot_1_data |>
+  select(all_of(keys)) |>
+  anti_join(
+    snapshot_2_data |> select(all_of(keys)),
+    by = keys
+  ) |>
+  mutate(discrepancy = "missing_from_destination")
+
+unexpected_in_destination <- snapshot_2_data |>
+  select(all_of(keys)) |>
+  anti_join(
+    snapshot_1_data |> select(all_of(keys)),
+    by = keys
+  ) |>
+  mutate(discrepancy = "unexpected_in_destination")
+
+discrepancies <- bind_rows(
+  missing_from_destination,
+  unexpected_in_destination
+)
+
+comparison_id <- paste0(
+  gsub("[:/\\\\]+", "", root_1), "_",
+  gsub("[:/\\\\]+", "", root_2), "_",
+  format(concordance_time, "%Y%m%d-%H%M%S")
+)
+
+concordance_file_name <- paste0(
+  "concordance_", comparison_id, ".rds"
+)
+
+discrepancy_file_name <- paste0(
+  "discrepancies_", comparison_id, ".rds"
+)
+
+operation_end_time <- Sys.time()
+
+elapsed_seconds <- as.numeric(
+  difftime(
+    operation_end_time,
+    operation_start_time,
+    units = "secs"
+  )
+)
+
+add_comparison_attributes <- function(x) {
+  attr(x, "snapshot") <- c(snapshot_1, snapshot_2)
+  attr(x, "storage_id") <- c(storage_id_1, storage_id_2)
+  attr(x, "root") <- c(root_1, root_2)
+  attr(x, "person_id") <- person_id
+  attr(x, "start_time") <- operation_start_time
+  attr(x, "compared_time") <- concordance_time
+  attr(x, "elapsed_seconds") <- elapsed_seconds
+  attr(x, "comparison_id") <- comparison_id
+  x
+}
+
+message(
+  "Operation completed in ",
+  sprintf(
+    "%02d:%02d",
+    floor(elapsed_seconds / 60),
+    round(elapsed_seconds %% 60)
+  )
+)
+
+concordance <- add_comparison_attributes(concordance)
+discrepancies <- add_comparison_attributes(discrepancies)
+
+attr(concordance, "concordance_file") <- concordance_file_name
+attr(discrepancies, "discrepancy_file") <- discrepancy_file_name
+
+saveRDS(concordance, file = file.path(snapshot_root_1, concordance_file_name))
+saveRDS(concordance, file = file.path(snapshot_root_2, concordance_file_name))
+
+
+# Save discrepancies only when discrepancies exist
+if (nrow(discrepancies) > 0) {
+  
+  attr(discrepancies, "discrepancy_file") <- discrepancy_file_name
+  
+  saveRDS(
+    discrepancies,
+    file.path(snapshot_root_1, discrepancy_file_name)
+  )
+  
+  saveRDS(
+    discrepancies,
+    file.path(snapshot_root_2, discrepancy_file_name)
+  )
+}
+
+concordance |>
+  count(filename, quick_sig, size) |>
+  filter(n > 1) |>
+  arrange(desc(n))
+
