@@ -60,9 +60,6 @@ The resulting table is intended to represent observed filesystem
 Instantiations rather than authoritative documentary entities.
 }
 \details{
-Read one or more serialized observational filesystem snapshots and
-combine them into a unified observational table.
-
 The function performs:
 \itemize{
 \item observational aggregation across snapshots
@@ -104,6 +101,11 @@ Snapshot-level provenance metadata are appended as columns to support:
 \item cross-storage comparison
 \item longitudinal temporal analysis
 }
+
+Snapshot schema versions are validated before reconstruction.
+Snapshots without schema metadata are treated as legacy version
+\verb{0.1.0}. Supported versions are \verb{0.1.0}, \verb{0.1.2}, and \verb{0.1.3}.
+Unsupported schema versions are rejected explicitly.
 
 Repository metadata are normally stored as snapshot attributes in
 order to avoid repeating identical repository information across all

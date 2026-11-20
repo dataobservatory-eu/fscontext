@@ -57,8 +57,10 @@ globally contextualised filesystem locator
 deterministic storage-scoped filesystem identifier
 (\code{storage_id::rel_path});
 \item \code{observation_id}:
-deterministic identifier of a specific filesystem observation,
-combining storage context, relative path, and observation time.
+deterministic identifier combining storage context,
+relative path, and observation time at second resolution.
+Observations of the same path within one second share
+this identifier, even when produced by separate scans.
 }
 }
 \examples{
